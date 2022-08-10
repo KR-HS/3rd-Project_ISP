@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.UpFileDAO">
+	<!-- 게시판 첨부파일 개수 얻기 -->
+	<select id="selectCountByBoard" parameterType="int" resultType="int">
+		select count(*) from upfile where board_idx=#{board_idx}
+	</select>
+	<!-- 유저 첨부파일 개수 얻기 -->
+	<select id="selectCountByUser" parameterType="int" resultType="int">
+		select count(*) from upfile where user_idx=#{user_idx}
+	</select>
+	<!-- 모임 첨부파일 개수 얻기 -->
+	<select id="selectCountByMoim" parameterType="int" resultType="int">
+		select count(*) from upfile where moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 게시판 첨부파일 목록 얻기 -->
+	<select id="selectListByBoard" parameterType="int" resultType="UpFileVO">
+		select * from upfile where board_idx=#{board_idx}
+	</select>	
+	<!-- 유저 첨부파일 목록 얻기 -->
+	<select id="selectListByUser" parameterType="int" resultType="UpFileVO">
+		select * from upfile where user_idx=#{user_idx}
+	</select>	
+	<!-- 모임 첨부파일 목록 얻기 -->
+	<select id="selectListByMoim" parameterType="int" resultType="UpFileVO">
+		select * from upfile where moim_idx=#{moim_idx}
+	</select>	
+	
+	<!-- 첨부파일 저장 -->
+	<insert id="insert" parameterType="UpFileVO">
+		insert into 
+			upfile
+		values
+			(file_idx_seq.nextval, #{moim_idx}, #{user_idx}, #{board_idx}, #{o_fileName}, #{s_fileName})
+	</insert>
+	<!-- 첨부파일 변경(1개)  ex)프로필이미지 -->
+	<insert id="update" parameterType="UpFileVO">
+		update 	upfile
+		set o_fileName=#{o_fileName},s_fileName=#{s_fileName}
+		where user_idx=#{user_idx} and board_idx=0 and moim_idx=0
+	</insert>
+	<!-- 4. 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from upfile where file_idx=#{file_idx}
+	</delete>
+	<!-- 5. 1개 얻기 -->
+	<select id="selectByIdx" parameterType="int" resultType="UpFileVO">
+		select * from upfile where file_idx=#{file_idx}
+	</select>
+	
+	
+	<select id="selectProfileImg" parameterType="int" resultType="UpFileVO">
+		select * from upfile where user_idx=#{user_idx} and board_idx=0 and moim_idx=0
+	</select>
+</mapper>

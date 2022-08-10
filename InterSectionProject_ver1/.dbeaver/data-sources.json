@@ -1,0 +1,83 @@
+{
+	"folders": {},
+	"connections": {
+		"oracle_thin-1825d93bc08-fd36e5118d70fe5": {
+			"provider": "oracle",
+			"driver": "oracle_thin",
+			"name": "ORCL",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "1521",
+				"database": "ORCL",
+				"url": "jdbc:oracle:thin:@db202204130038_medium?TNS_ADMIN=/Wallet_db202204130038",
+				"home": "C:\\Users\\ghs52\\Desktop\\WINDOWS.X64_193000_db_home",
+				"type": "dev",
+				"properties": {
+					"useFetchSizeWithLongColumn": "true",
+					"loginTimeout": "20",
+					"oracle.jdbc.fanEnabled": "false"
+				},
+				"provider-properties": {
+					"@dbeaver-connection-type@": "CUSTOM",
+					"@dbeaver-sid-service@": "SERVICE",
+					"show-only-one-schema@": "false",
+					"@dbeaver-check-schema-content@": "false",
+					"@dbeaver-always-show-dba@": "false",
+					"@dbeaver-always-use-dba-views@": "false",
+					"@dbeaver-meta-use-sys-schema@": "false",
+					"@dbeaver-meta-use-simple-constraints@": "false",
+					"@dbeaver-use-rule-hint@": "false",
+					"@dbeaver-use-meta-optimizer@": "true",
+					"@dbeaver-meta-use-alternative-table-query@": "false",
+					"oracle.meta-search-in-synonyms": "false"
+				},
+				"auth-model": "oracle_native",
+				"handlers": {}
+			}
+		},
+		"oracle_thin-1825d9d9eeb-49b81f9e9a36561a": {
+			"provider": "oracle",
+			"driver": "oracle_thin",
+			"name": "ORCL 2",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "1521",
+				"database": "ORCL",
+				"url": "jdbc:oracle:thin:@db202204130038_medium?TNS_ADMIN=/Wallet_db202204130038",
+				"home": "C:\\Users\\ghs52\\Desktop\\WINDOWS.X64_193000_db_home",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-connection-type@": "CUSTOM",
+					"show-only-one-schema@": "false",
+					"@dbeaver-check-schema-content@": "false",
+					"@dbeaver-always-show-dba@": "false",
+					"@dbeaver-always-use-dba-views@": "false",
+					"@dbeaver-meta-use-sys-schema@": "false",
+					"@dbeaver-meta-use-simple-constraints@": "false",
+					"@dbeaver-use-rule-hint@": "false",
+					"@dbeaver-use-meta-optimizer@": "true",
+					"@dbeaver-meta-use-alternative-table-query@": "false",
+					"oracle.meta-search-in-synonyms": "false",
+					"@dbeaver-sid-service@": "SERVICE"
+				},
+				"auth-model": "oracle_native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"auto-close-transactions": false
+		}
+	}
+}

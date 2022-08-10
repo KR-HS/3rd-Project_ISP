@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.SignUpDAO">
+		
+	<!-- 모임에 따른 신청자 가져오기 -->
+	<select id="selectByMoim" parameterType="hashMap" resultType="SignUpVO">
+		select * from signUp where moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 모임에 따른 신청자 인원수 가져오기 -->
+	<select id="selectCountByMoim" parameterType="int" resultType="int">
+		select count(*) from signUp where moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 유저에 따른 신청한 모임 가져오기 -->
+	<select id="selectByUser" parameterType="hashMap" resultType="SignUpVO">
+		select * from signUp where user_idx=#{user_idx}
+	</select>
+	
+	<!-- 유저에 따른 신청한 모임 개수 가져오기 -->
+	<select id="selectCountByUser" parameterType="hashMap" resultType="int">
+		select count(*) from signUp where user_idx=#{user_idx}
+	</select>
+	
+	<!-- 승인된 사람 가져오기 -->
+	<select id="selectByApply" parameterType="hashMap" resultType="SignUpVO">
+		select * from signUp where signUp_isApply = 'Y'
+	</select>
+
+	<!-- 승인된 사람수 가져오기 -->
+	<select id="selectCountByApply" parameterType="hashMap" resultType="int">
+		select count(*) from signUp where signUp_isApply = 'Y'
+	</select>
+	
+	<!-- 신청 등록하기 -->
+	<insert id="insert" parameterType="SignUpVO">
+		insert into signUp values
+		(signUp_idx_seq.nextval, #{moim_idx}, #{user_idx}, 'N')
+	</insert>
+	
+	<!-- 승인 허락하기 -->
+	<update id="updateApply" parameterType="int"> <!-- parametertype변경 : SignUpVO >> int -->
+		update signUp set
+		signUp_isApply = 'Y'
+		where
+		signUp_idx = #{signUp_idx}
+	</update>
+	
+	<!-- 승인 거절하기 -->
+	<update id="updateRefuse" parameterType="int"> <!-- parametertype변경 : SignUpVO >> int -->
+		update signUp set
+		signUp_isApply = 'R'
+		where
+		signUp_idx = #{signUp_idx}
+	</update>
+	
+</mapper>

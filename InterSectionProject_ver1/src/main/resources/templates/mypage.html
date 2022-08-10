@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+<title>시작 페이지</title>
+<script type="text/javascript">
+
+
+	$(function(){
+		$(".moimCreate").css({
+			"background-color":"rgb(52, 152, 219)",
+			"color":"white",
+			"border":"0"
+		})
+
+		
+		$(".moimCreate").trigger("click");
+		
+	});
+
+	$(window).resize(function(){
+		
+	})
+	
+	function sendPost(urlPage, params) {
+	var obj={
+			"user_idx" : "1"
+	};
+    for (var key in params) {	// key, value로 이루어진 객체 params
+       obj[key]=params[key]+"";
+    }
+    $.ajax({
+		url : "myMoim",
+		type : "POST",  
+		data : obj,
+		async: false,
+		success : function(res){
+			$(".moimList").empty();			
+			//var moimVO = JSON.stringify(res)
+			//alert("결과 : " + moimVO);
+			if(res["pv"].totalCount!=0){
+				
+				var moimList=res["pv"].list; // 모임리스트
+				var user=res["user"]; // 유저 정보
+				var cv=res["cv"]; // p,s,b를 담고있음.
+				var approveNum=res["approve"]; // 모임의 승인된 인원수
+				var week = ['일', '월', '화', '수', '목', '금', '토']; // 요일찍기위한 리스트
+				// var now = new Date(); // 현재시간
+				var i=(cv.p-1)*cv.b; // 모집인원 종료 여부 확인하기 위한 인덱스
+				for(vo of moimList){
+					$(".moimList").append(function(){
+						// 요일구하기
+						var dayOfWeek = week[new Date(vo.moim_time.substr(0,10)).getDay()];
+						// 모임시간과 현재시간 비교하기(0:년도, 1:월, 2:일)
+						//var moimDate = vo.moim_time.substr(0,10).split("-");
+						//var moimTime=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]));
+						
+						// html출력
+						var moim="<div class='moim'>";
+						moim+="<div class='moimUpper'>"
+						moim+="<span class='moimSubject'>"+vo.moim_name+"</span>";
+						moim+="<span class='moimDate'>"+vo.moim_time.substr(0,10)+"("+dayOfWeek+")</span>";
+						moim+="<span class='moimEnd ";
+						if(vo.moim_personnel==approveNum[i]){
+							if(vo.moim_isEnd=='N'){
+								moim+="moim_progress'>&lt;진행중"+"&gt;</span>";	
+							}
+							else{
+								moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+							}
+						}
+						else{
+							moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
+						}
+						moim+="</div>";
+						moim+="<div class='moimUnder'>";
+						moim+="<p class='moimInfo Creator'>작성자명";
+						moim+="<span>"+user.user_name+"</span>";
+						moim+="</p>";
+						moim+="<p class='moimInfo JoinNum'>참여인원";
+						moim+="<span>"+vo.moim_personnel+"수정필요</span>";
+						moim+="</p>";
+						moim+="<p class='moimInfo CreatorPhone'>연락처";
+						moim+="<span>"+(user.user_phone).replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+"</span>";
+						moim+="</p>";
+						moim+="</div>";
+						moim+="</div>";
+						moim+="</div>";
+						return moim;
+					})
+					i++;
+				}
+				
+				var totalPage = parseInt((res["pv"].totalCount-1)/cv.s)+1;
+				var startPage = parseInt((cv.p-1)/cv.b)*cv.b+1
+				var endPage = startPage+cv.b-1;
+				if(endPage>totalPage) {
+					endPage = totalPage;
+				}
+				var pagingBtn="<ul class='pagination pagination-sm justify-content-center'>";
+				// 이전
+				if(startPage>1) {
+					pagingBtn+="<li class='page-item'>";
+					pagingBtn+="<a class='page-link' href='#' aria-label='Previous' onclick='sendPost(\"?\", {\"sortMenu\":\""+res["sortMenu"]+"\",\"p\":"+(startPage-1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+					pagingBtn+="<span aria-hidden='true'>&laquo;</span>";
+					pagingBtn+="</a>";
+					pagingBtn+="</li>";
+				}
+				// 페이지 리스트
+				for(let i=startPage;i<=endPage;i++) {
+					// 현재 페이지는 링크를 걸지 않는다.
+					if(i==cv.p) {
+						pagingBtn+="<li class='page-item active' aria-current='page'>";
+						pagingBtn+="<a class='page-link' href='#'>";
+						pagingBtn+=i;
+						pagingBtn+="</a>";
+						pagingBtn+="</li>";				
+					}else {
+						pagingBtn+="<li class='page-item'>";
+						pagingBtn+="<a class='page-link' href='#' onclick='sendPost(\"?\", {\"sortMenu\":\""+res["sortMenu"]+"\",\"p\":" + (i) + ",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+						pagingBtn+=i;
+						pagingBtn+="</a>";
+						pagingBtn+="</li>";				
+					}
+				}
+				// 다음
+				if(endPage<totalPage) {
+					pagingBtn+="<li class='page-item'>";
+					pagingBtn+="<a class='page-link' href='#' aria-label='Next' onclick='sendPost(\"?\", {\"sortMenu\":\""+res["sortMenu"]+"\",\"p\":"+(endPage+1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+					pagingBtn+="<span aria-hidden='true'>&raquo;</span>";
+					pagingBtn+="</a>";
+					pagingBtn+="</li>";
+				}
+				pagingBtn+="</ul>"; 
+				$(".moimList").append(pagingBtn);
+				
+				
+				$(".moim").each(function(){
+					var moimEnd = $(this).children(".moimUpper").children(".moimEnd").text();
+					switch(moimEnd){
+						case "<종료>":
+							$(this).css("background-color","rgb(224, 224, 224)");
+						break;
+						case "<모집중>":
+							$(this).css("background-color","rgb(26, 188, 156)");
+						break;
+						case "<진행중>":
+							$(this).css("background-color","rgb(241, 196, 15)");
+						break;
+					}
+				})
+			}
+			else{
+				$(".moimList").append("<div class='moim'>등록된 글이 없습니다.</div>");
+			}
+			var offset = $('.moimList').offset();
+			$('html').animate({scrollTop : offset.top}, 1000);
+			
+		},
+		error : function(err){
+			alert("ajax 보낼 파일명 바꾸세요");
+		}
+});
+}
+
+	
+	function clickMoim(e){
+		$(".moimMenu").css({
+			"background-color":"#FFFFFF",
+			"color":"#000000",
+			"border":"1px solid gray"
+		});
+		$(e).css({
+			"background-color":"rgb(52, 152, 219)",
+			"color":"white",
+			"border":"0"
+		})
+		
+		var sortMenu = $(e).text();
+		
+		var obj = {
+				"sortMenu" : sortMenu,
+				"user_idx" : "1",
+				"s":"5",
+				"b":"5" 
+		};
+		
+		$.ajax({
+				url : "myMoim",
+				type : "POST",  
+				data : obj,
+				async: false,
+				success : function(res){
+					$(".moimList").empty();			
+					//var moimVO = JSON.stringify(res)
+					//alert("결과 : " + moimVO);
+					
+					if(res["pv"].totalCount!=0){
+						
+						var moimList=res["pv"].list; // 모임리스트
+						var user=res["user"]; // 유저 정보
+						var cv=res["cv"]; // p,s,b를 담고있음.
+						var approveNum=res["approve"]; // 모임의 승인된 인원수
+						var week = ['일', '월', '화', '수', '목', '금', '토']; // 요일찍기위한 리스트
+						// var now = new Date(); // 현재시간
+						var i=(cv.p-1)*cv.b; // 모집인원 종료 여부 확인하기 위한 인덱스
+						for(vo of moimList){
+							$(".moimList").append(function(){
+								// 요일구하기
+								var dayOfWeek = week[new Date(vo.moim_time.substr(0,10)).getDay()];
+								// 모임시간과 현재시간 비교하기(0:년도, 1:월, 2:일)
+								//var moimDate = vo.moim_time.substr(0,10).split("-");
+								//var moimTime=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]));
+								
+								// html출력
+								var moim="<div class='moim'>";
+								moim+="<div class='moimUpper'>"
+								moim+="<span class='moimSubject'>"+vo.moim_name+"</span>";
+								moim+="<span class='moimDate'>"+vo.moim_time.substr(0,10)+"("+dayOfWeek+")</span>";
+								moim+="<span class='moimEnd ";
+								if(vo.moim_personnel==approveNum[i]){
+									if(vo.moim_isEnd=='N'){
+										moim+="moim_progress'>&lt;진행중"+"&gt;</span>";	
+									}
+									else{
+										moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+									}
+								}
+								else{
+									moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
+								}
+								moim+="</div>";
+								moim+="<div class='moimUnder'>";
+								moim+="<p class='moimInfo Creator'>작성자명";
+								moim+="<span>"+user.user_name+"</span>";
+								moim+="</p>";
+								moim+="<p class='moimInfo JoinNum'>참여인원";
+								moim+="<span>"+vo.moim_personnel+"수정필요</span>";
+								moim+="</p>";
+								moim+="<p class='moimInfo CreatorPhone'>연락처";
+								moim+="<span>"+(user.user_phone).replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+"</span>";
+								moim+="</p>";
+								moim+="</div>";
+								moim+="</div>";
+								moim+="</div>";
+								return moim;
+							})
+							i++;
+						}
+						// 하단 페이징 버튼 추가
+						var totalPage = parseInt((res["pv"].totalCount-1)/cv.s)+1;
+						var startPage = parseInt((cv.p-1)/cv.b)*cv.b+1
+						var endPage = startPage+cv.b-1;
+						if(endPage>totalPage) {
+							endPage = totalPage;
+						}
+						var pagingBtn="<ul class='pagination pagination-sm justify-content-center'>";
+						// 이전
+						if(startPage>1) {
+							pagingBtn+="<li class='page-item'>";
+							pagingBtn+="<a class='page-link' href='#' aria-label='Previous' onclick='sendPost(\"?\", {\"sortMenu\":\""+sortMenu+"\",\"p\":"+(startPage-1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+							pagingBtn+="<span aria-hidden='true'>&laquo;</span>";
+							pagingBtn+="</a>";
+							pagingBtn+="</li>";
+						}
+						// 페이지 리스트
+						for(let i=startPage;i<=endPage;i++) {
+							// 현재 페이지는 링크를 걸지 않는다.
+							if(i==cv.p) {
+								pagingBtn+="<li class='page-item active' aria-current='page'>";
+								pagingBtn+="<a class='page-link' href='#'>";
+								pagingBtn+=i;
+								pagingBtn+="</a>";
+								pagingBtn+="</li>";				
+							}else {
+								pagingBtn+="<li class='page-item'>";
+								pagingBtn+="<a class='page-link' href='#' onclick='sendPost(\"?\", {\"sortMenu\":\""+sortMenu+"\",\"p\":" + (i) + ",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+								pagingBtn+=i;
+								pagingBtn+="</a>";
+								pagingBtn+="</li>";				
+							}
+						}
+						// 다음
+						if(endPage<totalPage) {
+							pagingBtn+="<li class='page-item'>";
+							pagingBtn+="<a class='page-link' href='#' aria-label='Next' onclick='sendPost(\"?\", {\"sortMenu\":\""+sortMenu+"\",\"p\":"+(endPage+1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+							pagingBtn+="<span aria-hidden='true'>&raquo;</span>";
+							pagingBtn+="</a>";
+							pagingBtn+="</li>";
+						}
+						pagingBtn+="</ul>"; 
+						$(".moimList").append(pagingBtn);
+						
+						
+						
+						
+						$(".moim").each(function(){
+							var moimEnd = $(this).children(".moimUpper").children(".moimEnd").text();
+							switch(moimEnd){
+								case "<종료>":
+									$(this).css("background-color","rgb(224, 224, 224)");
+								break;
+								case "<모집중>":
+									$(this).css("background-color","rgb(26, 188, 156)");
+								break;
+								case "<진행중>":
+									$(this).css("background-color","rgb(241, 196, 15)");
+								break;
+							}
+						})
+					}
+					else{
+						$(".moimList").append("<div class='moim'>등록된 글이 없습니다.</div>");
+					}
+					
+					
+				},
+				error : function(err){
+					alert("ajax 보낼 파일명 바꾸세요");
+				}
+		});
+		
+		
+	}
+	
+	
+	
+</script>
+<style>
+
+	/* 메인부분 */
+	/* 윗부분 */
+	.main{
+		display: flex;
+		border: solid 1px lightgray; 
+		width: 70%;
+		height: 900px;
+		margin: 5% auto;
+	}
+	.left{
+		width: 750px;
+	}
+	.right{
+		width: 100%;
+	}
+	.mypage{
+		margin: 5% 5% 0% 5%;
+		font-size: 25px;
+		font-weight: bold;
+	}
+	.buttonArea{
+		width:100%;
+		height:7%;
+	}
+	.user{
+		width : 100%;
+		height: auto;
+	}
+	.profile-setting{
+		margin-left: 70%;
+	}
+	.profile{
+    	margin: 30% 0% 0% 15%;
+    	background-color: white;
+	}
+	.profile>img{
+		width: 300px;
+  		height: 300px; 
+   		border-radius: 100%;
+   		border:1px solid lightgray;
+    	overflow: hidden;
+		object-fit: cover;
+	}
+	.review{
+		width : 95%;
+		height: 230px;
+		margin-top : 20px;
+		background-color: rgb(255, 128, 128);
+	}
+	.email{
+		width: 300px;
+		height: 100px;
+		margin: 80px;
+	}
+	.badge rounded-pill text-bg-light{
+		height: 30px !important;
+		width:100px !important;
+		line-height:20px !important;
+		margin-left: 3px !important;
+	}
+	p{
+		margin-left: 15px;
+		font-size: 18px;
+	}
+	
+	/* 아랫부분 */
+	.underSection{
+		width:70%;
+		height:auto;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		border:1px solid lightgray;
+		padding:2%;
+	}
+	.title{
+		padding:0 2%;
+		font-weight:700;
+	}
+	.sortingMoimMenu{
+		display:flex;
+		width:60%;
+		justify-content:space-around;
+		padding:2% 0;
+	}
+	
+	.moimMenu{
+		width:110px;
+		text-align:center;
+		height:40px;
+		line-height:40px;
+		border-radius:20px;
+		border:1px solid gray;
+		font-size:12px;
+		cursor:pointer;
+		
+	}
+
+	.moimList{
+		padding:1% 2%;
+	}
+	
+	.moim{
+		padding:1% 2%;
+		margin:0;
+		margin-bottom:20px;
+		width:100%;
+		font-size:18px;
+	}
+	.moimUpper{
+		width:100%;
+		padding:10px 20px;
+	}
+	.moimSubject{
+		font-size:25px;
+		font-weight:600;
+	}
+	.moimSubject:before{
+		content:"『 "
+	}
+	.moimSubject:after{
+		content:" 』"
+	}
+	.moimDate{
+		padding-left:20px;
+		
+	}
+	.moimEnd{
+		padding-left:10px;
+	}
+	.moimUnder{
+		width:100%;
+		padding:10px 20px;
+	}
+	.moimInfo{
+		padding:10px 30px;
+		padding-bottom:0;
+		font-size:12px;
+		margin:0;
+	}
+	.moimInfo:before{
+		content:"▶";
+		font-size:10px;
+		padding-right:5px;
+	}
+	
+	.moimInfo span:before{
+		content:": ";
+		font-size:12px;
+	}
+</style>
+</head>
+<body>
+
+<!-- main -->
+
+<div class="upperSection">
+	<div class="main">
+		<div class="left">
+			<p class="mypage">마이페이지</p>
+			<div class="profile">
+   				<a href="#" onclick="window.open('/popup/profileImg_upload','프로필 이미지수정', 'width=500,height=250,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;"
+		        class="setting-icon profile-setting">
+		        	<i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+		        </a><br>
+   				<img th:if="${profileImg}==null" alt="" src="https://obj.thewiki.kr/thecloud/temp/53657267696f2052616d6f735f323032312e706e67.png">
+				<img th:if="${profileImg}!=null" th:src="'/upload/'+${profileImg.s_fileName}">
+			</div>
+			<div class="email">
+				<p>이메일 : &nbsp<span>lsls@naver.com</span></p>
+				<p>전화번호 :&nbsp<span>010-1234-5678</span></p>
+			</div>
+		</div>
+		<div class="right">
+			<div class="buttonArea">
+				<button type="button" class="btn btn-secondary btn-lg" style="float:right; margin:1%">수정하기</button>
+			</div>
+			<div class="user">
+				<p style="font-weight: bold; font-size: 20px;">이름</p>
+				<p>37(남)</p>
+				<p>관심항목</p>
+				<span style="height: 30px; width:100px; line-height:20px; margin-left: 7px;"class="badge rounded-pill text-bg-light">항목</span>
+				<span style="height: 30px; width:100px; line-height:20px; margin-left: 7px;"class="badge rounded-pill text-bg-light">항목</span>
+				<span style="height: 30px; width:100px; line-height:20px; margin-left: 7px;"class="badge rounded-pill text-bg-light">항목</span>
+				<p style="margin-top: 10px;">* 개설 모임수 : 3개</p>
+				<p>* 참여모임수 : 10개</p>
+				<p>* 후기 작성수 : 5개</p>
+				<p style="font-weight: bold; font-size: 20px;">승인 대기중인 모임</p>
+				<p>* 모임1</p>
+				<p>* 모임2</p>
+			</div>
+			<div class="review">
+				<label style="font-weight: bold; font-size: 20px; margin: 3%">최근 작성 후기</label>
+				<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%">더보기</button>
+				<p>* 풋살 드루와</p>
+				<p>* 영화로 수다떨기</p>
+				<p>* 이유도 의미도 없는 모임</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="underSection">
+	<h2 class="title" align="left">내 모임 목록</h2>
+	<div class="sortingMoimMenu">
+			<span class="moimMenu moimCreate" onclick="clickMoim(this);">개설</span>
+			<span class="moimMenu moimApply" onclick="clickMoim(this);">신청</span>
+			<span class="moimMenu moimJoin" onclick="clickMoim(this);">참여중</span>
+			<span class="moimMenu moimLike" onclick="clickMoim(this);">찜한모임</span>
+	</div>
+	
+	<div class="moimList">
+		<!-- 
+		<div class="moim">
+			<div class="moimUpper">
+				<span class="moimSubject">스터디 모임입니다!</span>
+				<span class="moimDate">2022-07-26(화)</span>
+				<span class="moimEnd">&lt;종료&gt;</span>
+			</div>
+			<div class="moimUnder">
+				<p class="moimInfo Creator">개설자명
+					<span>한사람</span>
+				</p>
+				<p class="moimInfo JoinNum">참여인원
+					<span>10명</span>
+				</p>
+				<p class="moimInfo CreatorPhone">연락처
+					<span>010-0000-0000</span>
+				</p>
+			</div>
+		</div> 
+		-->
+		
+
+	</div>
+</div>
+
+</body>
+ 
+</html>
