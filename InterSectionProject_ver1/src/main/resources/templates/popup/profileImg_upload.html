@@ -6,6 +6,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 <script type="text/javascript">
 $(function(){
 	// 이미지 미리보기
@@ -43,8 +45,8 @@ $(function(){
              processData: false,
              contentType: false,
              success: function (res) {
-                 alert("success : "+res);
-                 console.log(res);
+                 //alert("success : "+res);
+                 //console.log(res);
                  window.opener.location.reload();    //부모창 reload
              	 window.close();    //현재 팝업창 Close
                  
@@ -61,14 +63,16 @@ $(function(){
 
 </script>
 <style type="text/css">
+*{
+	font-family: 'Noto Sans KR', sans-serif;
+	user-select: none;
+}
 table {
 	width: 100%;
 	border: 2px solid #bfbfc8;
 	border-collapse: separate;
   	border-spacing: 0 10px;
-}
-table tr{
-	padding:20px;
+  	padding:0 5%;
 }
 table td {
 	border: none;
@@ -77,48 +81,47 @@ table td {
 table tr td {
 	text-align: center;
 }
-.delItem{
-	color:black;
+/* 업로드 */
+.item{
+	width: 80px;
+	font-size:13px;
+	font-weight:700;
 }
-.delItem:link{
-	color:black;
-}
-.delItem:active{
-	color:black;
-}
-.content_title {
+.itemUpload{
 	text-align: left;
+	padding-left: 22px;
 }
-textarea{
-max-width: 300px;
-min-width: 300px;
-max-height: 50px;
-min-height:50px
+/* 미리보기 */
+#imgViewArea{
+	display:none;
+	margin-top:20px;
 }
-#div {
-	text-align: left;
-	margin: 10px 0 0 17px;
+.imgPreview{
+	border:1px solid lightgray;
+	padding:5%;
 }
-
-#userid {
-	width: 165px;
-	background-color: lightgray;
-}
-
-#category, #password {
-	width: 165px;
+#preview{
+	width:300px;
+	height:150px;
 }
 
-#pwCheck {
-	width: 100%;
-	font-size: 15px;
-	font-weight: 600;
+/* 확인/취소 버튼 */
+.resultBtnWrap{
+	border: none;
+	text-align: right;
+}
+.resultBtn{
+	text-align: right;
+	margin: 10px 0;
 }
 
-#file-upload-button {
-	width: 70px;
-	border-radius: 5px;
-	border: 1px solid lightgray;
+.btn-sm{
+	cursor:pointer;
+}
+
+#submit,#cancel{
+	font-size:12px;
+	font-weight:600;
 }
 
 .btn-outline-success {
@@ -128,19 +131,8 @@ min-height:50px
 	border: 1px solid lightgray;
 }
 
-.btn-outline-danger {
-	width: 70px;
-	background-color: lightpink;
-	border-radius: 5px;
-	border: 1px solid lightgray;
-}
 
-.item {
-	font-size: 20px;
-}
-.btn-sm{
-	cursor:pointer;
-}
+
 </style>
 </head>
 <body>
@@ -148,28 +140,28 @@ min-height:50px
 		<form id="form" enctype="multipart/form-data">
 			<table>
 				<tr>
-					<td colspan="4" class="title">
-						<h1 style="font-weight: 900;">프로필 이미지 수정하기</h1>
+					<td colspan="4" >
+						<h2 class="title">&lt프로필 이미지 수정하기&gt</h2>
 					</td>
 				</tr>
 				<tr>
-					<td class="item" valign="top" style="width: 80px;font-size:15px">이미지첨부</td>
-					<td colspan="3" style="text-align: left; padding-left: 22px;">
+					<td class="item" valign="top">이미지첨부</td>
+					<td class="itemUpload" colspan="3">
 						<input style="margin-left:-17px;" type="file" id="u_file" accept="image/*"/>
 					</td>
 				</tr>
-				<tr id="imgViewArea" style="display:none;margin-top:20px;">
-					<td style="font-size:15px">미리보기</td>
-					<td colspan="4" style="border:1px solid lightgray;padding:5%">
-						<img  src="" id="preview" style="width:300px; height:150px;" />
+				<tr id="imgViewArea" >
+					<td class="item">미리보기</td>
+					<td class="imgPreview" colspan="4">
+						<img src="" id="preview"/>
 					</td>
 				</tr>
 
 				<tr>
-					<td colspan="4" style="border: none; text-align: right;">
-						<div style="text-align: right; margin: 0 20px 10px 0; padding: 10px;">
+					<td colspan="4" class="resultBtnWrap">
+						<div class="resultBtn">
 							<button id="submit" type="button" class="btn btn-outline-success btn-sm">저장</button>
-							<button type="button" class="btn btn-outline-success btn-sm" onclick='window.close()'>취소</button>
+							<button id="cancel"type="button" class="btn btn-outline-success btn-sm" onclick='window.close()'>취소</button>
 						</div>
 					</td>
 				</tr>

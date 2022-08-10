@@ -332,40 +332,58 @@
 
 	/* 메인부분 */
 	/* 윗부분 */
-	.main{
-		display: flex;
+	.upperSection{
 		border: solid 1px lightgray; 
 		width: 70%;
-		height: 900px;
-		margin: 5% auto;
+		margin: auto;
+		padding:0 0 2% 0;
 	}
-	.left{
-		width: 750px;
+	.upper,.under{
+		display: flex;
 	}
-	.right{
-		width: 100%;
-	}
+	/* upper */
 	.mypage{
-		margin: 5% 5% 0% 5%;
-		font-size: 25px;
-		font-weight: bold;
+		width:80%;
+		margin: 2% 0 0 2%;
 	}
+	.mypageTitle{
+		font-size: 30px;
+		font-weight: 700;
+	}
+	
 	.buttonArea{
-		width:100%;
-		height:7%;
+		width:20%;
+		margin: 1% 2% 0 0;
+	}
+	
+	#updateBtn{
+		float: right ;
+	    margin: 5%;
+	    padding: 2% 4% ;
+	    font-size: 18px ;
+	    font-weight: 700 ;
+	}
+	
+	/* under */
+	/* (왼쪽) 프로필이미지, 이메일, 전화번호 */
+	.left{
+		width: 45%;
 	}
 	.user{
-		width : 100%;
+		width : 95%;
 		height: auto;
+		padding:2%;
+		margin-bottom:2%;
+	}
+	
+	.profile{
+    	margin: 15% 0% 0% 15%;
+    	background-color: white;
 	}
 	.profile-setting{
 		margin-left: 70%;
 	}
-	.profile{
-    	margin: 30% 0% 0% 15%;
-    	background-color: white;
-	}
-	.profile>img{
+	.profileImg{
 		width: 300px;
   		height: 300px; 
    		border-radius: 100%;
@@ -373,27 +391,151 @@
     	overflow: hidden;
 		object-fit: cover;
 	}
-	.review{
-		width : 95%;
-		height: 230px;
-		margin-top : 20px;
-		background-color: rgb(255, 128, 128);
-	}
-	.email{
+	
+	.contact{
 		width: 300px;
 		height: 100px;
 		margin: 80px;
 	}
-	.badge rounded-pill text-bg-light{
-		height: 30px !important;
-		width:100px !important;
-		line-height:20px !important;
-		margin-left: 3px !important;
+	.email,.phone{
+		font-size:20px;
+		font-weight:500;
+		margin-bottom:1.5em;
 	}
-	p{
-		margin-left: 15px;
-		font-size: 18px;
+	.userEmail::before,.userPhone::before{
+		content:":";
+		margin:0 10px;
 	}
+	/* (오른쪽) 이름, 나이, 성별, 관심항목, 모임, 후기 */
+	.right{
+		width: 55%;
+	}
+	/* 이름 */
+	.userInform{
+		margin-bottom:1%;
+		padding:1% 2%;
+	}
+	.user{
+		background-color:rgb(0, 178, 255);
+	}
+	.userInformTitle{
+		font-size: 20px;
+		font-weight: 600;
+	}
+	.userInfromInput{
+		background-color:white;
+	}
+	.userName{
+		font-size:18px;
+		margin-left:1%;
+	}
+	.userAge,.userGender{
+		font-size:15px;
+	}
+	.userAge::before{
+		content:"/";
+		margin-right:1%;
+	}
+	.userGender::before{
+		content:"(";
+	}
+	.userGender::after{
+		content:")";
+	}
+	/* 관심항목 */
+	.userLike{
+		padding:1% 2%;
+	}
+	.userLikeTitle{
+		font-size: 20px;
+		font-weight: 600;
+	}
+	.userLikeContent{
+		width:auto;
+		margin-left: 1%;
+		margin-bottom:2%;
+		padding:2% 6%;
+		font-size:15px;
+	}
+	/* 개설모임수, 참여모임수, 작성후기수 */
+	.CountWrap{
+		padding:2% 2% 1% 2%;
+	}
+	.createMoimCount,.joinMoimCount,.reviewCount{
+		margin-left: 1%;
+		font-size:15px;
+		font-weight:700;
+	}
+	.createMoimCount::before,.joinMoimCount::before,.reviewCount::before{
+		content:"•";
+		margin-right:2%;
+	}
+	.countInput{
+		font-weight:500;
+	}
+	.countInput::before{
+		content:":";
+		margin:0 1% 0 1%;
+	}
+	
+	/* 승인대기중인 모임 */
+	.WatingMoimWrap{
+		padding:1% 2%;
+	}
+	.watingMoimInput{
+		margin-left: 1%;
+		font-size:15px;
+	}
+	.watingMoimInput::before{
+		content:"•";
+		margin-right:2%;
+	}
+	
+	/* 최근 작성 후기 */
+	.review{
+		width : 95%;
+		height: auto;
+		padding:1% 2%;
+		background-color: rgb(255, 128, 128);
+	}
+	
+	.recentReviewTitle{
+		font-size: 20px;
+		font-weight: 700;
+		margin:2%;
+		margin-bottom:4%;
+		width:60%;
+	}
+	
+	.recentReviewTitle::after{
+		content:"(최근 3건)";
+		font-size:15px;
+		margin-left:2%;
+	}
+
+	.recentReviewInput{
+		margin-left: 3%;
+		font-size:15px;
+	}
+	
+	.recentReviewInput::before{
+		content:"•";
+		margin-right:2%;
+	}
+	
+	.recentReviewInputDate{
+		font-size:12px;
+	}
+	.recentReviewInputDate::before{
+		content:"(";
+		margin: 0 1% 0 2%;
+	}
+	.recentReviewInputDate::after{
+		content:")";
+		margin-left:1%;
+	}
+	
+	
 	
 	/* 아랫부분 */
 	.underSection{
@@ -487,49 +629,89 @@
 <!-- main -->
 
 <div class="upperSection">
-	<div class="main">
-		<div class="left">
-			<p class="mypage">마이페이지</p>
-			<div class="profile">
-   				<a href="#" onclick="window.open('/popup/profileImg_upload','프로필 이미지수정', 'width=500,height=250,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;"
-		        class="setting-icon profile-setting">
-		        	<i class="fa fa-cog fa-2x" aria-hidden="true"></i>
-		        </a><br>
-   				<img th:if="${profileImg}==null" alt="" src="https://obj.thewiki.kr/thecloud/temp/53657267696f2052616d6f735f323032312e706e67.png">
-				<img th:if="${profileImg}!=null" th:src="'/upload/'+${profileImg.s_fileName}">
+		<div class="upper">
+			<div class="mypage">
+				<p class="mypageTitle">마이페이지</p>
 			</div>
-			<div class="email">
-				<p>이메일 : &nbsp<span>lsls@naver.com</span></p>
-				<p>전화번호 :&nbsp<span>010-1234-5678</span></p>
-			</div>
-		</div>
-		<div class="right">
 			<div class="buttonArea">
-				<button type="button" class="btn btn-secondary btn-lg" style="float:right; margin:1%">수정하기</button>
-			</div>
-			<div class="user">
-				<p style="font-weight: bold; font-size: 20px;">이름</p>
-				<p>37(남)</p>
-				<p>관심항목</p>
-				<span style="height: 30px; width:100px; line-height:20px; margin-left: 7px;"class="badge rounded-pill text-bg-light">항목</span>
-				<span style="height: 30px; width:100px; line-height:20px; margin-left: 7px;"class="badge rounded-pill text-bg-light">항목</span>
-				<span style="height: 30px; width:100px; line-height:20px; margin-left: 7px;"class="badge rounded-pill text-bg-light">항목</span>
-				<p style="margin-top: 10px;">* 개설 모임수 : 3개</p>
-				<p>* 참여모임수 : 10개</p>
-				<p>* 후기 작성수 : 5개</p>
-				<p style="font-weight: bold; font-size: 20px;">승인 대기중인 모임</p>
-				<p>* 모임1</p>
-				<p>* 모임2</p>
-			</div>
-			<div class="review">
-				<label style="font-weight: bold; font-size: 20px; margin: 3%">최근 작성 후기</label>
-				<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%">더보기</button>
-				<p>* 풋살 드루와</p>
-				<p>* 영화로 수다떨기</p>
-				<p>* 이유도 의미도 없는 모임</p>
+				<button type="button" id="updateBtn" class="btn btn-secondary btn-lg" >수정하기</button>
 			</div>
 		</div>
-	</div>
+		
+		<div class="under">
+			<div class="left">
+				<div class="profile">
+	   				<a href="#" onclick="window.open('/popup/profileImg_upload','프로필 이미지수정', 'width=500,height=250,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;"
+			        class="setting-icon profile-setting">
+			        	<i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+			        </a>
+			        <br>
+	   				<img class="profileImg" th:if="${profileImg}==null" alt="" src="https://obj.thewiki.kr/thecloud/temp/53657267696f2052616d6f735f323032312e706e67.png">
+					<img class="profileImg" th:if="${profileImg}!=null" th:src="'/upload/'+${profileImg.s_fileName}">
+				</div>
+				<div class="contact">
+					<p class="email">이메일
+						<span class="userEmail">lsls@naver.com</span></p>
+					<p class="phone">전화번호
+						<span class="userPhone">010-1234-5678</span></p>
+				</div>
+			</div>
+			
+			<div class="right">
+				<div class="user">
+					<div class="userInform">
+						<p class="userInformTitle">이름</p>
+						<p class="userInformInput">
+							<span class="userName">한사람</span>
+							<span class="userAge">27세</span>
+							<!-- 남자 : ♂, 여자 : ♀ -->
+							<span class="userGender">♂</span>
+						</p>
+					</div>
+					
+					<div class="userLike">
+						<p class="userLikeTitle">관심항목</p>
+						<span  class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+					</div>
+					<div class="CountWrap">
+						<p class="createMoimCount">개설 모임수
+							<span class="countInput">3개</span>
+						</p>
+						<p class="joinMoimCount">참여모임수
+							<span class="countInput">10개</span>
+						</p>
+						<p class="reviewCount">후기 작성
+							<span class="countInput">5개</span>
+						</p>
+					</div>
+					<div class="WatingMoimWrap">
+						<p class="watingMoim" style="font-weight: bold; font-size: 20px;">승인 대기중인 모임</p>
+						<p class="watingMoimInput">모임1</p>
+						<p class="watingMoimInput">모임2</p>
+					</div>
+				</div>
+				
+				<div class="review">
+					<label class="recentReviewTitle">최근 작성 후기</label>
+					<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%">더보기</button>
+					<p class="recentReviewInput">풋살 드루와
+						<span class="recentReviewInputDate">2022-06-14</span>
+					</p>
+					<p class="recentReviewInput">영화로 수다떨기
+						<span class="recentReviewInputDate">2022-06-14</span>
+					</p>
+					<p class="recentReviewInput">이유도 의미도 없는 모임
+						<span class="recentReviewInputDate">2022-06-14</span>
+					</p>
+				</div>
+			</div>
+		</div>
 </div>
 
 <div class="underSection">
