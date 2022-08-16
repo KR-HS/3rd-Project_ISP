@@ -17,6 +17,13 @@
 
 		
 		$(".moimCreate").trigger("click");
+		var phone=$(".userPhone").text();
+		$(".userPhone").text(phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3"));
+		
+		var now = new Date();
+		var year=now.getYear()+1900;
+		var myage=year-$(".userAge").text()+1;
+		$(".userAge").text(myage+"세");
 		
 	});
 
@@ -47,7 +54,6 @@
 				var cv=res["cv"]; // p,s,b를 담고있음.
 				var approveNum=res["approve"]; // 모임의 승인된 인원수
 				var week = ['일', '월', '화', '수', '목', '금', '토']; // 요일찍기위한 리스트
-				// var now = new Date(); // 현재시간
 				var i=(cv.p-1)*cv.b; // 모집인원 종료 여부 확인하기 위한 인덱스
 				for(vo of moimList){
 					$(".moimList").append(function(){
@@ -455,11 +461,11 @@
 		margin-left: 1%;
 		margin-bottom:2%;
 		padding:2% 6%;
-		font-size:15px;
+		font-size:12px;
 	}
 	/* 개설모임수, 참여모임수, 작성후기수 */
 	.CountWrap{
-		padding:2% 2% 1% 2%;
+		padding:2% 2% 0 2%;
 	}
 	.createMoimCount,.joinMoimCount,.reviewCount{
 		margin-left: 1%;
@@ -467,8 +473,10 @@
 		font-weight:700;
 	}
 	.createMoimCount::before,.joinMoimCount::before,.reviewCount::before{
-		content:"•";
+		content:"◆";
 		margin-right:2%;
+		font-weight:500;
+		font-size:12px;
 	}
 	.countInput{
 		font-weight:500;
@@ -519,7 +527,7 @@
 	}
 	
 	.recentReviewInput::before{
-		content:"•";
+		content:"-";
 		margin-right:2%;
 	}
 	
@@ -651,9 +659,9 @@
 				</div>
 				<div class="contact">
 					<p class="email">이메일
-						<span class="userEmail">lsls@naver.com</span></p>
+						<span class="userEmail" th:text="${userVO.user_id}"></span></p>
 					<p class="phone">전화번호
-						<span class="userPhone">010-1234-5678</span></p>
+						<span class="userPhone" th:text="${userVO.user_phone}"></span></p>
 				</div>
 			</div>
 			
@@ -662,53 +670,53 @@
 					<div class="userInform">
 						<p class="userInformTitle">이름</p>
 						<p class="userInformInput">
-							<span class="userName">한사람</span>
-							<span class="userAge">27세</span>
+							<span class="userName" th:text="${userVO.user_name}"></span>
+							<span class="userAge" th:text="${#dates.format(userVO.user_birth, 'yyyy')}">27세</span>
 							<!-- 남자 : ♂, 여자 : ♀ -->
-							<span class="userGender">♂</span>
+							<span th:if="${userVO.user_gender=='M'}" class="userGender">♂</span>
+							<span th:if="${userVO.user_gender=='F'}" class="userGender">♀</span>
 						</p>
 					</div>
 					
-					<div class="userLike">
+					<div class="userLike" >
 						<p class="userLikeTitle">관심항목</p>
-						<span  class="badge rounded-pill text-bg-light userLikeContent">항목</span>
-						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
-						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
-						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
-						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
-						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
-						<span class="badge rounded-pill text-bg-light userLikeContent">항목</span>
+						<p th:if="${#lists.isEmpty(listMap['categoryList'])}" class="categoryEmpty">관심 카테고리가 없습니다.</p>
+						
+						<th:block th:if="${!#lists.isEmpty(listMap['categoryList'])}" th:each="vo:${listMap['categoryList']}">
+							<span class="badge rounded-pill text-bg-light userLikeContent" th:text="${vo}">항목</span>
+						<th:block>
 					</div>
 					<div class="CountWrap">
 						<p class="createMoimCount">개설 모임수
-							<span class="countInput">3개</span>
+							<span class="countInput" th:text="${countMap['createcount']+'개'}"></span>
 						</p>
 						<p class="joinMoimCount">참여모임수
-							<span class="countInput">10개</span>
+							<span class="countInput" th:text="${countMap['signupCount']+'개'}"></span>
 						</p>
 						<p class="reviewCount">후기 작성
-							<span class="countInput">5개</span>
+							<span class="countInput" th:text="${countMap['reviewCount']+'개'}"></span>
 						</p>
 					</div>
 					<div class="WatingMoimWrap">
 						<p class="watingMoim" style="font-weight: bold; font-size: 20px;">승인 대기중인 모임</p>
-						<p class="watingMoimInput">모임1</p>
-						<p class="watingMoimInput">모임2</p>
+						<p th:if="${#lists.isEmpty(listMap['nameList'])}">신청한 모임이 없습니다.</p>
+						<th:block th:each="list : ${listMap['nameList']}" th:if="${!#lists.isEmpty(listMap['nameList'])}">
+							<p class="watingMoimInput" th:text="${list}"></p>
+						</th:block>
 					</div>
 				</div>
 				
 				<div class="review">
 					<label class="recentReviewTitle">최근 작성 후기</label>
-					<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%">더보기</button>
-					<p class="recentReviewInput">풋살 드루와
-						<span class="recentReviewInputDate">2022-06-14</span>
-					</p>
-					<p class="recentReviewInput">영화로 수다떨기
-						<span class="recentReviewInputDate">2022-06-14</span>
-					</p>
-					<p class="recentReviewInput">이유도 의미도 없는 모임
-						<span class="recentReviewInputDate">2022-06-14</span>
-					</p>
+					<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%" onclick="window.open('/popup/profile_ReviewList','내 작성후기 리스트', 'width=800,height=550,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;">더보기</button>
+					<br>
+					<p th:if="${#lists.isEmpty(listMap['reviewList'])}">작성한 후기가 없습니다</p>
+					<th:block th:if="${!#lists.isEmpty(listMap['reviewList'])&&voStat.index<5}" th:each="vo:${listMap['reviewList']}">
+						<span class="recentReviewInput" th:text="${vo.review_content}"></span>
+						<span class="recentReviewInputDate" th:text="${#dates.format(vo.review_regdate, 'yyyy-MM-dd')}"></span>
+						<br>
+					</th:block>
+					
 				</div>
 			</div>
 		</div>

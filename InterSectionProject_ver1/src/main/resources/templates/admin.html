@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<title>시작 페이지</title>
+<script type="text/javascript">
+
+
+	$(function(){	
+		$('.HomeMenu').trigger('click');
+	})
+	function selectMenu(e){
+		$(".MainMenu").css("background","lightgray");
+		$(e).css("background","white");
+		
+	}
+	
+</script>
+<style>
+	html, body{
+		height:100%;
+	}
+	.mainBanner{
+		width:100%;
+		padding:1%;
+		border-top:1px solid lightgray;
+		border-bottom:1px solid lightgray;
+		
+	}
+	.mainBannerContent{
+		font-weight:900;
+		font-size:20px;
+		margin: 0 0 0 5%;
+	}
+	.mainWrapper{
+		background-color:black;
+		display:flex;
+		height:100%;
+	}
+	
+	.mainMenubar{
+		width:5%;
+		height:100%;
+		background-color:lightgray;
+	}
+	.MainMenu{
+		height: 10%;
+	    display: flex;
+	    cursor:pointer;
+	}
+	.MainMenuIcon{
+		margin:auto;
+	}
+	
+	.mainSection{
+		width:95%;
+		height:100%;
+		background-color:white;
+		padding:2%;
+	}
+	
+	.mainContent{
+		height:100%;
+		width:100%;
+		border:1px solid lightgray;
+	}
+</style>
+</head>
+<body>
+	<div class="mainBanner">
+		<p class="mainBannerContent">관리자 메인</p>
+	</div>
+	
+	<div class="mainWrapper">
+		<div class="mainMenubar">
+			<div class="MainMenu HomeMenu" onclick="selectMenu(this);">
+				<i class="fa fa-home fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-address-book fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-bars fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-envelope fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-question-circle fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+		</div>		
+		<div class="mainSection">
+			<div class="mainContent">이곳에 컨텐츠 추가</div>
+		</div>
+	</div>
+</body>
+ 
+</html>

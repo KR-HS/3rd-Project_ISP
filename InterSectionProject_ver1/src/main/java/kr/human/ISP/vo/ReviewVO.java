@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class ReviewVO {
-	public int review_dix;
+	public int review_idx;
 	public int user_idx;
 	public int moim_idx;
 	public Date review_regdate;

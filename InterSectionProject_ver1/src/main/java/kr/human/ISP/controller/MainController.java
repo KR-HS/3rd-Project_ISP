@@ -15,7 +15,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +33,7 @@ import kr.human.ISP.service.UserService;
 import kr.human.ISP.vo.CommVO;
 import kr.human.ISP.vo.MoimVO;
 import kr.human.ISP.vo.PagingVO;
+import kr.human.ISP.vo.ReviewVO;
 import kr.human.ISP.vo.UpFileVO;
 import kr.human.ISP.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,14 @@ import lombok.extern.slf4j.Slf4j;
 public class MainController {
 
 	// application.properties에 등록된 파일의 경로를 가져온다.
-	String filePath="C:\\upload\\";
-	
+	String filePath = null;
+	{
+		try {
+			filePath = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	@Autowired
 	private MypageService mypageService;
 	
@@ -67,26 +73,43 @@ public class MainController {
 		model.addAttribute("today_date",date);
 		model.addAttribute("today_dayList",korDayOfWeek);
 		model.addAttribute("today_day",dayofWeek);
-		try {
-			filePath = new ClassPathResource("/static/upload/").getFile().getAbsolutePath();
-			log.info("서버 절대 경로 : {}", filePath);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log.info("서버 절대 경로 : {}", filePath);
+		
 		
 		return "index";
 	}
 	
 	@RequestMapping(value="mypage")
 	public String mypage(Model model) throws SQLException {
-		try {
-			filePath = new ClassPathResource("/static/upload/").getFile().getAbsolutePath();
-			log.info("서버 절대 경로 : {}", filePath);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log.info("서버 절대 경로 : {}", filePath);
+		
+		Map<String,Integer> countMap = new HashMap<>();
+		Map<String,Object> listMap = new HashMap<>(); 
+		
 		UpFileVO profileImg=mypageService.getProfile(1);
-		System.out.println("프로필"+profileImg);
+		UserVO userVO = mypageService.selectByIdx(1);
+		
+		int createcount = mypageService.createCount(1);
+		int signupCount = mypageService.signupCount(1);
+		int reviewCount = mypageService.reviewCount(1);
+		
+		countMap.put("createcount",createcount );
+		countMap.put("signupCount",signupCount );
+		countMap.put("reviewCount",reviewCount );
+
+		
+		List<String> nameList = mypageService.signUpList(1);
+		List<String> categoryList = mypageService.categoryList(1);
+		List<ReviewVO> reviewList = mypageService.reviewList(1);
+		
+		listMap.put("nameList", nameList);
+		listMap.put("categoryList", categoryList);
+		listMap.put("reviewList", reviewList);
+		
+		model.addAttribute("countMap",countMap);
+		model.addAttribute("listMap",listMap);
+		model.addAttribute("userVO",userVO);
+		
 		model.addAttribute("path",filePath);
 		model.addAttribute("profileImg",profileImg);
 		return "mypage";
@@ -106,12 +129,8 @@ public class MainController {
 	@ResponseBody
 	public String u_ImagePost(@RequestParam("profileImg") MultipartFile uploadfile) {
 		if(uploadfile!=null) {
-			try {
-				filePath = new ClassPathResource("/static/upload/").getFile().getAbsolutePath();
-				log.info("서버 절대 경로 : {}", filePath);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			log.info("서버 절대 경로 : {}", filePath);
+			
 			long sizeInBytes=uploadfile.getSize();
 			if(sizeInBytes>0){ // 파일크기가 있을때만
 				String oriName = uploadfile.getOriginalFilename();
@@ -152,13 +171,29 @@ public class MainController {
 		        	System.out.println(mypageService.updateProfileImg(upfileVO));
 		        }
 		        
-				return filePath+profile.getS_fileName();
+				return filePath+"/"+saveName;
 			}
 		} 
 		  return "error";
 	}
-	
-	
+	//리뷰 리스트 화면
+	@RequestMapping(value="/popup/profile_ReviewList")
+	public String profile_ReviewList(Model model,@RequestParam Map<String,String> map,
+			@ModelAttribute CommVO commVO,HttpServletRequest request) throws SQLException{
+		Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+		if(flashMap!=null) {
+			map = (Map<String, String>) flashMap.get("map");
+			commVO.setP(Integer.parseInt(map.get("p")));
+			commVO.setS(Integer.parseInt(map.get("s")));
+			commVO.setB(Integer.parseInt(map.get("b")));
+		}
+		List<ReviewVO> reviewList = mypageService.reviewList(1);
+		PagingVO<ReviewVO> pagingVO = null;
+		pagingVO=mypageService.reviewPaging(commVO, 1);
+		model.addAttribute("pv",pagingVO);
+		return "/popup/profile_ReviewList";
+	}
+
 	@GetMapping(value="myMoim")
 	public String MymoimGet() {
 		return "redirect:/mypage";
@@ -222,7 +257,10 @@ public class MainController {
 		return "applyMember";
 	}
 	
-	
+	@RequestMapping(value="admin")
+	public String admin(Model model) throws SQLException{
+		return "admin";
+	}
 	@RequestMapping(value = "/decorators/deco.html")
 	   public String deco() {
 	      return "decorators/deco";

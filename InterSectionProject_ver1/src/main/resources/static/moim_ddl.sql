@@ -30,7 +30,6 @@ CREATE TABLE userCategory (
 	user_idx number	NOT NULL,
 	category_idx number	NOT NULL
 );
-
 CREATE SEQUENCE like_idx_seq;
 CREATE TABLE likeMoim (
 	like_idx NUMBER PRIMARY KEY NOT NULL,
@@ -101,7 +100,6 @@ CREATE TABLE signUp (
 	user_idx NUMBER NOT NULL,
 	signUp_isApply varchar2(2) DEFAULT 'N' NOT NULL -- N:미승인 Y:승인 R:거절
 );
-
 CREATE SEQUENCE moimCategory_idx_seq;
 DROP TABLE moimCategory;
 CREATE TABLE moimCategory(
@@ -150,6 +148,7 @@ CREATE TABLE category(
 	lc_name	varchar2(50) NOT NULL, -- 대분류
 	sc_name	varchar2(50) NOT NULL  -- 소분류
 );
+
 
 -- 공용 테이블 관련 끝
 --	user_idx number	PRIMARY KEY NOT NULL,
