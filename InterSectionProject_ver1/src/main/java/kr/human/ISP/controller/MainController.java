@@ -225,6 +225,7 @@ public class MainController {
 			case "개설":
 				userVO=userService.selectByIdx(user_idx);
 				pagingVO=mypageService.createMoimList(commVO, user_idx);
+				System.out.println(pagingVO);
 				break;
 			case "신청":
 				userVO=userService.selectByIdx(user_idx);
@@ -260,6 +261,26 @@ public class MainController {
 	@RequestMapping(value="admin")
 	public String admin(Model model) throws SQLException{
 		return "admin";
+	}
+	@RequestMapping(value="admin2")
+	public String admin2(Model model) throws SQLException{
+		return "admin2";
+	}
+	@RequestMapping(value="admin3")
+	public String admin3(Model model) throws SQLException{
+		return "admin3";
+	}
+	@RequestMapping(value="admin4")
+	public String admin4(Model model) throws SQLException{
+		return "admin4";
+	}
+	@RequestMapping(value="admin5")
+	public String admin5(Model model) throws SQLException{
+		return "admin5";
+	}
+	@RequestMapping(value="admin5view")
+	public String admin5_view(Model model) throws SQLException{
+		return "admin5view";
 	}
 	@RequestMapping(value = "/decorators/deco.html")
 	   public String deco() {

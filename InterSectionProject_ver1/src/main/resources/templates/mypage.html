@@ -22,6 +22,7 @@
 		
 		var now = new Date();
 		var year=now.getYear()+1900;
+		now.get
 		var myage=year-$(".userAge").text()+1;
 		$(".userAge").text(myage+"세");
 		
@@ -60,8 +61,8 @@
 						// 요일구하기
 						var dayOfWeek = week[new Date(vo.moim_time.substr(0,10)).getDay()];
 						// 모임시간과 현재시간 비교하기(0:년도, 1:월, 2:일)
-						//var moimDate = vo.moim_time.substr(0,10).split("-");
-						//var moimTime=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]));
+						var moimDate = vo.moim_time.substr(0,10).split("-");
+						var moimTime=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]));
 						
 						// html출력
 						var moim="<div class='moim'>";
@@ -69,16 +70,16 @@
 						moim+="<span class='moimSubject'>"+vo.moim_name+"</span>";
 						moim+="<span class='moimDate'>"+vo.moim_time.substr(0,10)+"("+dayOfWeek+")</span>";
 						moim+="<span class='moimEnd ";
-						if(vo.moim_personnel==approveNum[i]){
-							if(vo.moim_isEnd=='N'){
+						if(vo.moim_isEnd=='N'){
+							if(vo.moim_personnel==approveNum[i]){
 								moim+="moim_progress'>&lt;진행중"+"&gt;</span>";	
 							}
 							else{
-								moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+								moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
 							}
 						}
 						else{
-							moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
+							moim+="moim_end'>&lt;종료"+"&gt;</span>";		
 						}
 						moim+="</div>";
 						moim+="<div class='moimUnder'>";
@@ -226,16 +227,16 @@
 								moim+="<span class='moimSubject'>"+vo.moim_name+"</span>";
 								moim+="<span class='moimDate'>"+vo.moim_time.substr(0,10)+"("+dayOfWeek+")</span>";
 								moim+="<span class='moimEnd ";
-								if(vo.moim_personnel==approveNum[i]){
-									if(vo.moim_isEnd=='N'){
+								if(vo.moim_isEnd=='N'){
+									if(vo.moim_personnel==approveNum[i]){
 										moim+="moim_progress'>&lt;진행중"+"&gt;</span>";	
 									}
 									else{
-										moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+										moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
 									}
 								}
 								else{
-									moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
+									moim+="moim_end'>&lt;종료"+"&gt;</span>";		
 								}
 								moim+="</div>";
 								moim+="<div class='moimUnder'>";
@@ -503,7 +504,7 @@
 	.review{
 		width : 95%;
 		height: auto;
-		padding:1% 2%;
+		padding:1% 2% 2% 2%;
 		background-color: rgb(255, 128, 128);
 	}
 	

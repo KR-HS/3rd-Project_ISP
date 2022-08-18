@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<title>시작 페이지</title>
+<script type="text/javascript">
+
+	$(function(){	
+		$('.HomeMenu').trigger('click');
+		
+		if($(".qnaAnswerContent").val().length!=0){
+			$(".qnaAnswerContent").attr("readonly",true);
+			$(".qnaAnswerContent").attr("onfocus","this.blur()");
+		}
+		/* textarea(관리자 답변) 자동 높이 조절 */
+		function adjustHeight(){
+			var textEleHeight = $('.qnaAnswerContent').prop('scrollHeight');
+			if(textEleHeight<=400){
+				$('.qnaAnswerContent').css('height', textEleHeight);
+			}
+		}
+		
+		$('.qnaAnswerContent').on('keyup',function(){
+			adjustHeight();
+		})
+	})
+	
+	//커서 위치 설정 함수
+	$.fn.setCursorPosition = function( pos )
+	{
+	  this.each( function( index, elem ) {
+	    if( elem.setSelectionRange ) {
+	      elem.setSelectionRange(pos, pos);
+	    } else if( elem.createTextRange ) {
+	      var range = elem.createTextRange();
+	      range.collapse(true);
+	      range.moveEnd('character', pos);
+	      range.moveStart('character', pos);
+	      range.select();
+	    }
+	  });
+	  
+	  return this;
+	};
+	
+	function selectMenu(e){
+		$(".MainMenu").css("background","lightgray");
+		$(e).css("background","white");
+	}
+	
+	function qnaAnswerSubmit(){
+		/* 아래 두속성은 관리자 답변을 ajax로 submit한후 db에 저장된 관리자 답변을
+			불러와 html에 찍어준 후 적용.
+		*/
+		$(".qnaAnswerContent").val("여기에 db에서 입력받은값 추가");
+		$(".qnaAnswerContent").attr("readonly",true);
+		$(".qnaAnswerContent").attr("onfocus","this.blur()");
+	}
+	
+</script>
+<style type="text/css">
+	html, body{
+		min-height:100%;
+	}
+	
+	.mainBanner{
+		width:100%;
+		padding:1%;
+		border-top:1px solid lightgray;
+		border-bottom:1px solid lightgray;
+	}
+	.mainBannerContent{
+		font-weight:900;
+		font-size:20px;
+		margin: 0 0 0 5%;
+	}
+	.mainWrapper{
+		background-color:lightgray;
+		display:flex;
+		height:100%;
+	}
+	
+	.mainMenubar{
+		width:5%;
+		background-color:lightgray;
+	}
+	.MainMenu{
+		height: 10%;
+	    display: flex;
+	    cursor:pointer;
+	    padding:15% 0;
+	    min-height:69px;
+	}
+	.MainMenuIcon{
+		margin:auto;
+	}
+	
+	.mainSection{
+		width:95%;
+		height:100%;
+		background-color:white;
+		padding:2%;
+	}
+	
+	.mainContent{
+		width:100%;
+		border:1px solid lightgray;
+		padding:1% 0;
+		margin-bottom:2%;
+	}
+	/* qna 부분 */
+	.qnaTitleWrap{
+		display:flex;
+		width:95%;
+		margin:auto;
+		padding:1% 2%;
+		background-color:#BEBEBE;
+		border-radius:5px;
+		height:100%;
+		margin-top:1%;
+	}
+	.qnaTitle{
+		float:left;
+		width:80%;
+		font-size:20px;
+		font-weight:700;
+	}
+	.qnaTitle::before{
+		content:"[문의하기]";
+		margin-right:1%;
+	}
+	.qnaRegdate{
+		float:right;
+		width:20%;
+		text-align:right;
+		font-size:15px;
+	}
+	
+	
+	.qnaContentWrap{
+		width:95%;
+		margin:auto;
+		margin-top:2%;
+		border:0;
+	}
+	.qnaContentInput{
+		width:100%;
+		min-height:400px;
+		padding:0.5% 1%;
+		border:1px solid lightgray;
+		border-radius:5px;
+		font-size:12px;
+		resize: none;
+	}
+	
+	.qnaAnswer{
+		width:95%;
+		margin:auto;
+		margin-top:2%;
+		font-size:20px;
+		font-weight:700;
+		padding:1% 0;
+	}
+	.qnaAnswerWrap{
+		width:95%;
+		margin:auto;
+		font-size:12px;
+		border:0;
+	}
+	
+	.qnaAnswerContent{
+		width:100%;
+		min-height:200px;
+		max-height:400px;
+		border:1px solid lightgray;
+		border-radius:5px;
+		padding:0.5% 1%;
+	}
+	.qnaAnswerContent::-webkit-scrollbar {
+		display: none;
+	}
+	.AnswerBtnWrap{
+		width:95%;
+		margin:auto;
+		text-align:right;
+		padding:1% 0;
+	}
+	.qnaAnswerBtn{
+		border:0;
+		border-radius:5px;
+		background-color:#3498DB;
+		color:white;
+		font-size:13px;
+		padding:0.8% 1.5%;
+	}
+	
+</style>
+</head>
+<body>
+	<div class="mainBanner">
+		<p class="mainBannerContent">문의 내역 보기</p>
+	</div>
+	
+	<div class="mainWrapper">
+	
+		<div class="mainMenubar">
+			<div class="MainMenu HomeMenu" onclick="selectMenu(this);">
+				<i class="fa fa-home fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-address-book fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-bars fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-envelope fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-question-circle fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+		</div>		
+		
+		<div class="mainSection">
+			<div class="mainContent">
+				<div class="qnaTitleWrap">
+					<div class="qnaTitle">문의하기의 제목부분 입니다.</div>
+					<div class="qnaRegdate">2020-12-29</div>
+				</div>		
+				
+				<div class="qnaContentWrap">
+					<textarea class="qnaContentInput" readonly onfocus="this.blur()">내용이 입력되어있습니다.</textarea>
+				</div>		
+				
+				<p class="qnaAnswer">관리자 답변내역</p>
+				<div class="qnaAnswerWrap">
+					<textarea class="qnaAnswerContent" placeholder="관리자 답변내역 입력" ></textarea>
+				</div>
+				
+				<div class="AnswerBtnWrap">
+					<button class="qnaAnswerBtn" onclick="qnaAnswerSubmit();">답변하기</button>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+ 
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<title>시작 페이지</title>
+<script type="text/javascript">
+
+	$(function(){	
+		$('.HomeMenu').trigger('click');
+	})
+	
+	//커서 위치 설정 함수
+	$.fn.setCursorPosition = function( pos )
+	{
+	  this.each( function( index, elem ) {
+	    if( elem.setSelectionRange ) {
+	      elem.setSelectionRange(pos, pos);
+	    } else if( elem.createTextRange ) {
+	      var range = elem.createTextRange();
+	      range.collapse(true);
+	      range.moveEnd('character', pos);
+	      range.moveStart('character', pos);
+	      range.select();
+	    }
+	  });
+	  
+	  return this;
+	};
+	
+	function selectMenu(e){
+		$(".MainMenu").css("background","lightgray");
+		$(e).css("background","white");
+	}
+	
+	function formChange(e){
+		$(e).parent().siblings().children('input').css("color","blue");
+		$(e).parent().siblings().children('input').attr("disabled",false);
+		$(e).parent().siblings('.moimNameInput').children('input').focus().setCursorPosition($(e).parent().siblings('.moimNameInput').children('input').val().length);
+		
+		$(e).removeAttr("onclick");
+		$(e).attr("onclick","moimManage(this);");
+		$(e).html("수정");
+	}
+	function moimManage(e){
+		$(e).parent().siblings().children('input').css("color","black");
+		$(e).parent().siblings().children('input').attr("disabled",true);
+		$(e).parent().siblings('.moimNameInput').children('input').blur();
+		
+		$(e).removeAttr("onclick");
+		$(e).attr("onclick","formChange(this);");
+		$(e).html("변경");
+		
+		/* Ajax 여기에 추가 */
+		
+	}
+	
+</script>
+<style type="text/css">
+	
+	html, body{
+		/* height:100%; */
+		min-height:100%;
+	}
+	
+	.mainBanner{
+		width:100%;
+		padding:1%;
+		border-top:1px solid lightgray;
+		border-bottom:1px solid lightgray;
+	}
+	.mainBannerContent{
+		font-weight:900;
+		font-size:20px;
+		margin: 0 0 0 5%;
+	}
+	.mainWrapper{
+		background-color:lightgray;
+		display:flex;
+		height:100%;
+	}
+	
+	.mainMenubar{
+		width:5%;
+		background-color:lightgray;
+	}
+	.MainMenu{
+		height: 10%;
+	    display: flex;
+	    cursor:pointer;
+	    padding:15% 0;
+	    min-height:69px;
+	}
+	.MainMenuIcon{
+		margin:auto;
+	}
+	
+	.mainSection{
+		width:95%;
+		height:100%;
+		background-color:white;
+		padding:2%;
+	}
+	
+	.mainContent{
+		width:100%;
+		border:1px solid lightgray;
+		padding:1% 0;
+	}
+	
+	.recentJoin,.recentMoim{
+		padding:2% 4% 0 4%;
+		font-size:15px;
+		font-weight:700;
+		margin:0;
+	}
+	
+	.simpleCountBtnWrap{
+		display:flex;
+		width:30%;
+		height:10%;
+		justify-content: space-around;
+		align-items: center;
+		padding:0 2%;
+		font-size:12px;
+		font-weight:500;
+		margin:1% 0;
+	}
+	
+	.TotalContent{
+		width:80px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#34495E;
+		color:white;
+		border-radius:20px;
+	}
+	
+	.countBtn{
+		border-radius:20px;
+		width:150px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#3498DB;
+		color:white;
+	}
+	
+	
+	.countBtnDummy{
+		float: left;
+		width:50%;
+	}
+	
+	.countBtnInput{
+		float: right;
+		width:50%;
+		background-color:lightgray;
+		color:rgb(94, 94, 94);
+		border-radius:20px;
+	}
+	
+	/* 검색버튼 */
+	.searchBtnWrap{
+		width:30%;
+		height:10%;
+		padding:1% 4%;
+		font-size:10px;
+		font-weight:500;
+	}
+	
+	.searchInput{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:3% 5%;
+		width:100%;
+	}
+	.searchBtn{
+		position:absolute;
+		margin-top:1%;
+		left: 27.5%;
+		cursor:pointer;
+	}
+	
+	/* 모임테이블 */
+	.MoimTableWrap{
+		width:100%;
+		margin:auto;
+		height:auto;
+		padding:2% 4%;
+	}
+	
+	.MoimTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+	}
+	
+	.moimInput,.moimType,.moimType > th,.moimInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.moimType{
+		background-color:#eaeaea;
+	}
+	.moimType > th{
+		font-size:14px;
+	}
+	.moimName,.moimAddr{
+		width:22%;
+	}
+	.moimCategory,.moimTime,.moimAge,.moimPersonnel,
+	.moimIsdelete,.moimIsend,.MoimManage{
+		width:8%;
+	}
+	
+	.moimInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	
+	.moimManageBtn{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:5% 15%;
+		background-color:rgb(52, 152, 219);
+		color:white;
+	}
+	
+	.moimInput > td>input{
+		border:0px;
+		text-align:center;
+		width:100%;
+	}
+</style>
+</head>
+<body>
+	<div class="mainBanner">
+		<p class="mainBannerContent">모임관리</p>
+	</div>
+	
+	<div class="mainWrapper">
+	
+		<div class="mainMenubar">
+			<div class="MainMenu HomeMenu" onclick="selectMenu(this);">
+				<i class="fa fa-home fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-address-book fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-bars fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-envelope fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-question-circle fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+		</div>		
+		<div class="mainSection">
+			<div class="mainContent">
+			
+				<div class="simpleCountBtnWrap">
+					<div class="TotalContent">전체목록</div>
+					
+					<div class="countBtn TotalCount">
+						<div class="countBtnDummy">생성 모임수</div>
+						<div class="countBtnInput TotalCountInput">100개</div>
+					</div>
+				</div>
+				
+				<div class="searchBtnWrap">
+					<form>
+						<input type="text" class="searchInput" placeholder="회원아이디 검색">
+						<i class="fa fa-search fa-1x searchBtn" aria-hidden="true" onclick="searchUser();"></i>
+					</form>
+				</div>
+				
+				<div class="MoimTableWrap">
+					<form onsubmit="return false;">
+						<table class="MoimTable">
+							<tr class="moimType">
+								<th class="moimName">모임 이름</th>
+								<th class="moimCategory">모임 카테고리</th>
+								<th class="moimTime">모임 일자</th>
+								<th class="moimAddr">모임 주소</th>
+								<th class="moimAge">모임 나이제한</th>
+								<th class="moimPersonnel">모임 정원</th> <!-- 삭제 여부만 변경 -->
+								<th class="moimIsdelete">모임 삭제여부</th> 
+								<th class="moimIsend">모임 종료여부</th> 
+								<th class="MoimManage">관리</th>
+							</tr>
+							
+							
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							<tr class="moimInput">
+								<td class="moimNameInput"><input type="text" value="모임1의 제목은 많이 길지 않습니다" disabled></td>
+								<td class="moimCategoryInput"><input type="text" value="운동(축구)" disabled></td>
+								<td class="moimTimeInput"><input type="text" value="2022-08-17(수)" disabled></td>
+								<td class="moimAddrInput"><input type="text" value="경기도 수원시 팔달구 팔달로" disabled></td>
+								<td class="moimAgeInput"><input type="text" value="13세 - 26세" disabled></td>
+								<td class="moimPersonnelInput"><input type="text" value="5명" disabled></td> 
+								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
+								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
+								<td class="MoimManageInput">
+									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+								</td>
+							</tr>
+							
+							
+						
+						</table>
+					</form>	
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+ 
+</html>

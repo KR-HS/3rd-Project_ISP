@@ -243,6 +243,8 @@ INSERT INTO moim values(moim_idx_seq.nextval,1,sysdate,'재미있는 모임4','�
 INSERT INTO moim values(moim_idx_seq.nextval,1,sysdate,'재미있는 모임5','재미있는 모임 내용5',sysdate,'N','postcode임','addr1임','addr2임',NULL,NULL,5,0,'N','N');
 INSERT INTO moim values(moim_idx_seq.nextval,1,sysdate,'재미있는 모임5','재미있는 모임 내용6',sysdate,'N','postcode임','addr1임','addr2임',NULL,NULL,5,0,'N','N');
 
+INSERT INTO moim values(moim_idx_seq.nextval,1,sysdate,'재미있는 모임1','재미있는 모임 내용1',sysdate,'N','postcode임','addr1임','addr2임',NULL,NULL,5,0,'N','Y',sysdate);
+SELECT * FROM moim;
 /*CREATE TABLE likeMoim (
 	like_idx NUMBER PRIMARY KEY NOT NULL,
 	user_idx NUMBER NOT NULL,
@@ -268,3 +270,4 @@ SELECT * FROM moim
 	IN (SELECT moim_idx FROM signUp WHERE user_idx=1 and signUp_isApply='Y');
 
 SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM signUp WHERE user_idx=1);
+

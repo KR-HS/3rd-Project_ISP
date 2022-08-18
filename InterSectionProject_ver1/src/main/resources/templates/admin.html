@@ -10,6 +10,7 @@
 
 	$(function(){	
 		$('.HomeMenu').trigger('click');
+		
 	})
 	function selectMenu(e){
 		$(".MainMenu").css("background","lightgray");
@@ -18,16 +19,17 @@
 	}
 	
 </script>
-<style>
-	html, body{
-		height:100%;
+<style type="text/css">
+
+	html,body{
+		min-height:100%;
+		
 	}
 	.mainBanner{
 		width:100%;
 		padding:1%;
 		border-top:1px solid lightgray;
 		border-bottom:1px solid lightgray;
-		
 	}
 	.mainBannerContent{
 		font-weight:900;
@@ -35,7 +37,7 @@
 		margin: 0 0 0 5%;
 	}
 	.mainWrapper{
-		background-color:black;
+		background-color:lightgray;
 		display:flex;
 		height:100%;
 	}
@@ -49,6 +51,8 @@
 		height: 10%;
 	    display: flex;
 	    cursor:pointer;
+	    padding:15% 0;
+	    min-height:69px;
 	}
 	.MainMenuIcon{
 		margin:auto;
@@ -62,10 +66,88 @@
 	}
 	
 	.mainContent{
-		height:100%;
 		width:100%;
 		border:1px solid lightgray;
+		padding:1% 0;
 	}
+	
+	.recentJoin,.recentMoim{
+		padding:2% 4% 0 4%;
+		font-size:18px;
+		font-weight:700;
+		margin:0;
+	}
+	.recentJoin::before,.recentMoim::before{
+		content:"❤️";
+		font-size:20px;
+		margin-right:0.5%;
+	}
+	/* 테이블 */
+	/* 공통 */
+	.RecentTableWrap{
+		width:100%;
+		margin:auto;
+		height:auto;
+		padding:2% 4%;
+	}
+	
+	.RecentTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+	}
+	
+	
+	/* 신규회원 테이블 */
+	.userInput,.userType,.userType > th,.userInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.userType{
+		background-color:#eaeaea;
+	}
+	.userType > th{
+		font-size:14px;
+	}
+	.userId,.userBirth,.userPhone{
+		width:15%;
+	}
+	.userName,.userGender,.userUse,.userIsdeleted{
+		width:12%;
+	}
+	
+	.userInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	
+	
+	/* 신규모임 테이블 */
+	.moimInput,.moimType,.moimType > th,.moimInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.moimType{
+		background-color:#eaeaea;
+	}
+	.moimType > th{
+		font-size:14px;
+	}
+	.moimName,.moimAddr{
+		width:22%;
+	}
+	.moimCategory,.moimTime,.moimAge,.moimPersonnel,
+	.moimIsdelete,.moimIsend{
+		width:8%;
+	}
+	
+	.moimInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+
+	
+	
 </style>
 </head>
 <body>
@@ -92,8 +174,148 @@
 			</div>
 		</div>		
 		<div class="mainSection">
-			<div class="mainContent">이곳에 컨텐츠 추가</div>
+			<div class="mainContent">
+				<p class="recentJoin">신규 회원가입 목록 (최신 5건)</p>
+				<div class="RecentTableWrap">
+					<table class="RecentTable RecentJoinTable">
+						<tr class="userType">
+							<th class="userId">유저 아이디</th>
+							<th class="userName">유저 이름</th>
+							<th class="userBirth">유저 생일</th>
+							<th class="userGender">유저 성별</th>
+							<th class="userPhone">유저 번호</th>
+							<th class="useruse">유저 인증여부</th>
+							<th class="userIsdeleted">유저 삭제여부</th> <!-- 삭제 여부만 변경 -->
+						</tr>
+						
+						<tr class="userInput">
+							<td class="userIdInput">aaaa1234@naver.com</td>
+							<td class="userNameInput">한사람</td>
+							<td class="userBirthInput">1999-02-30</td>
+							<td class="userGenderInput">남</td>
+							<td class="userPhoneInput">010-2345-4945</td>
+							<td class="useruseInput">Y</td>
+							<td class="userIsdeletedInput">N</td> <!-- 삭제 여부만 변경 -->
+						</tr>
+						
+						<tr class="userInput">
+							<td class="userIdInput">aaaa1234@naver.com</td>
+							<td class="userNameInput">한사람</td>
+							<td class="userBirthInput">1999-02-30</td>
+							<td class="userGenderInput">남</td>
+							<td class="userPhoneInput">010-2345-4945</td>
+							<td class="useruseInput">Y</td>
+							<td class="userIsdeletedInput">N</td> <!-- 삭제 여부만 변경 -->
+						</tr>
+						
+						<tr class="userInput">
+							<td class="userIdInput">aaaa1234@naver.com</td>
+							<td class="userNameInput">한사람</td>
+							<td class="userBirthInput">1999-02-30</td>
+							<td class="userGenderInput">남</td>
+							<td class="userPhoneInput">010-2345-4945</td>
+							<td class="useruseInput">Y</td>
+							<td class="userIsdeletedInput">N</td> <!-- 삭제 여부만 변경 -->
+						</tr>
+						
+						<tr class="userInput">
+							<td class="userIdInput">aaaa1234@naver.com</td>
+							<td class="userNameInput">한사람</td>
+							<td class="userBirthInput">1999-02-30</td>
+							<td class="userGenderInput">남</td>
+							<td class="userPhoneInput">010-2345-4945</td>
+							<td class="useruseInput">Y</td>
+							<td class="userIsdeletedInput">N</td> <!-- 삭제 여부만 변경 -->
+						</tr>
+						
+						<tr class="userInput">
+							<td class="userIdInput">aaaa1234@naver.com</td>
+							<td class="userNameInput">한사람</td>
+							<td class="userBirthInput">1999-02-30</td>
+							<td class="userGenderInput">남</td>
+							<td class="userPhoneInput">010-2345-4945</td>
+							<td class="useruseInput">Y</td>
+							<td class="userIsdeletedInput">N</td> <!-- 삭제 여부만 변경 -->
+						</tr>
+					</table>
+				</div>
+				
+				
+				<p class="recentMoim">최근 모임개설 목록 (최신 5건)</p>
+				<div class="RecentTableWrap">
+					<table class="RecentTable RecentMoimTable">
+						<tr class="moimType">
+							<th class="moimName">모임 이름</th>
+							<th class="moimCategory">모임 카테고리</th>
+							<th class="moimTime">모임 일자</th>
+							<th class="moimAddr">모임 주소</th>
+							<th class="moimAge">모임 나이제한</th>
+							<th class="moimPersonnel">모임 정원</th> <!-- 삭제 여부만 변경 -->
+							<th class="moimIsdelete">모임 삭제여부</th> 
+							<th class="moimIsend">모임 종료여부</th> 
+						</tr>
+						
+						<tr class="moimInput">
+							<td class="moimNameInput">모임1의 제목은 많이 길지 않습니다.</td>
+							<td class="moimCategoryInput">운동(축구)</td>
+							<td class="moimTimeInput">2022-08-17(수)</td>
+							<td class="moimAddrInput">경기도 수원시 팔달구 팔달로</td>
+							<td class="moimAgeInput">13세 - 26세</td>
+							<td class="moimPersonnelInput">5명</td> <!-- 삭제 여부만 변경 -->
+							<td class="moimIsdeleteInput">N</td> 
+							<td class="moimIsendInput">Y</td> 
+						</tr>
+						
+						<tr class="moimInput">
+							<td class="moimNameInput">모임1의 제목은 많이 길지 않습니다.</td>
+							<td class="moimCategoryInput">운동(축구)</td>
+							<td class="moimTimeInput">2022-08-17(수)</td>
+							<td class="moimAddrInput">경기도 수원시 팔달구 팔달로</td>
+							<td class="moimAgeInput">13세 - 26세</td>
+							<td class="moimPersonnelInput">5명</td> <!-- 삭제 여부만 변경 -->
+							<td class="moimIsdeleteInput">N</td> 
+							<td class="moimIsendInput">Y</td> 
+						</tr>
+						
+						<tr class="moimInput">
+							<td class="moimNameInput">모임1의 제목은 많이 길지 않습니다.</td>
+							<td class="moimCategoryInput">운동(축구)</td>
+							<td class="moimTimeInput">2022-08-17(수)</td>
+							<td class="moimAddrInput">경기도 수원시 팔달구 팔달로</td>
+							<td class="moimAgeInput">13세 - 26세</td>
+							<td class="moimPersonnelInput">5명</td> <!-- 삭제 여부만 변경 -->
+							<td class="moimIsdeleteInput">N</td> 
+							<td class="moimIsendInput">Y</td> 
+						</tr>
+						
+						<tr class="moimInput">
+							<td class="moimNameInput">모임1의 제목은 많이 길지 않습니다.</td>
+							<td class="moimCategoryInput">운동(축구)</td>
+							<td class="moimTimeInput">2022-08-17(수)</td>
+							<td class="moimAddrInput">경기도 수원시 팔달구 팔달로</td>
+							<td class="moimAgeInput">13세 - 26세</td>
+							<td class="moimPersonnelInput">5명</td> <!-- 삭제 여부만 변경 -->
+							<td class="moimIsdeleteInput">N</td> 
+							<td class="moimIsendInput">Y</td> 
+						</tr>
+						
+						<tr class="moimInput">
+							<td class="moimNameInput">모임1의 제목은 많이 길지 않습니다.</td>
+							<td class="moimCategoryInput">운동(축구)</td>
+							<td class="moimTimeInput">2022-08-17(수)</td>
+							<td class="moimAddrInput">경기도 수원시 팔달구 팔달로</td>
+							<td class="moimAgeInput">13세 - 26세</td>
+							<td class="moimPersonnelInput">5명</td> <!-- 삭제 여부만 변경 -->
+							<td class="moimIsdeleteInput">N</td> 
+							<td class="moimIsendInput">Y</td> 
+						</tr>
+						
+						
+					</table>
+				</div>
+			</div>
 		</div>
+		
 	</div>
 </body>
  

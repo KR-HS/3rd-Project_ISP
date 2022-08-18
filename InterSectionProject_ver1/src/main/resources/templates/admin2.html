@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<title>시작 페이지</title>
+<script type="text/javascript">
+
+	$(function(){	
+		$('.HomeMenu').trigger('click');
+		
+	})
+	
+	//커서 위치 설정 함수
+	$.fn.setCursorPosition = function( pos )
+	{
+	  this.each( function( index, elem ) {
+	    if( elem.setSelectionRange ) {
+	      elem.setSelectionRange(pos, pos);
+	    } else if( elem.createTextRange ) {
+	      var range = elem.createTextRange();
+	      range.collapse(true);
+	      range.moveEnd('character', pos);
+	      range.moveStart('character', pos);
+	      range.select();
+	    }
+	  });
+	  
+	  return this;
+	};
+	
+	function selectMenu(e){
+		$(".MainMenu").css("background","lightgray");
+		$(e).css("background","white");
+	}
+	
+	function formChange(e){
+		$(e).parent().siblings().children('input').css("color","blue");
+		$(e).parent().siblings().children('input').attr("disabled",false);
+		$(e).parent().siblings('.userIdInput').children('input').focus().setCursorPosition($(e).parent().siblings('.userIdInput').children('input').val().length);
+		
+		$(e).removeAttr("onclick");
+		$(e).attr("onclick","userManage(this);");
+		$(e).html("수정");
+	}
+	function userManage(e){
+		$(e).parent().siblings().children('input').css("color","black");
+		$(e).parent().siblings().children('input').attr("disabled",true);
+		$(e).parent().siblings('.userIdInput').children('input').blur();
+		
+		$(e).removeAttr("onclick");
+		$(e).attr("onclick","formChange(this);");
+		$(e).html("변경");
+		
+		/* Ajax 여기에 추가 */
+		
+	}
+	
+</script>
+<style>
+	
+	html, body{
+		height:100%;
+	}
+	
+	.mainBanner{
+		width:100%;
+		padding:1%;
+		border-top:1px solid lightgray;
+		border-bottom:1px solid lightgray;
+	}
+	.mainBannerContent{
+		font-weight:900;
+		font-size:20px;
+		margin: 0 0 0 5%;
+	}
+	.mainWrapper{
+		background-color:white;
+		display:flex;
+		height:100%;
+	}
+	
+	.mainMenubar{
+		width:5%;
+		background-color:lightgray;
+	}
+	.MainMenu{
+		height: 10%;
+	    display: flex;
+	    cursor:pointer;
+	    padding:15% 0;
+	}
+	.MainMenuIcon{
+		margin:auto;
+	}
+	
+	.mainSection{
+		width:95%;
+		height:100%;
+		background-color:white;
+		padding:2%;
+	}
+	
+	.mainContent{
+		width:100%;
+		border:1px solid lightgray;
+		padding:1% 0;
+	}
+	/* 최상단 버튼 묶음(4종)  */
+	.simpleCountBtnWrap{
+		display:flex;
+		width:50%;
+		height:10%;
+		justify-content: space-around;
+		align-items: center;
+		padding:0 2%;
+		font-size:12px;
+		font-weight:500;
+		margin:1% 0;
+	}
+	
+	.TotalContent{
+		width:80px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#34495E;
+		color:white;
+		border-radius:20px;
+	}
+	
+	.countBtn{
+		border-radius:20px;
+		width:100px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#3498DB;
+		color:white;
+	}
+	
+	
+	.countBtnDummy{
+		float: left;
+		width:40%;
+	}
+	
+	.countBtnInput{
+		float: right;
+		width:60%;
+		background-color:lightgray;
+		color:rgb(94, 94, 94);
+		border-radius:20px;
+	}
+	
+	.TotalCount{
+		width:120px;
+	}
+	
+	.TotalCount > .countBtnDummy{
+		width:50%;
+	}
+	.TotalCount > .countBtnInput{
+		width:50%;
+	}
+	/* 검색버튼 */
+	.searchBtnWrap{
+		width:30%;
+		height:10%;
+		padding:1% 4%;
+		font-size:10px;
+		font-weight:500;
+	}
+	
+	.searchInput{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:3% 5%;
+		width:100%;
+	}
+	.searchBtn{
+		position:absolute;
+		margin-top:1%;
+		left: 27.5%;
+		cursor:pointer;
+	}
+	
+	/* 테이블 */
+	.UserTableWrap{
+		width:100%;
+		margin:auto;
+		height:auto;
+		padding:2% 4%;
+		
+	}
+	
+	.userTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+		
+	}
+	.userInput,.topRow,.topRow > th,.userInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.topRow{
+		background-color:#eaeaea;
+	}
+	.topRow > th{
+		font-size:14px;
+	}
+	.userId,.userBirth,.userPhone{
+		width:15%;
+	}
+	.userName,.userGender,.userUse,.userIsdeleted{
+		width:12%;
+	}
+	.userManage{
+		width:7%;
+	}
+	
+	.userInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	.userManageBtn{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:5% 15%;
+		background-color:rgb(52, 152, 219);
+		color:white;
+	}
+	.userInput > td>input{
+		border:0px;
+		text-align:center;
+		width:100%;
+	}
+</style>
+</head>
+<body>
+	<div class="mainBanner">
+		<p class="mainBannerContent">회원관리</p>
+	</div>
+	
+	<div class="mainWrapper">
+		<div class="mainMenubar">
+			<div class="MainMenu HomeMenu" onclick="selectMenu(this);">
+				<i class="fa fa-home fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-address-book fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-bars fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-envelope fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+			<div class="MainMenu" onclick="selectMenu(this);">
+				<i class="fa fa-question-circle fa-3x MainMenuIcon" aria-hidden="true"></i>
+			</div>
+		</div>		
+		<div class="mainSection">
+			<div class="mainContent">
+				<div class="simpleCountBtnWrap">
+					<div class="TotalContent">전체목록</div>
+					
+					<div class="countBtn TotalCount">
+						<div class="countBtnDummy">전체목록</div>
+						<div class="countBtnInput TotalCountInput">1,000명</div>
+					</div>
+					
+					<div class="countBtn Refuse">
+						<span class="countBtnDummy">차단</span>
+						<span class="countBtnInput RefuseInput">0명</span>
+					</div>
+					
+					<div class="countBtn Resign">
+						<span class="countBtnDummy">탈퇴</span>
+						<span class="countBtnInput ResignInput">50명</span>
+					</div>
+				</div>
+				
+				<div class="searchBtnWrap">
+					<form>
+						<input type="text" class="searchInput" placeholder="회원아이디 검색">
+						<i class="fa fa-search fa-1x searchBtn" aria-hidden="true" onclick="searchUser();"></i>
+					</form>
+				</div>
+				
+				<div class="UserTableWrap">
+					<form onsubmit="return false;">
+						<table class="userTable">
+							<tr class="topRow">
+								<th class="userId">유저 아이디</th>
+								<th class="userName">유저 이름</th>
+								<th class="userBirth">유저 생일</th>
+								<th class="userGender">유저 성별</th>
+								<th class="userPhone">유저 번호</th>
+								<th class="useruse">유저 인증여부</th>
+								<th class="userIsdeleted">유저 삭제여부</th> <!-- 삭제 여부만 변경 -->
+								<th class="userManage">관리</th>
+							</tr>
+							<tr class="userInput">
+								<td class="userIdInput"><input type="text" value="aaaa1234@naver.com" disabled></td>
+								<td class="userNameInput"><input type="text" value="한사람"  disabled></td>
+								<td class="userBirthInput"><input type="text" value="1999-02-30"  disabled></td>
+								<td class="userGenderInput"><input type="text" value="남"  disabled></td>
+								<td class="userPhoneInput"><input type="text" value="010-2345-4945"  disabled></td>
+								<td class="useruseInput"><input type="text" value="Y"  disabled></td>
+								<td class="userIsdeletedInput"><input type="text" value="N"  disabled></td> 
+								<td class="userManageInput"><button class="userManageBtn" onclick="formChange(this);">변경</button></td>
+							</tr>
+							
+							<tr class="userInput">
+								<td class="userIdInput"><input type="text" value="aaaa1234@naver.com" disabled></td>
+								<td class="userNameInput"><input type="text" value="두사람"  disabled></td>
+								<td class="userBirthInput"><input type="text" value="1999-02-30"  disabled></td>
+								<td class="userGenderInput"><input type="text" value="남"  disabled></td>
+								<td class="userPhoneInput"><input type="text" value="010-2345-4945"  disabled></td>
+								<td class="useruseInput"><input type="text" value="Y"  disabled></td>
+								<td class="userIsdeletedInput"><input type="text" value="N"  disabled></td> 
+								<td class="userManageInput"><button class="userManageBtn" onclick="formChange(this);">변경</button></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+ 
+</html>
