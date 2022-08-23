@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<link rel="stylesheet" href="moim/MoimCreate.css">
+
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+<script src="moim/MoimCreate.js"></script>
+<!-- 
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b921c11228fb6ed80af48abcc7b8d09c"></script>
+ -->
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<!-- services와 clusterer, drawing 라이브러리 불러오기 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b921c11228fb6ed80af48abcc7b8d09c&libraries=services,clusterer,drawing"></script>
+
+<script type="text/javascript">
+$(function() {
+		
+});
+
+</script>
+<style type="text/css">
+
+
+</style>
+</head>
+<body>
+
+	<div class="moim_create_full_wrap">
+		<h2>모임 개설하기</h2>
+		<h2 th:text="${session.userVO.user_idx}"></h2>
+		<form action="moimInsertOk" method="post">
+	    <input type="hidden" name="user_idx" th:value="${session.userVO.user_idx}"/>
+		<input type="hidden" name="moim_isDelete" value="N"/>
+		<input type="hidden" name="moim_isEnd" value="N"/>
+		
+		<div class="moim_info1">
+
+			<div class="profile_photo_wrap">
+				<div class="profile_image">
+				<img th:if="${profileImg}==null" alt="" src="/upload/kakao_basic.jpg" style="width: 100%; height: 100%;">
+				<img th:if="${profileImg}!=null" th:src="'/upload/'+${profileImg.s_fileName}" style="width: 100%; height: 100%;">
+				</div>
+				<!-- 프로필 사진 업로드 -->
+								 
+				<a href=# onclick="window.open('/profileUploadForm','질문', 'width=700,height=500,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;">
+					<button class="image_upload_button">이미지 업로드</button>
+				</a>
+					 
+			</div>
+
+			<div class="base_info_wrap">
+				<h4>모임 기본정보</h4>
+				<label for="">카테고리</label> 
+				
+				
+				<select name="" id="lc_category" onchange="document.getElementById('lc_name').value = this.options[this.selectedIndex].value" >
+					<option>대분류</option>
+					<option th:each="lc_name, index : ${LC_list}" th:text="${lc_name}" th:id="lc+${index.index}" th:value="${lc_name}"/>
+				</select> 
+				<input type="hidden" name="lc_name" id="lc_name" value=""/>
+
+				&nbsp;&nbsp;
+				
+				<span id="sc" style="display: none;">
+				카테고리 상세 : 
+					
+				<select name="" id="sc_category" onchange="document.getElementById('sc_name').value = this.options[this.selectedIndex].value" >
+					<!-- 
+					<option th:each="sc_name, index : ${sc_list}" th:text="${sc_name}" th:id="sc+${index.index}"/>
+					 -->
+				</select> 
+				<input type="hidden" name="sc_name" id="sc_name" value=""/>
+				</span>
+				
+				
+				
+				<!-- 대분류 셀렉 결과에 따라 상세 카테고리가 나와야 함-->
+				<br> 
+				<label>모임명</label> 
+				<input type="text" placeholder="모임명을 입력해주세요" name="moim_name"> <br> 
+							
+				<label>연령대 제한 </label> 
+				<input type="radio" name="check_limit_age" class="check_limit_age" id="check_limit_age_off" checked="checked" value="limit_off">없음 
+				<input type="radio" name="check_limit_age" class="check_limit_age" id="check_limit_age_on" value="limit_on"> 있음 <!-- 있음 체크시 연령대 제한 메뉴 떠야함 -->
+				<div class="slider" style="display: none;">
+        			<input type="range" name="moim_startAge" class="limit_range_age" id="input-left" min="0" max="100" value="0" oninput="document.getElementById('start_value').innerHTML=this.value;" />
+			       	<input type="range" name="moim_limitAge" class="limit_range_age" id="input-right" min="10" max="100" value="100" oninput="document.getElementById('limit_value').innerHTML=this.value;" />
+			       	
+			       	<div class="track">
+				         <div class="range"></div>
+				         <div class="thumb left"></div>
+				         <div class="thumb right"></div>
+			       	</div>
+		     	<br />
+		     	최소 나이 : <span id="start_value"></span> 세 // 최대나이 : <span id="limit_value"></span>세
+		 			
+		     	</div>
+				
+				
+				
+				
+				<br> 
+				<!-- 
+				<label>태그 추가</label>
+				 -->
+				<br>
+
+
+
+
+
+
+
+			</div>
+
+
+
+		</div>
+
+			<hr>
+			<br />
+			<h2>모임 상세정보</h2>
+			<hr>
+			
+		<div class="moim_info2">
+			<textarea class="form-control" id="content" name="moim_content" required="required" maxlength="5000" style="height: 100%;"></textarea>
+		</div>
+		<br>
+		<hr>
+		<div class="moim_info3">
+			<h3 class="info_title">신청자 모집</h3>
+			<label for="">모집방법</label> 
+			<input type="radio" name="moim_onoff" id="moim_online" value="N" checked="checked">온라인 모집 
+			<input type="radio" name="moim_onoff" id="moim_offline" value="Y">오프라인 모집
+		</div>
+
+		<div class="moim_info3">
+			<h3 class="info_title">그룹 정보</h3>
+
+			<label for="">모집 정원 입력</label> 
+			<input type="number" value="3" min="3" max="15" name="moim_personnel"> <br> 
+
+			<div class="cham" style="border: 1px solid black; display: inline-block;">
+				<label for="">참가비 유무</label>
+				<div class="form-check form-switch" style="border: 1px solid black; width: 100px;">
+					<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" > 
+					<label class="form-check-label" for="flexSwitchCheckChecked">Ct</label>
+				</div>
+				<div class="moimCost" style="display: none;">
+					<input type="number" value="0" min="0" step="100" name="moim_cost"/>
+				</div>				
+			</div>
+		</div>
+
+		<br>
+
+		<div class="moim_info4" id="moim_info4" style="display: none;">
+		
+			<h3>모임 지정일</h3>
+			<input type="datetime-local" name="moim_time">
+			<h3>모임 마감 시간설정</h3>
+			<input type="datetime-local" name="moim_deadline"/>
+			<br />
+			<h3>모임 장소 설정</h3>			
+			<input type="text" name="moim_postCode" id="postCode" readonly required onclick="daumPostcode();"> 
+			<input type="text" class="addr1" name="moim_addr1" id="addr1" placeholder="주소를 입력해주세요" onclick="daumPostcode();"> 
+			<input type="button" class="btn-check" id="zipCodebtn" onclick="daumPostcode();"> 
+			<label class="btn btn-outline-primary" for="zipCodebtn">검색</label> <br>
+			<input type="text" class="addr2" name="moim_addr2" id="addr2" placeholder="나머지 주소를 입력해주세요" onclick="daumPostcode();">
+						
+			<div class="map_wrap" style="width: 100%; height: 600px;">
+	    		<div id="map" style="width:100%;height:300px;position:relative;overflow:hidden;"></div>
+	    			<div class="hAddr">
+	        			<span id="centerAddr"></span>
+	    			</div>
+			</div>
+
+
+		</div>
+		
+		<input type="submit" value="모임등록" style="margin-left: 90%;"/>	
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.MailSendDAO">
+	
+	<!-- 메일 보낸 이력 저장하기 -->
+	<insert id="insert" parameterType="hashMap">
+		insert into mailSend values
+		(mail_send_idx.nextval, board_idx=#{board_idx}, user_idx=#{user_idx})
+	</insert>
+	
+	<!-- 메일에 따른 보낸사람 가져오기 -->
+	<select id="selectByBoard" parameterType="int" resultType="MailSendVO">
+		select * from mailSend where board_idx=#{board_idx}
+	</select>
+	
+	<!-- 메일을 보낸 사람의 수 가져오기 -->
+	<select id="selectCountByBoard" parameterType="int" resultType="int">
+		select count(*) from mailSend where board_idx=#{board_idx}
+	</select>
+	
+	<!-- 관리자페이지에서 사용할 것 -->
+	
+	<!-- 메일전송한 인원 목록 가져오기 -->
+	<select id="selectMailSendList" parameterType="hashmap" resultType="BoardVO">	
+		select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(select * from userInfo where user_idx in (select user_idx from mailsend) order by user_idx desc) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+</mapper>

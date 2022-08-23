@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.MoimDAO">
+	
+	<!-- 전체모임수 -->
+	<select id="selectCount" resultType="int">
+   		select count(*) from moim
+	</select>
+	
+	<!-- 날짜에 해당하는 전체 모임수 -->
+	<select id="selectCountByTime" parameterType="string" resultType="int">
+   		select count(*) from moim where moim_time = #{moim_time}
+	</select>
+	
+	<!-- 날짜로 모임 선택하기 -->
+	<select id="selectByTime" parameterType="string" resultType="MoimVO">
+		select * from moim where moim_time = #{moim_time}
+	</select>
+		
+	
+	<!-- 모임 1개 가져오기 -->
+	<select id="selectByIdx" parameterType="int" resultType="MoimVO" >
+		select * from moim where moim_idx = #{moim_idx}
+	</select>
+	
+	<!-- 모임 저장 동원 수정 8/19-->
+	<insert id="insert" parameterType="MoimVO">
+		insert into moim
+			(moim_idx,user_idx, moim_regdate, moim_name, moim_content, moim_time, moim_onoff, moim_postCode, moim_addr1, moim_addr2, moim_startAge, moim_limitAge, moim_personnel, moim_cost, moim_isDelete, moim_isEnd, moim_deadline)
+		values
+			(moim_idx_seq.nextval,#{user_idx}, sysdate, #{moim_name}, #{moim_content}, #{moim_time}, #{moim_onoff}, #{moim_postCode}, #{moim_addr1}, #{moim_addr2}, #{moim_startAge}, #{moim_limitAge}, #{moim_personnel}, #{moim_cost}, #{moim_isDelete}, #{moim_isEnd}, #{moim_deadline})
+	</insert>
+	
+	
+	<!-- 모임 수정 -->
+	<update id="update" parameterType="MoimVO">
+		update moim set 
+		moim_name = #{moim_name},
+		moim_content = #{moim_content},
+		moim_time = #{moim_time},
+		moim_onoff = #{moim_onoff},
+		moim_postCode = #{moim_postCode},
+		moim_addr1 = #{moim_addr1},
+		moim_addr2 = #{moim_addr2},
+		moim_startAge = #{moim_startAge},
+		moim_limitAge = #{moim_limitAge},
+		moim_personnel = #{moim_personnel},
+		moim_cost = #{moim_cost}	
+		where 
+		moim_idx= #{moim_idx}
+	</update>
+	
+	<!-- 삭제시 상태변경 -->
+	<update id="delete" parameterType="int">
+		update moim set 
+		moim_isDelete = 'Y' where moim_idx=#{moim_idx}
+	</update>
+	
+	<!-- 관리자 삭제(실제 삭제) -->
+	<delete id="supervisorDelete" parameterType="int">
+		delete from moim where moim_idx = #{moim_idx}
+	</delete>
+	
+	<!-- 1페이지 얻기 -->
+	<select id="selectList" parameterType="hashmap" resultType="MoimVO">	
+		select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(select * from moim order by moim_time desc) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+	
+	<!-- 개설자(유저)에 따른 모임 개수 구하기 -->
+	<select id="selectCountByUser" parameterType="int" resultType="int">
+		select count(*) from moim where user_idx=#{user_idx}
+	</select>
+	
+	<!-- 개설자(유저)가 만든 모임 가져오기 -->
+	<select id="selectByUser" parameterType="int" resultType="MoimVO">
+		select * from moim where user_idx = #{user_idx}
+	</select>
+	
+	<!-- 관리자페이지에서 쓰는 매퍼 -->
+	
+	<!-- 신규모임 5개 뽑기 -->
+	<select id="selectFiveMoim" resultType="MoimVO">
+		select * from moim where <![CDATA[ rownum  <= 5 ]]> order by moim_idx desc
+	</select>
+	
+	
+	<!-- 신규모임 1개 뽑기 -->
+	<select id="selectByNewOneMoim" resultType="MoimVO">
+		select * from moim where <![CDATA[ rownum  <= 1 ]]> order by moim_idx desc
+	</select>
+	
+	
+	<!-- 현수꺼 추가 08/19 -->
+	
+	<!-- 유저 개설목록 가져오기 현수꺼 추가 08/19-->
+	<select id="selectCreatePage" parameterType="hashmap" resultType="MoimVO" >
+		select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(select * from moim where user_idx = #{user_idx} order by moim_idx) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+	
+	<!-- 현수꺼 추가 08/19 -->
+	<select id="selectCreateList" parameterType="int" resultType="MoimVO" >
+		select * from moim where user_idx = #{user_idx} order by moim_idx
+	</select>
+	
+	<!-- 신청리스트 개수 얻기 현수꺼 추가 08/19-->
+	<select id="selectCreateListCount" resultType="int">
+   		select count(*) from moim where user_idx = #{user_idx}
+	</select>
+	
+	
+	<!-- 신청리스트 얻기 현수꺼 추가 08/19-->
+	<select id="selectApplyPage" parameterType="hashmap" resultType="MoimVO">
+	select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM signUp WHERE user_idx=#{user_idx})) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+	<!-- 현수꺼 추가 08/19 -->
+	<select id="selectApplyList" parameterType="int" resultType="MoimVO">
+		SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM signUp WHERE user_idx=#{user_idx})
+	</select>
+	
+	<!-- 신청리스트 개수 얻기 현수꺼 추가 08/19-->
+	<select id="selectApplyListCount" resultType="int">
+   	SELECT count(*) FROM moim
+	WHERE moim_idx 
+	IN (SELECT moim_idx FROM signUp WHERE user_idx=#{user_idx})
+	</select>
+	
+	
+	<!-- 참여리스트 얻기 현수꺼 추가 08/19-->
+	<select id="selectJoinPage" parameterType="hashmap" resultType="MoimVO">
+	select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM signUp WHERE user_idx=#{user_idx} and signUp_isApply='Y')) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+	<!-- 현수꺼 추가 08/19 -->
+	<select id="selectJoinList" parameterType="int" resultType="MoimVO">
+	SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM signUp WHERE user_idx=#{user_idx} and signUp_isApply='Y')
+	</select>
+	
+	<!-- 참여리스트 개수 얻기 현수꺼 추가 08/19-->
+	<select id="selectJoinListCount" resultType="int">
+   		SELECT count(*) FROM moim
+	WHERE moim_idx 
+	IN (SELECT moim_idx FROM signUp WHERE user_idx=#{user_idx} and signUp_isApply='Y')
+	</select>
+	
+	<!-- 찜리스트 얻기 현수꺼 추가 08/19-->
+	<select id="selectLikePage" parameterType="hashmap" resultType="MoimVO">
+	select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM likeMoim WHERE user_idx=#{user_idx})) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+	<!-- 현수꺼 추가 08/19 -->
+	<select id="selectLikeList" parameterType="int" resultType="MoimVO">
+		SELECT * FROM moim WHERE moim_idx IN (SELECT moim_idx FROM likeMoim WHERE user_idx=#{user_idx})
+	</select>
+	
+	<!-- 찜리스트 개수 얻기 현수꺼 추가 08/19-->
+	<select id="selectLikeListCount" resultType="int">
+   		SELECT count(*) FROM moim
+	WHERE moim_idx 
+	IN (SELECT moim_idx FROM likeMoim WHERE user_idx=#{user_idx})
+	</select>
+	
+	
+	
+</mapper>

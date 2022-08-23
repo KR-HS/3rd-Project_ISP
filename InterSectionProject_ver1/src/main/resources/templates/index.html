@@ -195,7 +195,12 @@
 		font-size:18px;
 		font-weight:600;
 	}
-	
+	.moimSubject:before{
+		content:"『 "
+	}
+	.moimSubject:after{
+		content:" 』"
+	}
 	.moimInform{
 		font-size:12px;
 		padding:0 1%;
@@ -277,23 +282,23 @@
     
                 </div>        <!-- 슬라이드 부분 종료 (Slide End)-->
             </div> <!-- 슬라이드 크기조절 부분 종료 (slide resizing part End) -->
-			
 			<div class="under_slide" >
 			  	<div id="slider-div"  >
-				    <p class="slider-element date_sort_start" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date}"></span><br><span class="slider-element-day" th:text="${today_dayList[(today_day)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+1}">${today_date+1}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+1)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+2}">${today_date+2}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+2)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+3}">${today_date+3}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+3)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+4}">${today_date+4}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+4)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+5}">${today_date+5}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+5)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+6}">${today_date+6}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+6)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+7}">${today_date+7}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+7)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+8}">${today_date+8}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+8)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+9}">${today_date+9}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+9)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+10}">${today_date+10}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+10)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+11}">${today_date+11}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+11)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+12}">${today_date+12}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+12)%7]}"></span></p>
-				    <p class="slider-element" onclick="click_date(this);"><span class="slider-element-date" th:text="${today_date+13}">${today_date+13}</span><br><span class="slider-element-day" th:text="${today_dayList[(today_day+13)%7]}"></span></p>
+			  		<th:block th:each="num : ${#numbers.sequence(1,14)}">
+					    <p class="slider-element date_sort_start" onclick="click_date(this);" th:if="${num==1}">
+					    	<span class="slider-element-date" th:if="${(today_date+numStat.index)>Month_date}" th:text="${#numbers.formatDecimal(today_date+numStat.index-Month_date,2,0)}"></span>
+					    	<span class="slider-element-date" th:unless="${(today_date+numStat.index)>Month_date}"th:text="${today_date+numStat.index}"></span>
+					    	<br>
+					    	<span class="slider-element-day" th:text="${today_dayList[(today_day+numStat.index)%7]}"></span>
+					    </p>
+					    
+					    <p class="slider-element" onclick="click_date(this);" th:unless="${num==1}">
+					    	<span class="slider-element-date" th:if="${(today_date+numStat.index)>Month_date}" th:text="${#numbers.formatDecimal(today_date+numStat.index-Month_date,2,0)}"></span>
+					    	<span class="slider-element-date" th:unless="${(today_date+numStat.index)>Month_date}"th:text="${today_date+numStat.index}"></span>
+					    	<br>
+					    	<span class="slider-element-day" th:text="${today_dayList[(today_day+numStat.index)%7]}"></span>
+					    </p>
+			  		</th:block>
 			  	</div>
 			</div>
 			
@@ -330,8 +335,6 @@
 							<span class="moimInformInput moimTimeInput">입력</span>
 						</p>
 					</li>
-
-
 					
 				</ul>
 			</div>

@@ -34,7 +34,7 @@
 		$(e).css("background","white");
 	}
 	
-	function formChange(e){
+	function moimFormChange(e){
 		$(e).parent().siblings().children('input').css("color","blue");
 		$(e).parent().siblings().children('input').attr("disabled",false);
 		$(e).parent().siblings('.moimNameInput').children('input').focus().setCursorPosition($(e).parent().siblings('.moimNameInput').children('input').val().length);
@@ -44,12 +44,12 @@
 		$(e).html("수정");
 	}
 	function moimManage(e){
-		$(e).parent().siblings().children('input').css("color","black");
+		$(e).parent().siblings().children('input').css("color","rgb(84, 84, 84)");
 		$(e).parent().siblings().children('input').attr("disabled",true);
 		$(e).parent().siblings('.moimNameInput').children('input').blur();
 		
 		$(e).removeAttr("onclick");
-		$(e).attr("onclick","formChange(this);");
+		$(e).attr("onclick","moimFormChange(this);");
 		$(e).html("변경");
 		
 		/* Ajax 여기에 추가 */
@@ -60,8 +60,7 @@
 <style type="text/css">
 	
 	html, body{
-		/* height:100%; */
-		min-height:100%;
+		height:auto;
 	}
 	
 	.mainBanner{
@@ -76,12 +75,12 @@
 		margin: 0 0 0 5%;
 	}
 	.mainWrapper{
-		background-color:lightgray;
 		display:flex;
 		height:100%;
 	}
 	
 	.mainMenubar{
+		min-height:500px;
 		width:5%;
 		background-color:lightgray;
 	}
@@ -109,14 +108,8 @@
 		padding:1% 0;
 	}
 	
-	.recentJoin,.recentMoim{
-		padding:2% 4% 0 4%;
-		font-size:15px;
-		font-weight:700;
-		margin:0;
-	}
-	
-	.simpleCountBtnWrap{
+	/* 최상단 버튼 묶음(2종)  */
+	.moimCountBtnWrap{
 		display:flex;
 		width:30%;
 		height:10%;
@@ -138,7 +131,7 @@
 		border-radius:20px;
 	}
 	
-	.countBtn{
+	.moimTotalCount{
 		border-radius:20px;
 		width:150px;
 		height:35px;
@@ -149,12 +142,12 @@
 	}
 	
 	
-	.countBtnDummy{
+	.moimTotalCount> .countBtnDummy{
 		float: left;
 		width:50%;
 	}
 	
-	.countBtnInput{
+	.moimTotalCount > .countBtnInput{
 		float: right;
 		width:50%;
 		background-color:lightgray;
@@ -233,6 +226,7 @@
 		border:0px;
 		text-align:center;
 		width:100%;
+		background-color:white;
 	}
 </style>
 </head>
@@ -263,10 +257,10 @@
 		<div class="mainSection">
 			<div class="mainContent">
 			
-				<div class="simpleCountBtnWrap">
+				<div class="moimCountBtnWrap">
 					<div class="TotalContent">전체목록</div>
 					
-					<div class="countBtn TotalCount">
+					<div class="moimTotalCount">
 						<div class="countBtnDummy">생성 모임수</div>
 						<div class="countBtnInput TotalCountInput">100개</div>
 					</div>
@@ -305,7 +299,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -318,7 +312,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -331,7 +325,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -344,7 +338,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -357,7 +351,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -370,7 +364,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -383,7 +377,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -396,7 +390,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -409,7 +403,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							<tr class="moimInput">
@@ -422,7 +416,7 @@
 								<td class="moimIsdeleteInput"><input type="text" value="N" disabled></td> 
 								<td class="moimIsendInput"><input type="text" value="Y" disabled></td> 
 								<td class="MoimManageInput">
-									<button class="moimManageBtn" onclick="formChange(this);">변경</button>
+									<button class="moimManageBtn" onclick="moimFormChange(this);">변경</button>
 								</td>
 							</tr>
 							

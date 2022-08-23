@@ -66,13 +66,14 @@ public class MainController {
 		Calendar cal  = Calendar.getInstance();
 		int date = cal.get(Calendar.DATE);
 		int dayofWeek = cal.get(Calendar.DAY_OF_WEEK)-1;
-		
+		int dayofMonth= cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		String[] korDayOfWeek={"일","월","화","수","목","금","토"};
 		
 		model.addAttribute("today", today.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 		model.addAttribute("today_date",date);
 		model.addAttribute("today_dayList",korDayOfWeek);
 		model.addAttribute("today_day",dayofWeek);
+		model.addAttribute("Month_date",dayofMonth);
 		log.info("서버 절대 경로 : {}", filePath);
 		
 		

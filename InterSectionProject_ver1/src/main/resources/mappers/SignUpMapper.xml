@@ -30,8 +30,8 @@
 	</select>
 
 	<!-- 승인된 사람수 가져오기 -->
-	<select id="selectCountByApply" parameterType="hashMap" resultType="int">
-		select count(*) from signUp where signUp_isApply = 'Y'
+	<select id="selectCountByMoimApply" parameterType="hashMap" resultType="int">
+		select count(*) from signUp where signUp_isApply = 'Y' and moim_idx = #{moim_idx}
 	</select>
 	
 	<!-- 신청 등록하기 -->

@@ -11,55 +11,15 @@
 		$('.HomeMenu').trigger('click');
 	})
 	
-	//커서 위치 설정 함수
-	$.fn.setCursorPosition = function( pos )
-	{
-	  this.each( function( index, elem ) {
-	    if( elem.setSelectionRange ) {
-	      elem.setSelectionRange(pos, pos);
-	    } else if( elem.createTextRange ) {
-	      var range = elem.createTextRange();
-	      range.collapse(true);
-	      range.moveEnd('character', pos);
-	      range.moveStart('character', pos);
-	      range.select();
-	    }
-	  });
-	  
-	  return this;
-	};
-	
 	function selectMenu(e){
 		$(".MainMenu").css("background","lightgray");
 		$(e).css("background","white");
 	}
 	
-	function formChange(e){
-		$(e).parent().siblings().children('input').css("color","blue");
-		$(e).parent().siblings().children('input').attr("disabled",false);
-		$(e).parent().siblings('.moimNameInput').children('input').focus().setCursorPosition($(e).parent().siblings('.moimNameInput').children('input').val().length);
-		
-		$(e).removeAttr("onclick");
-		$(e).attr("onclick","moimManage(this);");
-		$(e).html("수정");
-	}
-	function moimManage(e){
-		$(e).parent().siblings().children('input').css("color","black");
-		$(e).parent().siblings().children('input').attr("disabled",true);
-		$(e).parent().siblings('.moimNameInput').children('input').blur();
-		
-		$(e).removeAttr("onclick");
-		$(e).attr("onclick","formChange(this);");
-		$(e).html("변경");
-		
-		/* Ajax 여기에 추가 */
-		
-	}
-	
 </script>
 <style type="text/css">
 	html, body{
-		min-height:100%;
+		height:auto;
 	}
 	
 	.mainBanner{
@@ -74,12 +34,12 @@
 		margin: 0 0 0 5%;
 	}
 	.mainWrapper{
-		background-color:lightgray;
 		display:flex;
 		height:100%;
 	}
 	
 	.mainMenubar{
+		min-height:500px;
 		width:5%;
 		background-color:lightgray;
 	}

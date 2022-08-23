@@ -14,7 +14,7 @@ public interface SignUpDAO {
 	public List<SignUpVO> selectByApply(HashMap<String, Integer> map) throws SQLException;
 	public int selectCountByUser(HashMap<String, Integer> map) throws SQLException;
 	public int selectCountByMoim(int moim_idx) throws SQLException;
-	public int selectCountByApply(HashMap<String, Integer> map) throws SQLException;
+	public int selectCountByMoimApply(HashMap<String, Integer> map) throws SQLException;
 	public void insert(SignUpVO signUpVO) throws SQLException;
 	public void udpateApply(int signUp_idx) throws SQLException;
 	public void udpateRefuse(int signUp_idx) throws SQLException;

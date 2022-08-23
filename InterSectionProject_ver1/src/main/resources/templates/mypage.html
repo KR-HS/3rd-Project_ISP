@@ -87,7 +87,7 @@
 						moim+="<span>"+user.user_name+"</span>";
 						moim+="</p>";
 						moim+="<p class='moimInfo JoinNum'>참여인원";
-						moim+="<span>"+vo.moim_personnel+"수정필요</span>";
+						moim+="<span>"+approveNum[i]+" / "+vo.moim_personnel+"</span>";
 						moim+="</p>";
 						moim+="<p class='moimInfo CreatorPhone'>연락처";
 						moim+="<span>"+(user.user_phone).replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+"</span>";
@@ -244,7 +244,7 @@
 								moim+="<span>"+user.user_name+"</span>";
 								moim+="</p>";
 								moim+="<p class='moimInfo JoinNum'>참여인원";
-								moim+="<span>"+vo.moim_personnel+"수정필요</span>";
+								moim+="<span>"+approveNum[i]+" / "+vo.moim_personnel+"</span>";
 								moim+="</p>";
 								moim+="<p class='moimInfo CreatorPhone'>연락처";
 								moim+="<span>"+(user.user_phone).replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+"</span>";
@@ -584,6 +584,7 @@
 	}
 	
 	.moim{
+		border-radius:5px;
 		padding:1% 2%;
 		margin:0;
 		margin-bottom:20px;
@@ -606,10 +607,12 @@
 	}
 	.moimDate{
 		padding-left:20px;
+		font-size:15px;
 		
 	}
 	.moimEnd{
 		padding-left:10px;
+		font-size:15px;
 	}
 	.moimUnder{
 		width:100%;
@@ -625,11 +628,13 @@
 		content:"▶";
 		font-size:10px;
 		padding-right:5px;
+		margin-right:5px;
 	}
 	
 	.moimInfo span:before{
 		content:": ";
 		font-size:12px;
+		margin: 0 10px;
 	}
 </style>
 </head>
@@ -650,7 +655,7 @@
 		<div class="under">
 			<div class="left">
 				<div class="profile">
-	   				<a href="#" onclick="window.open('/popup/profileImg_upload','프로필 이미지수정', 'width=500,height=250,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;"
+	   				<a href="#" onclick="window.open('/popup/profileImg_upload','프로필 이미지수정', 'width=500,height=400,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;"
 			        class="setting-icon profile-setting">
 			        	<i class="fa fa-cog fa-2x" aria-hidden="true"></i>
 			        </a>
@@ -709,7 +714,7 @@
 				
 				<div class="review">
 					<label class="recentReviewTitle">최근 작성 후기</label>
-					<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%" onclick="window.open('/popup/profile_ReviewList','내 작성후기 리스트', 'width=800,height=550,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;">더보기</button>
+					<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%" onclick="window.open('/popup/profile_ReviewList','내 작성후기 리스트', 'width=800,height=620,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;">더보기</button>
 					<br>
 					<p th:if="${#lists.isEmpty(listMap['reviewList'])}">작성한 후기가 없습니다</p>
 					<th:block th:if="${!#lists.isEmpty(listMap['reviewList'])&&voStat.index<5}" th:each="vo:${listMap['reviewList']}">
@@ -733,27 +738,6 @@
 	</div>
 	
 	<div class="moimList">
-		<!-- 
-		<div class="moim">
-			<div class="moimUpper">
-				<span class="moimSubject">스터디 모임입니다!</span>
-				<span class="moimDate">2022-07-26(화)</span>
-				<span class="moimEnd">&lt;종료&gt;</span>
-			</div>
-			<div class="moimUnder">
-				<p class="moimInfo Creator">개설자명
-					<span>한사람</span>
-				</p>
-				<p class="moimInfo JoinNum">참여인원
-					<span>10명</span>
-				</p>
-				<p class="moimInfo CreatorPhone">연락처
-					<span>010-0000-0000</span>
-				</p>
-			</div>
-		</div> 
-		-->
-		
 
 	</div>
 </div>

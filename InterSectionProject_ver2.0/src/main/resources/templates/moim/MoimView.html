@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<link rel="stylesheet" href="moim/MoimView.css">
+<<script src="moim/MoimView.js"></script>
+<!-- ckeditor cdn 추가 -->
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+<!-- services와 clusterer, drawing 라이브러리 불러오기 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b921c11228fb6ed80af48abcc7b8d09c&libraries=services,clusterer,drawing"></script>
+ 
+ 
+</head>
+<body>
+	<!-- 맨위로 클릭시 top으로 옴. -->
+	<div class="moim_create_full_wrap" id="top">
+		
+		
+		<div class="moim_info">
+			<div class="profile_photo_wrap">
+				<div>
+					<!-- 개설자가 올린이미지 파일 가지고와야함.  -->
+					<img class="profile_image" alt="" src=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2CX_o4D8CvjIKgiL6iJOy1OvEl3ySwkVklQ&usqp=CAU>
+				</div>
+				<br>
+				<h6>모임 개설자 정보</h6>
+				<hr>
+				<!-- 개설자 이미지 가지고와야함. -->
+				<span> <img class="profile_img" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbxNvpMhQMgJc7XdbcPX_KF1efQBDac2UTZw&usqp=CAU"></span>
+				
+				<!-- 개설자 유저이름 -->
+				<span th:text="${userVO.user_name}"></span><br>
+				
+				<!-- 개설자 아이디 -->
+				<span class="open_user4" th:text="${userVO.user_id}+' /'"></span>
+				
+				<!-- 개설자 핸드폰번호 -->
+				<span class="open_user2" th:text="${userVO.user_phone}"></span>
+				<hr>
+				<p class="open_user3">문의 사항은 메일/전화/댓글을 이용해주세요.</p>
+			</div>
+
+			<div class="base_info_wrap">
+				<!-- 자바 스크립트 찜하기 기능에 넘겨줄 moim_idx의 값 -->
+				<input th:value="${vo.moim_idx}" style="display: none;" id="moim_idx"></input>
+				
+				<!-- 온라인 오프라인체크 -->
+				<h6  th:text="${vo.moim_onoff}=='Y' ? '온라인' : '오프라인'"></h6>
+				
+				<!-- 모임이름 -->
+				<h4 th:text="${vo.moim_name}"></h4>
+				
+				<span>간단한모임 소개</span><br>
+				<span>#태그 #태그</span><br>
+				<hr>
+				<!-- 모임시간 년-월-일 출력 -->
+				<span th:text="${#dates.format(vo.moim_regdate, 'yyyy-MM-dd HH:mm')}"></span><br>
+				
+				<!-- 모임주소 -->
+				<span th:text="${vo.moim_addr1}"></span><br>
+				
+				<!-- 인원 -->
+				<span>정원 : </span>
+				<span th:text="${vo.moim_personnel}"></span>&emsp;
+				
+				<!-- 나이제한, 0명일경우에 제한없음으로 찍기 .  -->
+				<span>나이제한 : </span>		
+				<!-- 0 ~ 0이라면 제한없음 -->
+				<span th:if="${vo.moim_startAge}=='0' and ${vo.moim_limitAge}=='0'">제한없음</span>		
+				<!-- th:unless -> 둘다 0이 아니라라면  startAge ~ limitAge 으로 찍기 -->
+				<span th:unless="${vo.moim_startAge}=='0' and ${vo.moim_limitAge}=='0'" th:text="${vo.moim_startAge}+'~'+${vo.moim_limitAge}"></span>
+			
+				
+				
+				
+				<hr>
+				<!-- 참여자 목록-->
+				<h4 class="list_h4">참여자 목록 </h4>
+				<hr>
+				<div class="participants">
+					<div class="participant"th:each="m : ${userSignUp_list}">
+						<img class="profile_img" alt="" src="data:image/jpeg;base64,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">
+						<p class="participant_p" th:text="${m.user_name}"></p>
+					</div>
+				</div>
+				<!-- 신청하기, 찜하기 -->
+				<div id="sign_like">
+					<input type="button" id="signUp" class="btn btn-outline-danger" value="참여신청버튼"> 
+					<input type="button" id="signUp_ok" class="btn btn-danger" value="참여신청완료"> 
+					<input type="button" id="like" class="btn btn-outline-danger" value="찜하기"> 
+					<input type="button" id="like_ok" class="btn btn-danger" value="찜완료">
+				</div>
+				
+				
+			        <!-- confirm 모달을 쓸 페이지에 추가 start-->
+				<div class="wrap"><!-- .type-confirm.btn_ok로 위에 모달함수 선택자 사용함 변경하지말기 -->
+			        <section class="modal modal-section type-confirm">
+			            <div class="enroll_box">
+			                <p class="menu_msg"></p>
+			            </div>
+			            <div class="enroll_btn">
+			            	<button class="btn btn-danger btn_ok">확인</button>
+			               	<button class="btn btn-outline-danger modal_close">취소</button>
+			                
+			            </div>
+			        </section>
+			        <!-- confirm 모달을 쓸 페이지에 추가 end-->
+			
+			        <!-- alert 모달을 쓸 페이지에 추가 start-->
+			        <section class="modal modal-section type-alert">
+			            <div class="enroll_box">
+			                <p class="menu_msg"></p>
+			            </div>
+			            <div class="enroll_btn">
+			                <button class="btn btn-danger modal_close">확인</button>	
+			            </div>
+			        </section>
+			    </div>
+			        <!-- alert 모달을 쓸 페이지에 추가 end-->
+			</div>
+			
+
+			<!-- 마감시간 -->
+			<div class="view_time">
+				<p class="font time-title"></p>
+				<span class="day"></span> 
+				<span class="d_col"></span> 
+				<span class="hours"></span> 
+				<span class="h_col"></span> 
+				<span class="minutes"></span>
+				<span class="h_col"></span>
+				<span class="seconds"></span>
+			</div>
+		</div>
+
+		<hr>
+		<!-- 이거 안쓰면 왜 꺠지지?이유모르겠음. -->
+		<h6>&nbsp;</h6>
+
+		<!-- 클릭시 스크롤이동. -->
+		<div class="detail_view">
+			<a href="#detail" id="scroll_move">&emsp;상세정보&emsp;|</a>
+			<a href="#map_view" id="scroll_move">&emsp; 지도보기&emsp;|</a> 
+			<a href="#comment" id="scroll_move">&emsp; 문의/기대평&emsp;|</a> 
+			<a href="#information" id="scroll_move">&emsp; 참여신청/취소안내</a>
+		</div>
+		
+		<div class="detail">
+			<div th:text="${vo.moim_content}" class="form-control" id="content" name="content" readonly="readonly" maxlength="5000" style="height: 100%;"></div>
+		</div>
+		<br>
+		<hr>
+		<h5 id="map_view" class="map_view">지도보기</h5>
+		<input type="hidden" id="addr2_Save" th:value="${vo.moim_addr2}" />
+		<div id="moim_info3" style="width: 100%;height: 400px;"></div>
+	<hr>
+
+		<!-- 후기 -->
+		<h5 id="comment" class="comment">문의 / 기대평</h5>
+		
+			<!-- 세션에 로그인된 유저 이미지 가지고 와야함. -->		
+			<div class="comment_div">	
+				<img class="comment_img" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbxNvpMhQMgJc7XdbcPX_KF1efQBDac2UTZw&usqp=CAU">		
+				<!-- 댓글 등록하기  -->
+				<input class="comment_content" name="review_content" id="comment_content"></input>
+				<!--N이 비공개 댓글임.  -->
+				<button id="commentInsert" class="btn btn-danger">등록</button>				
+				<button id="commentUpdate" class="btn btn-danger">수정</button>			
+			</div>
+			<div  id="isPublic">
+				<p><input type="checkbox" id="review_isPublic">비공개</p>
+			</div>
+		<br>
+		<hr>
+		<!-- 댓글 찍기.  -->
+		<div id="comment_List">
+		<div th:each="m : ${review}">
+			<!-- 비공개 글일경우의 조건도 추가해줘서 넣어야함.  -->		 
+		 	<div th:if="${m.review_isDelete}=='N'">
+		 		<p style="color: red;" th:text="${m.review_isPublic}=='N'? '비공개댓글입니다.':' '"></p>
+				<p th:text="${m.user_name}"></p>
+				<span th:text="${m.review_content}"></span>
+				<button style="font-size: 12px; border: 1px solid gray; background-color: white; color: black;" onclick='delete_ok(this)'th:value="${m.review_idx}">삭제</button>				
+				<button style="font-size: 12px;border: 1px solid gray; background-color: white; color: black;" th:onclick='update_ok([[${m.review_idx}]],[[${m.review_content}]])' th:value="${m}">수정</button>				
+				<hr> 
+			</div> 
+		</div>
+		</div>
+		<h5 id="information" class="information">참여신청 / 취소안내</h5>
+		<div class="information_div">
+			<p>- 모임의 신청/취소/변경은 참여신청 기간 내에만 가능합니다.</p>
+			<p>- 참여신청 수정/취소, 참여상태 확인, 참여내역 확인은 마이페이지에서 할 수 있습니다.</p>
+			<p>- 모임 또는 그룹의 설정, 모집정원 초과 여부에 따라 대기자로 선정될 수 있습니다.</p>
+			<p>- 모임 내용과 관련한 사항은 모임 개설자에게 문의 바랍니다.</p>
+		</div>
+		
+		<a href="#top" id="scroll_move">맨위로가기</a>
+	<div class="moim_updel_div">
+	<button class="btn btn-danger" id="moim_update">게시물수정하기</button>
+	<button class="btn btn-danger" id="moim_delete">게시물삭제하기</button>
+	</div>
+	</div>
+
+</body>
+</html>
+

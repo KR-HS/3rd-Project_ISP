@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.ReviewDAO">
+	
+	<!-- 후기 1개 얻기 -->
+	<select id="selectByIdx" parameterType="int" resultType="ReviewVO">
+		select * from review where review_idx=#{review_idx}
+	</select>
+	
+	<!-- 전체 후기 갯수 얻기(관리자) -->
+	<select id="selectCount" resultType="int">
+		select count(*) from review
+	</select>
+	
+	<!-- 유저에 따른 후기 얻기 -->
+	<select id="selectByUser" parameterType="int" resultType="ReviewVO">
+		select * from review where user_idx=#{user_idx}
+	</select>
+	
+	<!-- 유저에 따른 후기 갯수 얻기 -->
+	<select id="selectCountByUser" parameterType="int" resultType="int">
+		select count(*) from review where user_idx=#{user_idx}
+	</select>
+	
+	
+	
+	<!-- 모임에 따른 후기 얻기 -->
+	<select id="selectByMoim" parameterType="int" resultType="ReviewVO">
+		select * from review where moim_idx=#{moim_idx}
+	</select>
+	
+	
+	
+	<!-- 모임에 따른 후기 갯수 얻기 -->
+	<select id="selectCountByMoim" parameterType="int" resultType="int">
+		select count(*) from review where moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 후기 저장 08/19 새롬걸로 수정 -->
+	<insert id="insert" parameterType="ReviewVO">
+		insert into review values
+		(review_idx_seq.nextval,#{user_idx},#{moim_idx}, #{review_content}, sysdate, #{review_isPublic}, 'N')
+	</insert>
+	
+	<!-- 후기 수정 -->
+	<update id="update" parameterType="ReviewVO">
+		update review set
+		review_content=#{review_content},
+		review_regdate= sysdate,
+		review_isPublic = #{review_isPublic}
+		where
+		review_idx = #{review_idx}
+	</update>
+	
+	<!-- 후기 변경(삭제) -->
+	<update id="updateIsDelete" parameterType="int">
+		update review set
+		review_isDelete = 'Y'
+		where
+		review_idx = #{review_idx}
+	</update>
+	
+	
+	<!-- 새롬 추가 부분 08/19 금 -->
+	<!-- 모임에 따른 후기 얻기 유저이름가져오려고 조인함.  -->
+	<select id="selectByMoimPlusName" parameterType="int" resultType="ReviewVO">
+		select r.*, u.USER_NAME from REVIEW r, USERINFO u where moim_idx=#{moim_idx} 
+		and u.USER_IDX =r.USER_IDX order by review_idx desc
+	</select>
+	
+	
+</mapper>

@@ -160,7 +160,7 @@ public class MypageServiceImpl implements MypageService{
 	public List<Integer> ApplyAgreeList(int user_idx,String sortMenu) {
 		List<MoimVO> moimList = null;
 		List<Integer> list=new ArrayList<>();
-		
+		HashMap<String,Integer> map=new HashMap<>();
 		try {
 			switch(sortMenu) {
 			case "개설":
@@ -180,7 +180,8 @@ public class MypageServiceImpl implements MypageService{
 			System.out.println(moimList);
 			for(MoimVO vo : moimList ) {
 				if(vo!=null) {
-					list.add(signUpDAO.selectCountByMoim(vo.getMoim_idx()));
+					map.put("moim_idx", vo.getMoim_idx());
+					list.add(signUpDAO.selectCountByMoimApply(map));
 				}
 				
 			}

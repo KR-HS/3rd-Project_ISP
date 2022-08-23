@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<title>시작 페이지</title>
+<script type="text/javascript">
+	
+
+	$(function(){	
+		$('.firstItem').trigger('click'); // 트리거 다시 선택해져있게 만들어야함. 
+	});
+
+	$(window).resize(function(){
+		
+	})
+	function sendPost(urlPage,params){
+		var moim_idx = $("#moim_select option:selected").val();
+		var obj={
+				"moim_idx" : moim_idx,
+		};
+	    for (var key in params) {	// key, value로 이루어진 객체 params
+	       obj[key]=params[key]+"";
+	    }
+	    $.ajax({
+			url : "userList",
+			type : "POST",  
+			data : obj,
+			async: false,
+			success : function(res){
+				$(".underSection").empty();		
+				$(".pagingVO").empty();
+				if(res["pv"].totalCount!=0){
+					var userList=res['pv'].list;
+					var pv = res['pv'];
+					var cv=res["cv"];
+					if(userList.length>0){
+						for(vo of userList){
+							$(".underSection").append(function(){
+								var user = "<div class='item'>";
+								user += "<div class='user_idx'>"+vo.user_idx+"</div>"
+								user += "<div class='item_image'></div>"
+								user += "<div class='item_name'>"
+								user += "<span class='user_name'>"+vo.user_name+"</span>"
+								user += "<span class='user_detail'><a href='#' onclick='window.open(\"/\",\"유저상세보기\", \"width=500,height=250,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no\");return false;'>상세보기</a></span>"
+								user += "</div>"
+								user += "<div class='item_detail_wrap'>"
+								user += "<div class='user_email'>이메일"
+								user += "<span class='item_detail user_email_input'>"+vo.user_id+"</span>"
+								user += "</div>"
+								user += "<div class='user_phone'>전화번호"
+								user += "<span class='item_detail user_email_input'>"+vo.user_phone+"</span>"
+								user += "</div>"
+								user += "</div>"
+								user += "<div class='item_button_wrap'>"
+								user += "<div class='agree_button' onclick='apply(this)' >승인수락</div>"
+								user += "<div class='disagree_button' onclick='apply(this)'>승인거절</div>"
+								user += "</div>"
+								return user;
+							})
+						}
+					}else{
+						$(".underSection").append("<div class='user'>신청인원이 없습니다.</div>");
+					}
+					$(".pagingVO").append(pv.pageList);
+				}
+			},
+			error : function(err){
+				alert("실행 실패");
+			}
+		});
+	}
+	
+	
+	function clickMoim(e){
+		var clickMoim_idx=e;
+		var obj = {
+				"moim_idx" : clickMoim_idx,
+				"s" : 5,
+				"b" : 5
+		};
+		$.ajax({
+			url : "userList",
+			type : "POST",  
+			data : obj,
+			async: false,
+			success : function(res){
+				$(".underSection").empty();	
+				$(".pagingVO").empty();
+				if(res["pv"].totalCount!=0){
+					var userList=res['pv'].list;
+					var signUpList=res['signUpList'].list;
+					var pv = res['pv'];
+					var cv=res["cv"];
+					if(userList.length>0){
+						for(vo of userList){
+							$(".underSection").append(function(){
+								var user = "<div class='item'>";
+								user += "<div class='user_idx'>"+vo.user_idx+"</div>"
+								user += "<div class='item_image'></div>"
+								user += "<div class='item_name'>"
+								user += "<span class='user_name'>"+vo.user_name+"</span>"
+								user += "<span class='user_detail'><a href='#' onclickk='window.open(\"/\",\"유저상세보기\", \"width=500,height=250,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no\");return false;'>상세보기</a></span>"
+								user += "</div>"
+								user += "<div class='item_detail_wrap'>"
+								user += "<div class='user_email'>이메일"
+								user += "<span class='item_detail user_email_input'>"+vo.user_id+"</span>"
+								user += "</div>"
+								user += "<div class='user_phone'>전화번호"
+								user += "<span class='item_detail user_email_input'>"+vo.user_phone+"</span>"
+								user += "</div>"
+								user += "</div>"
+								user += "<div class='item_button_wrap'>"
+								user += "<div class='agree_button' onclick='apply(this)' >승인수락</div>"
+								user += "<div class='disagree_button' onclick='apply(this)'>승인거절</div>"
+								user += "</div>"
+								return user;
+							})
+						}
+					}else{
+						$(".underSection").append("<div class='user'>신청인원이 없습니다.</div>");
+					}
+					$(".pagingVO").append(pv.pageList);
+				}
+			},
+			error : function(err){
+				alert("실행 실패");
+			}
+		});
+	}
+	
+	function apply(e){
+		var isApply = $(e).text();
+		var moim_idx = $("#moim_select option:selected").val();
+		var user_idx = $(e).parent(".item_button_wrap").siblings(".user_idx").text();
+		var obj = {
+				"isApply" : isApply,
+				"moim_idx" : moim_idx+"",
+				"user_idx" : user_idx+""
+		}
+		$.ajax({
+			url : "isApply",
+			type : "POST",  
+			data : obj,
+			async: false,
+			success : function(res){
+				alert(res["apply"])
+				if(res["apply"]=="승인완료"){
+					$(e).text("승인완료");
+					$(e).removeAttr("onclick");
+					$(e).css("cursor","none");
+					$(e).siblings(".disagree_button").hide(); // 눌렀을때 변경되게 해야하는거 못하겠음.
+				}else{
+					$(e).text("거절된 승인");
+					$(e).removeAttr("onclick");
+					$(e).css("cursor","none");
+					$(e).siblings(".agree_button").hide();
+				}
+				//location.reload();
+			},
+			error : function(){
+				alert("승인 작동 실패")
+			}
+		});
+	}
+	
+	
+</script>
+<style>
+
+	/* 메인부분 */
+	/* 윗부분 */
+	.upperSection{
+		width:70%;
+		height:20%;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		border:1px solid lightgray;
+		padding:2%;
+		background-color:lightgray;
+	}
+	.upperSubject{
+		font-weight:bold;
+		margin:0 0 2% 0;
+	}
+	
+	.btn-group{
+		width:90%;
+	}
+	.dropdown-menu-right{
+		width:100%;
+	}
+	
+	.dropdown-toggle{
+		background-color:white;
+		color:#333333;
+		border:1px solid #ccc;
+		text-align:left;
+	}
+	.dropdown-toggle::after{
+		margin-left:2%;
+	}
+		
+	/* 아랫부분 */
+	.underSection{
+		width:70%;
+		height:auto;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		padding:2%;
+		display:flex;
+		flex-direction:row;
+		flex-wrap:wrap;
+	}
+	.item{
+		width:18%;
+		height:auto;
+		background-color:white;
+		margin:2% 1%;
+		border:1px solid gray;
+	}
+	.user_idx{
+		display: none !important;
+	}
+	.item_image{
+		border-radius:100%;
+		margin:1px solid lightgray;
+		height:150px;
+		width:150px;
+		background-color:gray;
+		margin:auto;
+		margin-top:5%;
+		margin-bottom:5%;
+	}
+	.user_name{
+		font-size:18px;
+		font-weight:bold;
+		margin:0 25% 0 15%;
+	}
+	.user_detail{
+		font-size:12px;
+		padding:1.5% 3%;
+		border-radius:4px;
+		color:white;
+		background-color:rgb(94,94,94);
+		line-height:2em;
+		text-align:center;
+		cursor:pointer;
+	}
+	.item_detail_wrap{
+		font-size:12px;
+		color:#7F7F7F;
+		padding:10%;		
+	}
+	.item_detail:before{
+		content:":";
+		margin:2%;
+	}
+	.agree_button{
+		margin:auto;	
+		width:80%;
+		border-radius:30px;
+		background-color:rgb(26, 188, 156);
+		color:white;
+		line-height:20px;
+		text-align:center;
+		margin-bottom:5%;
+		cursor:pointer;
+	}
+	.disagree_button{
+		margin:auto;	
+		width:80%;
+		border-radius:30px;
+		background-color:rgb(211, 84, 0);
+		color:white;
+		line-height:20px;
+		text-align:center;
+		margin-bottom:5%;
+		cursor:pointer;
+	}
+	
+</style>
+</head>
+<body>
+
+<!-- main -->
+<div class="upperSection">
+	<h3 class="upperSubject">신청자 관리</h3>
+	<div class="selectBox" >
+		<label> 모임을 선택하세요 <br />
+		<select id="moim_select" onchange="clickMoim(value);">
+			<optgroup label="내가 만든 모임">
+				<option th:each="vo:${moimList}" th:value="${vo.moim_idx}" th:text="${vo.moim_name}" />
+			</optgroup>
+		</select>
+		</label>
+	</div>
+</div>
+<div class="underSection"></div>
+<div class="pagingVO"></div>
+</body>
+ 
+</html>

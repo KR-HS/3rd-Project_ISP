@@ -83,6 +83,7 @@ table{
 	padding:2%;
 	text-align:center;
 	margin-bottom:2%;
+	min-height:500px;
 }
 th{
 	border-bottom:1px solid lightgray;
@@ -125,13 +126,17 @@ td{
 				<th class="review">리뷰내용 입력</th>
 				<th class="date">작성일</th>
 			</tr>
-			<th:block th:each="vo:${pv.list}">
+			<th:block th:each="vo:${pv.list}" th:if="${!#lists.isEmpty(pv.list)}">
 			<tr>
 				<td class="review_No" th:text="${voStat.count}"></td>
 				<td class="review_content" th:text="${vo.review_content}">리뷰내용 입력</td>
 				<td class="review_date" th:text="${#dates.format(vo.review_regdate, 'yyyy-MM-dd')}">작성일</td>
 			</tr>
-			
+			</th:block>
+			<th:block th:if="${#lists.isEmpty(pv.list)}">
+			<tr>
+				<td colspan="3" class="review_empty">작성한 후기가 없습니다.</td>
+			</tr>
 			</th:block>
 		</table>
 		
