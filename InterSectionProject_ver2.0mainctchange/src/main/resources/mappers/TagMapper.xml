@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.TagDAO">
+	
+	<!-- 모임에 따른 태그(여러개) 가져오기 -->
+	<select id="selectByMoim" parameterType="int" resultType="TagVO">
+		select * from tag where moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 한개 얻기 -->
+	<select id="selectByIdx" parameterType="int" resultType="TagVO">
+		select * from tag where tag_idx=#{tag_idx}
+	</select>
+	
+	<!-- 태그 저장하기 -->
+	<insert id="insert" parameterType="TagVO">
+		insert into tag values
+		(tag_idx_seq.nextval, #{moim_idx}, #{tag_name})
+	</insert>
+	
+	<!-- 태그 삭제 -->
+	<delete id="delete" parameterType="TagVO">
+		delete from tag where tag_idx=#{tag_idx}
+	</delete>
+	
+</mapper>

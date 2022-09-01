@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.SignUpDAO">
+	
+	<!-- 모임에 따른 신청자 가져오기 -->
+	<select id="selectByMoim" parameterType="int" resultType="UserVO">
+		select * from userInfo where user_idx in (select user_idx from signUp where moim_idx=#{moim_idx})
+	</select>
+	
+	<!-- 모임에 따른 신청자 인원수 가져오기 -->
+	<select id="selectCountByMoim" parameterType="int" resultType="int">
+		select count(*) from signUp where moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 유저에 따른 신청한 모임 가져오기 -->
+	<select id="selectByUser" parameterType="int" resultType="SignUpVO">
+		select * from signUp where user_idx=#{user_idx}
+	</select>
+	
+	<!-- 유저에 따른 신청한 모임 개수 가져오기 -->
+	<select id="selectCountByUser" parameterType="int" resultType="int">
+		select count(*) from signUp where user_idx=#{user_idx}
+	</select>
+	
+	
+	
+	
+	<!-- 유저에 따른 신청허가된(참여한)모임 가져오기 -->
+	<select id="selectByUserApply" parameterType="int" resultType="SignUpVO">
+		select * from signUp where signUp_isApply = 'Y' and user_idx = #{user_idx}
+	</select>
+	
+	<!-- 유저에 따른 신청허가된(참여한)모임 개수 가져오기 -->
+	<select id="selectCountByUserApply" parameterType="int" resultType="SignUpVO">
+		select count(*) from signUp where signUp_isApply = 'Y' and user_idx = #{user_idx}
+	</select>
+	
+	<!-- 모임에 따른 신청허가된(참여한)유저 가져오기 -->
+	<select id="selectByMoimApply" parameterType="int" resultType="SignUpVO">
+		select * from signUp where signUp_isApply = 'Y' and moim_idx = #{moim_idx}
+	</select>
+
+	<!-- 모임별 승인된 사람수 가져오기 -->
+	<select id="selectCountByMoimApply" parameterType="int" resultType="int">
+		select count(*) from signUp where signUp_isApply = 'Y' and moim_idx = #{moim_idx}
+	</select>
+	
+	<!-- 신청 등록하기 새롬이 추가 08/19금-->
+	<insert id="insert" parameterType="SignUpVO">
+		insert into signUp values
+		(signUp_idx_seq.nextval, #{moim_idx}, #{user_idx}, 'N')
+	</insert>
+	
+	
+	<!-- 모임신청 취소  새롬이 추가 08/19 금-->
+   <delete id="delete" parameterType="int">
+	delete from signUp where signUp_idx=#{signUp_idx}
+   </delete>
+	
+	
+	
+	<!-- 승인 허락하기 -->
+	<update id="updateApply" parameterType="int"> <!-- parametertype변경 : SignUpVO >> int -->
+		update signUp set
+		signUp_isApply = 'Y'
+		where
+		signUp_idx = #{signUp_idx}
+	</update>
+	
+	<!-- 승인 거절하기 -->
+	<update id="updateRefuse" parameterType="int"> <!-- parametertype변경 : SignUpVO >> int -->
+		update signUp set
+		signUp_isApply = 'R'
+		where
+		signUp_idx = #{signUp_idx}
+	</update>
+	
+	<!-- 모임idx와 유저idx로 signUp_idx 구하기 -->
+	<select id="selectSignUpIdx" parameterType="hashMap" resultType="int">
+		select signUp_idx from signUp where user_idx=#{user_idx} and moim_idx=#{moim_idx}
+	</select>
+	
+	<!-- 모임idx로 signUpVO가져오기 -->
+	<select id="selectByMoimIdx" parameterType="int" resultType="SignUpVO">
+		select * from signUp where moim_idx = #{moim_idx} order by user_idx desc
+	</select>
+	
+</mapper>

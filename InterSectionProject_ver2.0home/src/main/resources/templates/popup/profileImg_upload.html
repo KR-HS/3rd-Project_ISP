@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+<script type="text/javascript">
+$(function(){
+	// 이미지 미리보기
+	$('#u_file').change(function(){
+	    setImageFromFile(this, '#preview');
+	});
+	
+	function setImageFromFile(input, expression) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	            $(expression).attr('src', e.target.result);
+	            $("#imgViewArea").show();
+	        }
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	    else{
+	    	$("#preview").attr('src',"");
+	    	$("#imgViewArea").hide();
+	    }
+	}
+	
+	 $('#submit').on("click",function () {
+		 if($("#u_file")[0].files.length==0){
+			 swal('업로드 오류', "한개 이상의 파일을 선택해주세요")
+		 }
+		 
+		 const dataForm = new FormData();
+		 dataForm.append("profileImg",$("#u_file")[0].files[0]);
+      	 $.ajax({
+             type: "POST",
+             url: "../profileImg_uploadOk",
+             data: dataForm,
+             enctype: 'multipart/form-data',
+             processData: false,
+             contentType: false,
+             success: function (res) {
+                 alert("success : "+res);
+                 //console.log(res);
+                 window.opener.location.reload();    //부모창 reload
+             	 window.close();    //현재 팝업창 Close
+                 
+             },
+             error: function () {
+				alert("error");
+             }
+         });   
+     });
+	
+})
+
+	
+
+</script>
+<style type="text/css">
+*{
+	font-family: 'Noto Sans KR', sans-serif;
+	user-select: none;
+}
+table {
+	width: 100%;
+	border: 2px solid #bfbfc8;
+	border-collapse: separate;
+  	border-spacing: 0 10px;
+  	padding:0 5%;
+}
+table td {
+	border: none;
+}
+
+table tr td {
+	text-align: center;
+}
+/* 업로드 */
+.item{
+	width: 80px;
+	font-size:13px;
+	font-weight:700;
+}
+.itemUpload{
+	text-align: left;
+	padding-left: 22px;
+}
+/* 미리보기 */
+#imgViewArea{
+	display:none;
+	margin-top:20px;
+}
+.imgPreview{
+	border:1px solid lightgray;
+	padding:5%;
+}
+#preview{
+	max-width:250px;
+}
+
+/* 확인/취소 버튼 */
+.resultBtnWrap{
+	border: none;
+	text-align: right;
+}
+.resultBtn{
+	text-align: right;
+	margin: 10px 0;
+}
+
+.btn-sm{
+	cursor:pointer;
+}
+
+#submit,#cancel{
+	font-size:12px;
+	font-weight:600;
+}
+
+.btn-outline-success {
+	width: 70px;
+	background-color: #87CEEB;
+	border-radius: 5px;
+	border: 1px solid lightgray;
+}
+
+
+
+</style>
+</head>
+<body>
+	<div style="text-align:center;vertical-align:center;">
+		<form id="form" enctype="multipart/form-data">
+			<table>
+				<tr>
+					<td colspan="4" >
+						<h2 class="title">&lt프로필 이미지 수정하기&gt</h2>
+					</td>
+				</tr>
+				<tr>
+					<td class="item" valign="top">이미지첨부</td>
+					<td class="itemUpload" colspan="3">
+						<input style="margin-left:-17px;" type="file" id="u_file" accept="image/*"/>
+					</td>
+				</tr>
+				<tr id="imgViewArea" >
+					<td class="item">미리보기</td>
+					<td class="imgPreview" colspan="4">
+						<img src="" id="preview"/>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="4" class="resultBtnWrap">
+						<div class="resultBtn">
+							<button id="submit" type="button" class="btn btn-outline-success btn-sm">저장</button>
+							<button id="cancel"type="button" class="btn btn-outline-success btn-sm" onclick='window.close()'>취소</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form> 
+
+	</div>
+</body>
+
+</body>
+</html>

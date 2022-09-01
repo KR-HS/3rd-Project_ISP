@@ -1,0 +1,295 @@
+/*전체 정보보기*/
+.moim_create_full_wrap {
+	margin-left: auto;
+	margin-right: auto;
+	width: 80vw;
+	padding: 30px;
+	border: 1px solid black;
+}
+
+ /*모임정보보기*/
+.moim_info {
+	width: 100%;
+	border: 1px solid black;
+	height: 600px;
+	float: left;
+}
+.base_info_wrap {
+	width: calc(100% - 500px); float : left;
+	padding: 20px;
+	margin-left: 10px;
+	margin-top: 30px;
+	float: left;
+}
+
+
+/* 개설 대표이미지  */
+.profile_photo_wrap {
+	width: 450px;
+	height: 500px;
+	margin: 0px;
+	margin-top: 30px;
+	float: left;
+	margin-left: 30px;
+}
+
+
+#isPublic{
+	margin-left: 120px;
+}
+/*모임보기 대표이미지*/
+.profile_image {
+	width: 100%;
+	height: 300px;
+	margin-top: 10px;
+}
+
+
+
+/* 프로필 영역 종료 */
+#sign_like {
+	width: 100%;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.detail>p {
+	margin-top: 20px;
+}
+
+.moim_info3 {
+	height: 100px;
+	border: 1px solid black;
+}
+
+.list_h4 {
+	margin-top: 30px;
+}
+
+.map_view {
+	margin-left: 20px;
+}
+
+.moim_info4 {
+	border: 1px solid black;
+	width: 80%;
+	height: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* 마감시간 */
+.view_time {
+	color: red;
+}
+
+/* 참여자이미지 ,개설자이미지  */
+.profile_img {
+	border-radius: 100%;
+	width: 100px;
+	margin-left: 20px;
+	height: 100px;
+}
+
+/*개설자정보*/
+.open_user1 {
+	margin-left: 20px;
+}
+/* 개설자 핸드폰번호 */
+.open_user2 {
+	margin-top: -10px;
+}
+/* 개설문의사항 */
+.open_user3 {
+	font-size: 13px;
+}
+
+.open_user4 {
+	margin-top: 7px;
+}
+/* 참여자 이미지 파일넣을 큰 div */
+.participants {
+	display: flex;
+	width: 100%; 
+	float: left;
+	
+	height: 150px;
+	margin-bottom: 15px;
+}
+/* 참여자이미지아래 글씨위치*/
+.participant {
+	text-align: center;
+
+	
+}
+/* 참여자이미지아래 글씨크기*/
+.participant_p {
+	margin-top: 10px;
+	margin-left: 20px;
+}
+/*상세페이지,지도보기 ,문의기대평,참여신청/취소안내*/
+.detail_view {
+	height: 30px;
+	width: 100%;
+}
+
+.detail_view>a{
+	text-decoration: none;
+	font-size: 20px;
+	color: black;
+}
+
+/*문의 기대평 댓글*/
+.comment {
+	margin-left: 20px;
+	margin-top: 30px;
+}
+/*문의 기대평 큰div*/
+.comment_div {
+	display: flex;
+	width: 100%;
+	margin-top: 20px;
+}
+/*문의 기대평 댓글다는 유저 이미지*/
+.comment_img {
+	border-radius: 100%;
+	width: 100px;
+}
+/*문의 기대평 댓글내용입력란*/
+.comment_content {
+	height: 100px;
+	width: 90%;
+	margin-left: 20px;
+}
+
+.comment_form {
+	width: 100%;
+}
+#commentInsert{
+	
+	display: inline;
+}
+#commentUpdate{
+
+	display: none;
+}
+
+.information {
+	margin-left: 20px;
+	margin-top: 30px;
+}
+
+.information_div {
+	height: auto;
+	border: 1px solid black;
+}
+
+.information>p {
+	margin-top: 20px;
+	
+}
+
+
+#signUp {
+	display: inline;
+}
+
+#signUp_ok {
+	display: none;
+}
+
+#like {
+	display: inline;
+}
+
+#like_ok {
+	display: none;
+}
+
+
+
+.modal .btn {
+	cursor: pointer;
+	border: 1px solid #999999;
+	text-align: center;
+	border-radius: 5px;
+	outline: none;
+	font-weight: 500;
+}
+
+.dimLayer {
+	display: block;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+	position: fixed;
+	left: 0;
+	top: 0px;
+	margin: 0;
+	padding: 0;
+	z-index: 9998;
+}
+
+.modal {
+	width: 600px;
+	height: 252px;
+	border-radius: 10px;
+	padding: 80px 24px;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.modal-section {
+	background: #ffffff;
+	box-sizing: border-box;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	display: none;
+	z-index: 9999;
+}
+
+.menu_msg {
+	font-size: 21px;
+	font-weight: 500;
+}
+
+.enroll_box p {
+	padding-bottom: 56px;
+}
+
+.gray_btn {
+	width: 90px;
+	background: #ffffff;
+	color: #999999;
+	height: 36px;
+	line-height: 36px;
+	transition: 0.5s;
+	font-size: 17px;
+}
+
+.pink_btn {
+	width: 90px;
+	background: #ed197a;
+	color: #fff;
+	height: 36px;
+	line-height: 36px;
+	transition: 0.5s;
+	font-size: 17px;
+	border: none;
+}
+.comment_div{
+	width: 100%;
+}
+
+
+.moim_updel_div{
+	margin-top: 10px;
+	
+}
+

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.UserDAO">
+
+	<!-- 전체회원수 -->
+	<select id="selectCount" resultType="int">
+		select count(*) from
+		userInfo
+	</select>
+
+	<!-- 회원한명 가져오기 -->
+	<select id="selectByIdx" parameterType="int" resultType="UserVO">
+		select *
+		from userInfo where user_idx = #{user_idx}
+	</select>
+
+	<!-- 회원등록 -->
+	<insert id="insert" parameterType="UserVO">
+		insert into userInfo
+		(user_idx,user_id,user_pwd,user_name,user_birth,user_gender,user_phone,user_use,user_uuid,role)
+		values
+		(user_idx_seq.nextval,#{user_id},#{user_pwd},#{user_name},#{user_birth},#{user_gender},#{user_phone},'0',#{user_UUID}, 'ROLE_USER')
+	</insert>
+	<!-- 회원정보수정 -->
+	<update id="update" parameterType="UserVO">
+		update userInfo set
+		user_pwd=#{user_pwd},
+		user_name=#{user_name},
+		user_gender=#{user_gender},
+		user_phone=#{user_phone},
+		user_isPublic=#{user_isPublic}
+		where
+		user_idx= #{user_idx}
+	</update>
+
+	<!-- 삭제시 상태변경 -->
+	<update id="updateIsDelete" parameterType="int">
+		update userInfo set
+		user_isDelete = 'Y' where user_idx=#{user_idx}
+	</update>
+
+	<!-- 메일인증시 인증부여 -->
+	<update id="updateUse" parameterType="int">
+		update userInfo set
+		user_use='1' where user_idx=#{user_idx}
+	</update>
+
+	<!-- 비밀번호변경 -->
+	<update id="updatePassword" parameterType="hashMap">
+		update userInfo set
+		user_pwd =#{user_pwd} where user_id=#{user_id}
+	</update>
+
+
+	<!-- 아이디로 찾기 -->
+	<select id="selectByUserid" parameterType="string"
+		resultType="UserVO">
+		select * from userInfo where user_id=#{user_id}
+	</select>
+
+	<!-- 유저 아이디 중복 확인 -->
+	<select id="selectUseridCount" parameterType="string"
+		resultType="int">
+		select count(*) from userInfo where user_id=#{user_id}
+	</select>
+
+	<!-- 삭제하기 -->
+	<delete id="delete" parameterType="int">
+		delete from userInfo where
+		user_idx=#{user_idx}
+	</delete>
+
+	<!-- 신청한 인원 리스트로 받아오기 -->
+	<select id="selectSignUpUser" parameterType="hashMap"
+		resultType="UserVO">
+		select
+		R.*
+		from
+		(select
+		rownum rnum, Q.*
+		from
+		(select * from userInfo where
+		user_idx in (select user_idx from signUp where
+		moim_idx = #{moim_idx})
+		order by user_idx desc) Q
+		where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+		) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+
+	<!-- 신청페이지 관련해서 써야함. -->
+
+	<!-- 관리자페이지에서 쓰는 매퍼 -->
+
+	<!-- 신규인원 5명 뽑기 -->
+	<select id="selectFiveUser" resultType="UserVO">
+		select * from userInfo where <![CDATA[ rownum  <= 5 ]]>
+		order by user_idx desc
+	</select>
+
+	<!-- 탈퇴회원수 가져오기 -->
+	<select id="selectCountDeleteUser" resultType="int">
+		select count(*)
+		from userInfo where user_isDelete = 'Y'
+	</select>
+
+	<!-- (관리자)한페이지 얻기 -->
+	<select id="selectList" parameterType="hashmap"
+		resultType="UserVO">
+		select
+		R.*
+		from
+		( select
+		rownum rnum, Q.*
+		from
+		(select * from userInfo order
+		by user_idx desc) Q
+		where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+		) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+
+	<!-- 탈퇴회원목록 가져오기 -->
+	<select id="selectDeleteList" parameterType="hashmap"
+		resultType="UserVO">
+		select
+		R.*
+		from
+		( select
+		rownum rnum, Q.*
+		from
+		(select * from userInfo where
+		user_isDelete = 'Y' order by user_idx desc) Q
+		where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+		) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+
+	<!-- 관리자모드에서 수정하기 -->
+	<update id="supervisorUpdate" parameterType="UserVO">
+		update userInfo set
+		user_name = #{user_name},
+		user_phone = #{user_phone},
+		user_use =
+		#{user_use},
+		user_isDelete = #{user_isDelete}
+		where
+		user_idx=#{user_idx}
+	</update>
+
+	<!-- login 부분 -->
+
+	<!-- 최근 가입 user_idx 가져오기  -->
+	<select id="selectCurrentUserIdx" resultType="int">
+		select Max(user_idx) from userInfo
+	</select>
+	<!-- 이름 번호로 찾기 -->
+	<select id="selectByPhone" parameterType="string"
+		resultType="string">
+		select user_id from userInfo where user_name = #{user_name} and user_phone =
+		#{user_phone}
+	</select>
+	<!-- 유저 정보 확인(이메일,이름으로) -->
+	<select id="userInfoCheck" parameterType="string"
+		resultType="int">
+		select count(*) from userInfo where user_id=#{user_id} and
+		user_name=#{user_name}
+	</select>
+	<!-- 대형추가// 비밀번호 찾기시 임시비밀번호로 비밀번호 업데이트 -->
+	<update id="updateTempPassword" parameterType="string">
+		update userInfo set user_pwd = #{user_pwd} where user_id=#{user_id} and
+		user_name=#{user_name}
+	</update>
+	
+	
+	<!-- 새롬 추가 08/19 금 -->
+	<!-- 모임별 승인된 유저정보가지고오기 -->
+	<select id="selectSignUpList" parameterType="int" resultType="UserVO">
+		select * from userInfo where user_idx IN(select user_idx from signUp where signUp_isApply='Y' and moim_idx=#{moim_idx})
+	</select>
+	
+	
+	<!-- 0826 현수 추가(user_idx별 유저 이름 얻기) -->
+	<select id="getUserNameList" parameterType="string" resultType="string">
+	select user_name from userInfo where user_idx in (SELECT user_idx FROM MOIM WHERE TO_CHAR(MOIM_TIME, 'YYYY-MM-DD') = #{moim_time})
+	</select>
+
+
+</mapper>

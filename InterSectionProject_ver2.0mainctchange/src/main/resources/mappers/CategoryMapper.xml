@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.CategoryDAO">
+	
+	<!-- 대분류로 게시글찾기 -->
+	<select id="selectByLcname" parameterType="CategoryVO" resultType="CategoryVO">
+		select * from category
+		where lc_name=#{lc_name}
+	</select>
+
+
+
+	<!-- 대/소분류로 게시글찾기 동원수정8/19 파라미터 vo로 변경-->
+	<select id="selectByCategory" parameterType="CategoryVO" resultType="CategoryVO" >		
+		select * from category
+		where sc_name=#{sc_name}
+	</select>
+	
+	
+	
+	<!-- 1개 가져오기 -->
+	<select id="selectByIdx" parameterType="int" resultType="CategoryVO">
+		select * from category where category_idx = #{category_idx}
+	</select>
+	
+	<!-- 소분류로 category_idx찾기 -->
+   <select id="selectCategoryIdxByScName" parameterType="String" resultType="int" >
+      select category_idx from category
+      where sc_name=#{sc_name}
+   </select>
+	
+	
+		<!-- 동원 추가 ==- 모임 개설시 대분류만 가져오기 -->
+	<select id="selectAllLcname" resultType="string">
+		SELECT DISTINCT LC_NAME FROM CATEGORY
+	</select>
+	
+	<!-- 동원 추가 ==- 모임 개설시 대분류고르면 가져오기 -->
+	<select id="selectByScname" parameterType="string" resultType="string">
+		SELECT SC_NAME FROM CATEGORY WHERE LC_NAME = #{lc_name}
+	</select>
+	
+	
+	
+</mapper>

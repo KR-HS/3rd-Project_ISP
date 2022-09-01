@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<!--하단 날짜 슬라이드(Slick Carousel Slider)-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<title>시작 페이지</title>
+<script type="text/javascript">
+	$(function(){
+		$('#slider-div').slick({
+			slide: 'p',		//슬라이드 되어야 할 태그 ex) div, li 
+			rows:1,
+			infinite : false, 	//무한 반복 옵션	 
+			slidesToShow : 7,		// 한 화면에 보여질 컨텐츠 개수
+			slidesToScroll : 1,		//스크롤 한번에 움직일 컨텐츠 개수
+			speed : 100,	 // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+			arrows : true, 		// 옆으로 이동하는 화살표 표시 여부
+			dots : false, 		// 스크롤바 아래 점으로 페이지네이션 여부
+			autoplay : false,			// 자동 스크롤 사용 여부
+			autoplaySpeed : 10000, 		// 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
+			pauseOnHover : false,		// 슬라이드 이동	시 마우스 호버하면 슬라이더 멈추게 설정
+			vertical : false,		// 세로 방향 슬라이드 옵션
+			prevArrow : "<button type='button' class='slick-prev'>Previous</button>",		// 이전 화살표 모양 설정
+			nextArrow : "<button type='button' class='slick-next'>Next</button>",		// 다음 화살표 모양 설정
+			dotsClass : "slick-dots", 	//아래 나오는 페이지네이션(점) css class 지정
+			draggable : true, 	//드래그 가능 여부 
+			variableWidth: true,
+			variableHeight: true,
+			initialSlide:0
+
+		});
+		
+		$(".slider-element-day").each(function(){
+			var yoil = $(this).text();
+			if(yoil=="일"){
+				$(this).css("color","red");
+				$(this).siblings().css("color","red");
+			}
+		})
+		var width=parseInt(($("#slider-div").width()-35)/7)+"px";
+		$(".slider-element").css("width",width);
+		
+		
+		
+		// 동원 필터 부분 
+		$('.lc_filter').on('click', function(e){
+			// alert(e.target.id);
+			var result = $('#'+e.target.id).text();
+			if(result == '대분류'){
+				$('#sc').hide();
+			}else{
+				$('#sc').show();
+				$.ajax("Category",{
+					type:"GET",
+					data:{
+						"lc_name" : result
+					},
+					success : function(data){
+						// alert(typeof(data) + " : " + data );
+						$("#sc").empty();
+						for(index in data){
+							// alert(data[index]);
+							$("#sc").append("<button class='sc_filter' value='" + data[index] + "'>" + data[index] + "</button>");
+
+						}
+					},
+					error : function(data){
+						alert(data + "먼가 안됌");
+						
+					}
+				})
+			
+			}
+			
+		});	
+		
+		// 동원 필터 부분 종료
+		
+		$(".date_sort_start").trigger('click');
+	
+		
+		
+	});		// <-- 윈도우 온로드
+	
+	
+	function sendMoim(e){
+		 var form = document.createElement('form');
+		    form.setAttribute('method', 'post'); //POST 메서드 적용
+		    form.setAttribute('action', "/moim1");	// 데이터를 전송할 url
+		    document.charset = "utf-8";
+		   
+		        var hiddenField = document.createElement('input');
+		        hiddenField.setAttribute('type', 'hidden'); //값 입력
+		        hiddenField.setAttribute('name', 'indexMoimidx');
+		        hiddenField.setAttribute('value', $(e).children(".moimContentIdx").val());
+		        form.appendChild(hiddenField);
+		    
+		    document.body.appendChild(form);
+		    form.submit();	// 전송~
+	}
+	
+	
+	$(window).resize(function(){
+		var width=parseInt(($("#slider-div").width()-35)/7)+"px";
+		$(".slider-element").css("width",width);
+	})
+
+	
+	function click_date(e){
+		$(".slider-element").css("background-color","#FFFFFF");
+		$(".slider-element span").css("color","#000000");
+		$(".slider-element-day").each(function(){
+			var yoil = $(this).text();
+			if(yoil=="일"){
+				$(this).css("color","red");
+				$(this).siblings().css("color","red");
+			}
+		})
+		$(e).css("background-color","#1570FF");
+		$(e).children("span").css("color","#FFFFFF");
+		
+		
+		
+		
+		
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth()+1;
+		var day = $(e).children(".slider-element-date").text();
+		
+		var today=new Date(date.getYear()+1900,date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds());
+		
+		if(day<date.getDate()){
+			month=month+1;
+			if(month>12){
+				month=month%12;
+				year=year+1;
+			}
+		}
+		
+		var getDate = year+"-"+("0"+month).slice(-2)+"-"+("0"+day).slice(-2);
+		/* alert(getDate); */
+		var obj = {
+				"anotherDay" : getDate
+		};
+		
+		$.ajax(
+				{
+				url:"/moimOfDate",
+				type : "get",  
+				data : obj,
+				success : function(res){
+					$('.moimContentList').empty();
+				   	var moimList=res["todayMoimList"];
+					var moimFounderList=res["todayMoimListFounder"];
+					var moimSignUpCountList=res["MoimSignUpAgreeList"];
+					var moimCategoryList=res["moimCategoryList"];
+					
+	               	if(moimList.length<1){
+	               		$('.moimContentList').append("<p class='moimEmpty'>오늘 모임이 없습니다.</p>");
+	               	}
+					for(var i=0;i<moimList.length;i++){
+					$('.moimContentList').append("<li class='moimContent' onclick='sendMoim(this)'>");
+					$('.moimContent').append("<input class='moimContentIdx' type='hidden' value="+moimList[i].moim_idx+">");
+					$('.moimContent').append("<p class='moimSubject'>");
+					$('.moimSubject').append("<span class='moimSubjectInput'>"+moimList[i].moim_name+"</span>")
+					$('.moimSubject').append("<span class='moimCategory moimLC'>"+moimCategoryList[i].lc_name+"</span>")
+					$('.moimSubject').append("<span class='moimCategoryArrow'>▶</span>")
+					$('.moimSubject').append("<span class='moimCategory moimSC'>"+moimCategoryList[i].sc_name+"</span>")
+					$('.moimContent').append("</p>")
+					
+					/* $('.moimContent').append("<p class='moimInform moimCreator'>개설자");
+					$('.moimCreator').append("<span class='moimInformInput moimCreatorInput'>"+moimFounderList[i]+"</span>");
+					$('.moimContent').append("</p>"); */
+					
+					$('.moimContent').append("<p class='moimInform moimPersonCount'>모임인원");
+					$('.moimPersonCount').append("<span class='moimInformInput moimPersonCountInput'>"+moimSignUpCountList[i]+"명 / "+moimList[i].moim_personnel+"명</span>");
+					if(moimSignUpCountList[i]<moimList[i].moim_personnel){
+						$('.moimPersonCountInput').append("<span class='moimProceeding'>모집중</span>")
+					}
+					else{
+						$('.moimPersonCountInput').append("<span class='moimProceeding'>모집완료</span>")
+					}
+					$('.moimContent').append("</p>");
+					
+					
+					$('.moimContent').append("<p class='moimInform moimLocation'>모임장소");
+					$('.moimLocation').append("<span class='moimInformInput moimLocationInput'>("+moimList[i].moim_postCode+") "+moimList[i].moim_addr1+"</span>");
+					$('.moimContent').append("</p>");
+					
+					$('.moimContent').append("<p class='moimInform moimTime'>모임시간");
+					$('.moimTime').append("<span class='moimInformInput moimTimeInput'>"+moimList[i].moim_time+"</span>");
+					var moimDateSum = moimList[i].moim_time.split(" ")[0];
+					var moimDate=moimDateSum.split("-");
+					var moimTimeSum = moimList[i].moim_time.split(" ")[1];
+					var moimTime=moimTimeSum.split(":");
+					
+					var moimTimeAll=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]),Number(moimTime[0]),Number(moimTime[1]),Number(moimTime[2]));
+					
+					if(today<moimTimeAll){
+						$('.moimTime').append("<span class='moimProceeding'>진행중</span>")
+					}
+					else{
+						$('.moimTime').append("<span class='moimProceeding'>종료</span>")
+					}
+					$('.moimContent').append("</p>");
+					
+					$('.moimContentList').append("</li>");
+					
+					i=i+1;
+					}
+	                
+					$(".moimContent").each(function(){
+						var moimApplyEnd = $(this).children(".moimPersonCountInput").children(".moimProceeding").text();
+						var moimEnd = $(this).children(".moimTime").children(".moimProceeding").text();
+						switch(moimApplyEnd){
+							case "모집중":
+								$(this).children(".moimPersonCountInput").children(".moimProceeding").css("background-color","#1ABC9C");
+							break;
+							case "모집완료":
+								$(this).children(".moimPersonCountInput").children(".moimProceeding").css("background-color","#1570FF");
+							break;
+						}
+						switch(moimEnd){
+							case "종료":
+								$(this).children(".moimTime").children(".moimProceeding").css("background-color","#A9A9A9");
+							break;
+							case "진행중":
+								$(this).children(".moimTime").children(".moimProceeding").css("background-color","#1570FF");
+							break;
+						}
+					})
+				},
+				error : function(err){
+					alert("ajax 보낼 파일명 바꾸세요");
+				}
+		});
+	}
+	
+	
+	
+</script>
+<style>
+	input{
+		user-select: none;
+	}
+	/* 메인 부분. */
+	.upper_slide{
+		 width:70%;
+		 position:relative;
+		 position:flex;
+		 margin:auto;
+		 padding:0;
+	}
+	.carousel-inner{
+		border-radius:10px;
+		height:30%;
+		width:100%;
+	}
+	.d-block{
+		max-height:450px;
+		min-width:100%;
+		object-fit: cover;
+ 	 	object-position:center;
+  		overflow:hidden;
+	}
+	/* 날짜별 모임리스트 */
+	.under_slide{
+		width:70%;
+		margin:auto;
+		padding:5% 0 0 0;
+	}
+	.sortByDate{
+		width:100%;
+		padding:0 20px 0 20px;
+	}
+	.pagination{
+		display:flex;
+		justify-content:space-around;
+	}
+	.slider-element{
+		cursor:pointer;
+		text-align:center;
+		height:70px;
+		vertical-align:middle;
+		color:black;
+		border-radius:30px;
+		white-space:nowrap;
+		padding-top:5px;
+		margin:3px;
+	}
+	.date_sort_start{
+		background-color:#1570FF;
+		color:white;
+	}
+	
+	.slider-element-date{
+		font-size:1.5em;
+	}
+	
+	.slider-element-day{
+		font-size:0.8em;
+	}
+	
+	.slick-prev:before,.slick-next:before{
+		color:#3540A5;
+	}
+	
+	  .moimContentWrap{
+	  min-height:250px;
+      width:70%;
+      margin:auto;
+      background-color:lightgray;
+      border:none;
+      border-radius:10px;
+      display:flex;
+      margin-top:2%;
+   }
+   .moimContentList{
+      width:100%;
+      margin:0;
+      padding:1% 2%;
+      
+   }
+   .moimContent{
+      border:none;
+      width:100%;
+      background-color:white;
+      margin:2% 0;
+      padding:1% 2%;
+      border-radius:10px;
+      cursor:pointer;
+   }
+   .moimSubjectInput{
+      font-size:25px;
+      font-weight:600;
+   }
+   .moimSubjectInput:before{
+      content:"『 "
+   }
+   .moimSubjectInput:after{
+      content:" 』"
+   }
+   .moimCategory{
+   	padding:0.5% 2%;
+   	font-weight:600;
+   	border-radius:10px;
+   	color:white;
+   }
+
+	.moimLC{
+	   	margin-left:1%;
+	   	background-color:#015958;
+	   	font-size:13pt;
+	}
+	.moimCategoryArrow{
+		padding:0 0.5%;
+		font-size:13pt;
+		color:darkgray;
+	}
+	.moimCategoryArrow::after{
+		content:"▶";
+		font-size:10pt;
+		color:lightgray;
+		
+	}
+	
+	.moimSC{
+		background-color:#0CABA8;
+		font-size:10pt;
+	}
+	
+	
+   .moimProceeding{
+   		margin-left:1%;
+   		font-size:5px;
+   		font-weight:700;
+   		background-color:#1570FF;
+   		color:white;
+   		border-radius:10px;
+   		padding:0.5% 1.5%;
+   }
+   
+   .moimInform{
+      font-size:15px;
+      padding:0 1%;
+   }
+   
+
+   
+   .moimInform::before{
+      content:"•";
+      margin-right:1%;
+   }
+   
+   
+   .moimInformInput::before{
+      content:":";
+      margin:0 1%;
+   }
+
+
+	.moimEmpty{
+		padding: 1% 0 0 1%;
+    	font-weight: 700;
+    	font-size: 18px;
+	}
+	
+	
+	.filter_selectBox{
+		border: 1px solid black;
+		width: 70%;
+		height: 320px;
+		margin-top: 20px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	.lc_filter{
+	margin-right:5px;
+	width:80px; 
+	height:25%; 
+	border:solid 1px grey; 
+	border-radius:40px; 
+	}
+	
+	
+	.sc_filter{
+	margin-right:5px;
+	width:150px; 
+	 
+	border:solid 1px grey; 
+	border-radius:40px; 
+	}
+	
+	.info2{
+		height: 100px;
+		border: 1px solid black;
+	}
+	
+	
+</style>
+</head>
+<body>
+
+
+<!-- main -->
+<!-- 상단 섹션 슬라이드 크기 조정을 위한 부분 (upper Middle slide resizing part)  -->
+            <div class="upper_slide">
+
+                <!-- 슬라이드 부분 (Slide image ) >> (Bootstrap) -->
+                <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+
+                    <!-- 슬라이드 이미지 하단부분의 버튼 ( button under slide image )-->
+                    <div class="carousel-indicators" style="z-index:1;">
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" aria-label="Slide 3"></button>
+                    </div>
+
+                    <!-- 슬라이드 이미지(slide image)-->
+                    <div class="carousel-inner">
+                        <!-- 첫 슬라이드 요소 (first slide) -->
+                        <div class="carousel-item active">
+                            <img src="#" 
+                            class="d-block w-30" alt="..." height= 450px; width=100%; style="border-radius:10px; background:orange;">
+                            <div class="carousel-caption d-none d-md-block"></div>
+                        </div>
+                        <!-- 두번째 슬라이드 요소 (second slide) -->
+                        <div class="carousel-item">
+                            <img src="#" 
+                            class="d-block w-30" alt="..." height=450px; width=100%; style="border-radius:10px; background:blue;">
+                            <div class="carousel-caption d-none d-md-block"></div>
+                        </div>
+                        <!-- 세번째 슬라이드 요소 (third slide) -->
+                        <div class="carousel-item">
+                            <img src="/pictures/pic1.jpg" 
+                            class="d-block w-30" alt="..." height=450px; width=100%; style="border-radius:10px; background:red;">
+                            <div class="carousel-caption d-none d-md-block"></div>
+                        </div>
+                        <!-- 네번째 슬라이드 요소 (fourth slide) -->
+                        <div class="carousel-item">
+                            <img src="#" class="d-block w-30" alt="..." height=450px; width=100%; style="background:yellow;">
+                            <div class="carousel-caption d-none d-md-block"></div>
+                        </div>
+                        <!-- 다섯번째 슬라이드 요소 (fifth slide) -->
+                        <div class="carousel-item">
+                            <img src="#" 
+                            class="d-block w-30" alt="..." height=450px; width=100%; style="background:black;">
+                            <div class="carousel-caption d-none d-md-block"></div>
+                        </div>
+                    </div> 
+                    <!-- 슬라이드 이미지 부분 종료 ( <carousel-inner> End) -->
+                    
+                    <!-- 슬라이드 양옆의 버튼( buttons on both sides of the slide ) -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                    </button>
+    
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                    </button>
+    
+                </div>        <!-- 슬라이드 부분 종료 (Slide End)-->
+            </div> <!-- 슬라이드 크기조절 부분 종료 (slide resizing part End) -->
+			
+			<!-- 동원 필터 추가 -->
+				
+			<div class="filter_selectBox">
+	
+					<h3 style="">선택목록</h3>
+					<div id="select" class="info">
+					</div>
+					
+					<p>대분류</p>
+					<hr style="width: 100%; border-bottom:5px solid pink;"/>
+					
+					<div id="item1" class="info" style="border: 1px solid black;">
+						<button class="lc_filter" th:each="lc_name, index : ${LC_list}" th:text="${lc_name}" th:id="lc+${index.index}"></button>
+					
+					</div>
+					
+					<br />
+					<p>소분류</p>
+					
+					<hr style="width: 100%; border-bottom:5px solid pink;"/>
+					
+					<div id="sc" class="info2" style="display: none; "></div>
+					
+					<div align="right"> 
+						<!--  소분류 선택된것들 히든값으로 처리 -->
+						<div id="scSelectResult">
+						</div>
+					</div>		
+			
+			
+			</div>
+			
+			
+			<!-- 동원 필터 추가 종료 -->
+			
+			<div class="under_slide" >
+			  	<div id="slider-div"  >
+			  		<th:block th:each="num : ${#numbers.sequence(1,14)}">
+					    <p class="slider-element date_sort_start" onclick="click_date(this);" th:if="${num==1}">
+					    	<span class="slider-element-date" th:if="${(today_date+numStat.index)>Month_date}" th:text="${#numbers.formatDecimal(today_date+numStat.index-Month_date,2,0)}"></span>
+					    	<span class="slider-element-date" th:unless="${(today_date+numStat.index)>Month_date}"th:text="${today_date+numStat.index}"></span>
+					    	<br>
+					    	<span class="slider-element-day" th:text="${today_dayList[(today_day+numStat.index)%7]}"></span>
+					    </p>
+					    
+					    <p class="slider-element" onclick="click_date(this);" th:unless="${num==1}">
+					    	<span class="slider-element-date" th:if="${(today_date+numStat.index)>Month_date}" th:text="${#numbers.formatDecimal(today_date+numStat.index-Month_date,2,0)}"></span>
+					    	<span class="slider-element-date" th:unless="${(today_date+numStat.index)>Month_date}"th:text="${today_date+numStat.index}"></span>
+					    	<br>
+					    	<span class="slider-element-day" th:text="${today_dayList[(today_day+numStat.index)%7]}"></span>
+					    </p>
+			  		</th:block>
+			  	</div>
+			</div>
+			
+
+	<div class="moimContentWrap">
+            <ul class="moimContentList">
+               <!-- <li class="moimContent" id="moimContent" th:if="${todayMoimList == null}">
+                  <p class="moimSubject" th:if="${todayMoimList == null}" th:text="오늘 모임이 없습니다."></p>
+               </li>
+
+               <li class="moimContent" id="moimContent" th:if="${todayMoimList != null}" th:each="tml, moimIndex : ${todayMoimList}">
+                  <p class="moimSubject" th:text="${tml.moim_name}"></p>
+                  <p class="moimInform moimCreator" >개설자
+                     <span class="moimInformInput moimCreatorInput">입력</span>
+                  </p>
+                  <p class="moimInform moimPersonCount" >모임인원
+                     <span class="moimInformInput moimPersonCountInput" th:text="${tml.moim_personnel}"></span>
+                  </p>
+                  <p class="moimInform moimLocation">모임장소
+                     <span class="moimInformInput moimLocationInput" th:text="${tml.moim_postCode}+${tml.moim_addr1}"></span>
+                  </p>
+                  <p class="moimInform moimTime">모임시간
+                     <span class="moimInformInput moimTimeInput" th:text="${tml.moim_time}"></span>
+                  </p>
+                  <button id="moimBtn_moimIndex" onclick="sendMoim(this.value)" th:value="${tml.moim_idx}">모임보기</button>
+               </li> -->
+               
+            </ul>
+    </div>
+			
+
+ <!-- 부트스트랩 자바스크립트 (Bootstrap Javascript) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+ </body>
+ 
+</html>

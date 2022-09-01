@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+<script type="text/javascript">
+$(function(){
+	// 이미지 미리보기
+	$('#u_file').change(function(){
+	    setImageFromFile(this, '#preview');
+	});
+	
+	function setImageFromFile(input, expression) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	            $(expression).attr('src', e.target.result);
+	            $("#imgViewArea").show();
+	        }
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	    else{
+	    	$("#preview").attr('src',"");
+	    	$("#imgViewArea").hide();
+	    }
+	}
+	
+	 $('#submit').on("click",function () {
+		 if($("#u_file")[0].files.length==0){
+			 swal('업로드 오류', "한개 이상의 파일을 선택해주세요")
+		 }
+		 
+		 const dataForm = new FormData();
+		 dataForm.append("profileImg",$("#u_file")[0].files[0]);
+      	 $.ajax({
+             type: "POST",
+             url: "/profileUploadFormOk",
+             data: dataForm,
+             enctype: 'multipart/form-data',
+             processData: false,
+             contentType: false,
+             success: function (res) {
+                 alert("success : "+res);
+                 console.log(res);
+                 window.opener.location.reload();    //부모창 reload
+             	 window.close();    //현재 팝업창 Close
+                 
+             },
+             error: function () {
+				alert("error");
+             }
+         });   
+     });
+	
+})
+
+	
+
+</script>
+<style type="text/css">
+table {
+	width: 100%;
+	border: 2px solid #bfbfc8;
+	border-collapse: separate;
+  	border-spacing: 0 10px;
+}
+table tr{
+	padding:20px;
+}
+table td {
+	border: none;
+}
+
+table tr td {
+	text-align: center;
+}
+.delItem{
+	color:black;
+}
+.delItem:link{
+	color:black;
+}
+.delItem:active{
+	color:black;
+}
+.content_title {
+	text-align: left;
+}
+textarea{
+max-width: 300px;
+min-width: 300px;
+max-height: 50px;
+min-height:50px
+}
+#div {
+	text-align: left;
+	margin: 10px 0 0 17px;
+}
+
+#userid {
+	width: 165px;
+	background-color: lightgray;
+}
+
+#category, #password {
+	width: 165px;
+}
+
+#pwCheck {
+	width: 100%;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+#file-upload-button {
+	width: 70px;
+	border-radius: 5px;
+	border: 1px solid lightgray;
+}
+
+.btn-outline-success {
+	width: 70px;
+	background-color: #87CEEB;
+	border-radius: 5px;
+	border: 1px solid lightgray;
+}
+
+.btn-outline-danger {
+	width: 70px;
+	background-color: lightpink;
+	border-radius: 5px;
+	border: 1px solid lightgray;
+}
+
+.item {
+	font-size: 20px;
+}
+.btn-sm{
+	cursor:pointer;
+}
+</style>
+</head>
+<body>
+	<div style="text-align:center;vertical-align:center;">
+		<form id="form" enctype="multipart/form-data">
+			<table>
+				<tr>
+					<td colspan="4" class="title">
+						<h1 style="font-weight: 900;">프로필 이미지 수정하기</h1>
+					</td>
+				</tr>
+				<tr>
+					<td class="item" valign="top" style="width: 80px;font-size:15px">이미지첨부</td>
+					<td colspan="3" style="text-align: left; padding-left: 22px;">
+						<input style="margin-left:-17px;" type="file" id="u_file" accept="image/*"/>
+					</td>
+				</tr>
+				<tr id="imgViewArea" style="display:none;margin-top:20px;">
+					<td style="font-size:15px">미리보기</td>
+					<td colspan="4" style="border:1px solid lightgray;padding:5%">
+						<img  src="" id="preview" style="width:300px; height:150px;" />
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="4" style="border: none; text-align: right;">
+						<div style="text-align: right; margin: 0 20px 10px 0; padding: 10px;">
+							<button id="submit" type="button" class="btn btn-outline-success btn-sm">저장</button>
+							<button type="button" class="btn btn-outline-success btn-sm" onclick='window.close()'>취소</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form> 
+
+	</div>
+</body>
+</html>

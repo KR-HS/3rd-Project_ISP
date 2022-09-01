@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<!--하단 날짜 슬라이드(Slick Carousel Slider)-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<title>시작 페이지</title>
+<script type="text/javascript">
+	$(function(){
+		$(".moimSearchBtn").trigger("click");
+	})
+	
+	function sendMoim(e){
+		 var form = document.createElement('form');
+		    form.setAttribute('method', 'post'); //POST 메서드 적용
+		    form.setAttribute('action', "/moim1");	// 데이터를 전송할 url
+		    document.charset = "utf-8";
+		   
+		        var hiddenField = document.createElement('input');
+		        hiddenField.setAttribute('type', 'hidden'); //값 입력
+		        hiddenField.setAttribute('name', 'indexMoimidx');
+		        hiddenField.setAttribute('value', $(e).children(".moimContentIdx").val());
+		        form.appendChild(hiddenField);
+		    
+		        
+		    document.body.appendChild(form);
+		    form.submit();	// 전송~
+	}
+	
+	function searchMoim(e){
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth()+1;
+		var today=new Date(date.getYear()+1900,date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds());
+		
+		var criteria=$(e).siblings(".search_Criteria").val();
+		var content=$(e).siblings(".find").val();
+		var obj = {
+				"criteria" : criteria,
+				"content" : content
+		};
+		
+		$.ajax(
+				{
+				url:"/searchMoim/click",
+				type : "POST",  
+				data : obj,
+				success : function(res){
+					$('.moimContentList').empty();
+		               var moimList=res["moimList"];
+		               var moimSignUpCountList=res["MoimSignUpCountList"];
+		               
+		               if(moimList.length<1){
+		                 $('.moimContentList').append("<p class='moimEmpty'>검색과 일치하는 모임이 없습니다.</p>");
+		               }
+		                     
+		               for(var i=0;i<moimList.length;i++){
+		            	   var  mt = moimList[i].moim_time;
+			               mt = mt.replace('T', ' ');
+			               
+
+			               var moimDateSum = mt.split(" ")[0];
+			               var moimDate=moimDateSum.split("-");
+			               var moimTimeSum = mt.split(" ")[1];
+			               var moimTime=moimTimeSum.split(":");
+			               
+			               var moimTimeAll=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]),Number(moimTime[0]),Number(moimTime[1]),Number(moimTime[2]));
+			               
+			               $('.moimContentList').append("<li class='moimContent moimContent"+i+"' onclick='sendMoim(this)'>");
+			               $('.moimContent'+i+'').append("<input class='moimContentIdx' type='hidden' value="+moimList[i].moim_idx+">");
+			               $('.moimContent'+i+'').append("<p class='moimSubject"+i+"'>");
+			               $('.moimSubject'+i+'').append("<span class='moimSubjectInput'>"+moimList[i].moim_name+"</span>")
+			               $('.moimSubject'+i+'').append("<span class='moimCategory moimLC'>"+moimList[i].lc_name+"</span>")
+			               $('.moimSubject'+i+'').append("<span class='moimCategoryArrow'>▶</span>")
+			               $('.moimSubject'+i+'').append("<span class='moimCategory moimSC'>"+moimList[i].sc_name+"</span>")
+			               $('.moimContent'+i+'').append("</p>")
+			               
+			               /* $('.moimContent').append("<p class='moimInform moimCreator'>개설자");
+			               $('.moimCreator').append("<span class='moimInformInput moimCreatorInput'>"+moimFounderList[i]+"</span>");
+			               $('.moimContent').append("</p>"); */
+			               
+			               $('.moimContent'+i+'').append("<p class='moimInform moimPersonCount moimPersonCount"+i+"'>모임인원");
+			               $('.moimPersonCount'+i+'').append("<span class='moimInformInput moimPersonCountInput moimPersonCountInput"+i+"'>"+moimSignUpCountList[i]+"명 / "+moimList[i].moim_personnel+"명</span>");
+			               
+			               if(today<moimTimeAll){
+				               if(moimSignUpCountList[i]<moimList[i].moim_personnel){
+				                  $('.moimPersonCountInput'+i+'').append("<span class='moimProceeding'>모집중</span>")
+				               }
+				               else{
+				                  $('.moimPersonCountInput'+i+'').append("<span class='moimProceeding'>모집완료</span>")
+				               }
+		               		}
+		               	  else{
+		               		 $('.moimPersonCountInput'+i+'').append("<span class='moimProceeding'>종료</span>")
+		               	  }
+			               
+			               
+		               $('.moimContent'+i+'').append("</p>");
+		               
+		               
+		               $('.moimContent'+i+'').append("<p class='moimInform moimLocation moimLocation"+i+"'>모임장소");
+		               $('.moimLocation'+i+'').append("<span class='moimInformInput moimLocationInput'>("+moimList[i].moim_postCode+") "+moimList[i].moim_addr1+"</span>");
+		               $('.moimContent'+i+'').append("</p>");
+		               
+		               $('.moimContent'+i+'').append("<p class='moimInform moimTime moimTime"+i+"'>모임시간");
+			          
+		               $('.moimTime'+i+'').append("<span class='moimInformInput moimTimeInput moimTimeInput"+i+"'>"+mt+"</span>");
+		               
+		               if(today<moimTimeAll){
+		                  $('.moimTime'+i+'').append("<span class='moimProceeding'>진행중</span>")
+		               }
+		               else{
+		                  $('.moimTime'+i+'').append("<span class='moimProceeding'>종료</span>")
+		               }
+		               
+		               
+		               $('.moimContent'+i+'').append("</p>");
+		               
+		               $('.moimContentList'+i+'').append("</li>");
+		               
+		               
+		              
+		               }
+		                   
+		               $(".moimContent").each(function(){
+		                  var moimApplyEnd = $(this).children(".moimPersonCount").children(".moimPersonCountInput").children(".moimProceeding").text();
+		                  var moimEnd = $(this).children(".moimTime").children(".moimProceeding").text();
+		                  switch(moimApplyEnd){
+		                     case "모집중":
+		                        $(this).children(".moimPersonCount").children(".moimPersonCountInput").children(".moimProceeding").css("background-color","#1570FF");
+		                     break;
+		                     case "모집완료":
+		                        $(this).children(".moimPersonCount").children(".moimPersonCountInput").children(".moimProceeding").css("background-color","#A9A9A9");
+		                     break;
+		                     case "종료":
+		                    	 $(this).children(".moimPersonCount").children(".moimPersonCountInput").children(".moimProceeding").css("background-color","#A9A9A9");
+			                 break;
+		                  }
+		                  switch(moimEnd){
+		                     case "종료":
+		                        $(this).children(".moimTime").children(".moimProceeding").css("background-color","#A9A9A9");
+		                     break;
+		                     case "진행중":
+		                        $(this).children(".moimTime").children(".moimProceeding").css("background-color","#1570FF");
+		                     break;
+		                  }
+		               })
+				},
+				error : function(err){
+					alert("ajax 보낼 파일명 바꾸세요" + err);
+					
+				}
+		});
+	}
+	
+	
+	
+	
+</script>
+<style>
+	input{
+		user-select: none;
+	}
+	
+	.moimCriteriaWrap{
+	  width:70%;
+      margin:auto;
+      display:flex;
+      margin-top:2%;
+	}
+	
+	.searchMoimWrap{
+		margin-left:auto;
+		display:flex;
+		justify-content:flex-end;
+		align-items:center;
+		padding:2% 0;
+	}
+	
+	.moimSearchBtn{
+		border:1px solid lightgray;
+		border-radius:5px;
+		margin:auto;
+		margin-left:2%;
+		padding:1% 3%;
+		font-weight:600;
+	}
+	/* 모임리스트 */
+	.moimContentWrap{
+      width:70%;
+      margin:auto;
+      background-color:lightgray;
+      border:none;
+      border-radius:10px;
+      display:flex;
+      margin-top:1%;
+   }
+   .moimContentList{
+      width:100%;
+      margin:0;
+      padding:1% 2%;
+      
+   }
+   .moimContent{
+      border:none;
+      width:100%;
+      background-color:white;
+      margin:2% 0;
+      padding:1% 2%;
+      border-radius:10px;
+      cursor:pointer;
+   }
+   .moimSubjectInput{
+      font-size:25px;
+      font-weight:600;
+   }
+   .moimSubjectInput:before{
+      content:"『 "
+   }
+   .moimSubjectInput:after{
+      content:" 』"
+   }
+   
+    .moimCategory{
+      padding:0.5% 2%;
+      font-weight:600;
+      border-radius:10px;
+      color:white;
+   }
+
+   .moimLC{
+         margin-left:1%;
+         background-color:#015958;
+         font-size:13pt;
+   }
+   .moimCategoryArrow{
+      padding:0 0.5%;
+      font-size:13pt;
+      color:darkgray;
+   }
+   .moimCategoryArrow::after{
+      content:"▶";
+      font-size:10pt;
+      color:lightgray;
+      
+   }
+   
+   .moimSC{
+      background-color:#0CABA8;
+      font-size:10pt;
+   }
+   
+   
+   .moimProceeding{
+         margin-left:1%;
+         font-size:5px;
+         font-weight:700;
+         background-color:#1570FF;
+         color:white;
+         border-radius:10px;
+         padding:0.5% 1.5%;
+   }
+   
+   
+   .moimProceeding{
+   		margin-left:1%;
+   		font-size:5px;
+   		font-weight:700;
+   		background-color:#1570FF;
+   		color:white;
+   		border-radius:10px;
+   		padding:0.5% 1.5%;
+   }
+   
+   .moimInform{
+      font-size:15px;
+      padding:0 1%;
+   }
+   
+
+   
+   .moimInform::before{
+      content:"•";
+      margin-right:1%;
+   }
+   
+   
+   .moimInformInput::before{
+      content:":";
+      margin:0 1%;
+   }
+
+
+	.moimEmpty{
+		padding: 1% 0 0 1%;
+    	font-weight: 700;
+    	font-size: 18px;
+	}
+	
+	
+	.filter_selectBox{
+		border: 1px solid black;
+		width: 70%;
+		height: 500px;
+		margin-top: 20px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	.area_filter{
+	margin-right:5px;
+	width:140px; 
+	height:25%; 
+	border:solid 1px grey; 
+	border-radius:40px; 
+	}
+	
+	
+	.lc_filter{
+	margin-right:5px;
+	width:80px; 
+	height:25%; 
+	border:solid 1px grey; 
+	border-radius:40px; 
+	}
+	
+	.sc_filter{
+	margin-right:5px;
+	width:150px; 
+	 
+	border:solid 1px grey; 
+	border-radius:40px; 
+	}
+	
+	.info2{
+		/*  height: 100px;*/
+		border: 1px solid black;
+	}
+	
+	
+	
+</style>
+</head>
+<body>
+
+
+<!-- main -->
+	<!-- 모임 검색 부분 -->
+	<div class="moimCriteriaWrap">
+		<form action="searchMoim" method="post" id="searchMoim">
+			<div class="searchMoimWrap">
+				<select name="searchCriteria" class="search_Criteria">
+					<th:block th:if="${criteria=='Subject'}">
+					<option value="Subject" selected>제목</option>
+					<option value="Content">내용</option>
+					</th:block>
+
+					<th:block th:if="${criteria=='Content'}">
+					<option value="Subject">제목</option>
+					<option value="Content" selected>내용</option>
+					</th:block>
+				</select>
+				<input type="text" class="find" name="content" maxlength="25" placeholder="검색어 입력" th:value="${content}">
+				<input type="button" class="moimSearchBtn" value="검색" onclick="searchMoim(this)">
+			</div>
+		</form>
+
+	</div>
+	<!-- 모임 리스트 -->
+	<div class="moimContentWrap">
+            <ul class="moimContentList">
+               <!-- <li class="moimContent" id="moimContent" th:if="${todayMoimList == null}">
+                  <p class="moimSubject" th:if="${todayMoimList == null}" th:text="오늘 모임이 없습니다."></p>
+               </li>
+
+               <li class="moimContent" id="moimContent" th:if="${todayMoimList != null}" th:each="tml, moimIndex : ${todayMoimList}">
+                  <p class="moimSubject" th:text="${tml.moim_name}"></p>
+                  <p class="moimInform moimCreator" >개설자
+                     <span class="moimInformInput moimCreatorInput">입력</span>
+                  </p>
+                  <p class="moimInform moimPersonCount" >모임인원
+                     <span class="moimInformInput moimPersonCountInput" th:text="${tml.moim_personnel}"></span>
+                  </p>
+                  <p class="moimInform moimLocation">모임장소
+                     <span class="moimInformInput moimLocationInput" th:text="${tml.moim_postCode}+${tml.moim_addr1}"></span>
+                  </p>
+                  <p class="moimInform moimTime">모임시간
+                     <span class="moimInformInput moimTimeInput" th:text="${tml.moim_time}"></span>
+                  </p>
+                  <button id="moimBtn_moimIndex" onclick="sendMoim(this.value)" th:value="${tml.moim_idx}">모임보기</button>
+               </li> -->
+               
+            </ul>
+    </div>
+			
+
+ <!-- 부트스트랩 자바스크립트 (Bootstrap Javascript) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+ </body>
+ 
+</html>

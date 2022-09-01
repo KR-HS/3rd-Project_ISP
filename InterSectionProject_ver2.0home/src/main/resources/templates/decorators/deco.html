@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+<!-- 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+ -->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<!-- font-awesome4 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+
+<!-- 글자 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+<title>시작 페이지</title>
+<script type="text/javascript">
+	$(function(){
+		$(".blackScreen").click(function(){$(".wrapper").hide(200)});
+		$(".menu_category li").hover(function(){
+			$(this).stop().animate({"background-color":"#000000",color:"#ffffff"});
+		},
+		function(){
+			$(this).stop().animate({"background-color":"#ffffff",color:"#000000"});
+		}
+		)
+	});
+	
+	function menu(){
+		$(".wrapper").show(200).css("z-index","999");
+	}
+
+</script>
+<style>
+	*{
+		font-family: 'Noto Sans KR', sans-serif;
+	}
+	
+	li{
+		list-style:none;
+	}
+	a,a:hover,a:link{
+		text-decoration:none !important;
+		color:black !important;
+	}
+	.menubar{
+		width:85%;
+		margin:0;
+	}
+	
+	.fa-search{
+		position:absolute;
+		right: 24%;
+		cursor:pointer;
+	}
+	.menubar form{
+		display: flex;
+    	padding: 1% 0 2.5% 1%;
+	}
+	.menubar form .left-child{
+		margin-right:auto;
+		font-family: 'Lobster', cursive;
+		font-size:70px;
+		margin:0 0 0 17%;
+	}
+	
+	.menubar form .right-child{
+		margin-left:auto;
+		display:flex;
+		justify-content:flex-end;
+		align-items:center;
+	}
+	
+	
+	.find{
+		width:600px;
+		height:40px;
+		border:1px solid lightgray;
+		border-radius:5px;
+		padding:10px;
+	}
+	
+	.fa{
+		margin: 0 0 0 20px;
+	}
+	.wrapper{
+		position:fixed;
+   	 	padding:0;
+   	 	margin:0;
+    	top:0;
+    	left:0;
+    	width: 100%;
+    	height: 100%;
+    	display:none;
+	}
+	.blackScreen{
+		position:fixed;
+   	 	padding:0;
+   	 	margin:0;
+    	top:0;
+    	left:0;
+    	width: 85%;
+    	height: 100%;
+    	background:rgba(0,0,0,0.7);
+	}
+	
+	.myInfo{
+		text-align:right;
+		padding:5px 0 0 2px;
+		margin:0 0 5px 0;
+		min-height:30px;
+	}
+	.myInfo p{
+		margin:0;
+		padding:0 0 2pt 5pt;
+		text-align:left;
+		
+	}
+
+	.myInfo_Name{
+		font-size:9pt;
+		font-weight:500;
+	}
+	
+	.myInfo_Name::before{
+		content:"Name :";
+		margin-right:1%;	
+		font-size:7pt;
+		font-weight:700;
+		color:black;
+		
+	}
+	.myInfo_Name::after{
+		content:"님";
+		margin-left:1%;
+	}
+
+	.myInfo_Email{
+		font-size:9pt;	
+		font-weight:500;
+	}
+
+	.myInfo_Email::before{
+		content:"Email :";
+		margin-right:1%;
+		font-size:7pt;
+		font-weight:700;
+		color:black;
+	}
+	
+	
+	.notLogin{
+		font-size:9pt;
+		font-weight:300;
+		color:darkgray;
+	}
+	.notLogin::after{
+		content:none;
+	}
+	.menuList{
+		position:fixed;
+		padding:0;
+		margin:0;
+		top:0;
+		right:0;
+		width:15%;
+		height:100%;
+		background:rgba(255,255,255,1);
+		
+	}
+	.menu_category{
+		padding:0;
+	}
+	
+	.menu_category li{
+		padding:5% 0 5% 10%;
+		font-size:13pt;
+		font-weight:500;
+		border:1px solid lightgray;
+		cursor:pointer;
+	}
+
+	.logout{
+		position:fixed;
+		padding:0;
+		margin:0;
+		bottom:0;
+		right:0;
+		width:15%;
+		height:5%;
+		background-color:black;
+		color:white;
+		border:none;
+		font-weight:500;
+		font-size:10pt;
+	}
+	
+	#SupportBtn{
+		width:100px;
+		height:100px;
+		border-radius:100px;
+		background-color:rgb(26, 188, 156);
+		position:fixed;
+		bottom:5%;
+		right:3%;
+		z-index:5;
+		text-align:center;
+		line-height:100px;
+		color:white;
+	}
+
+</style>
+<sitemesh:write property='head'/>
+</head>
+<body>
+
+<header>
+<nav class="menubar">
+<form>
+	<a class="left-child" href="/">ISP</a>
+	<span class="right-child">
+		<input type="text" class="find" maxlength="36" placeholder="검색어 입력">
+		<i class="fa fa-search fa-1x" aria-hidden="true"></i>
+		<a href="mypage" sec:authorize="isAuthenticated()"><i class="fa fa-user-circle fa-2x" aria-hidden="true"></i></a>
+		<a href="/login/login" sec:authorize="!isAuthenticated()"><i class="fa fa-user-circle fa-2x" aria-hidden="true"></i></a>
+		<a onclick="menu()"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></a>
+	</span>
+</form>
+</nav>
+</header>
+
+
+<div class="wrapper">
+	<div class="blackScreen"></div>
+	<div class="menuList">
+		<div class="myInfo" sec:authorize="isAuthenticated()">
+			<p class="myInfo_Name" th:text="${userVO.user_name}"></p>
+			<p class="myInfo_Email" th:text="${userVO.user_id}"></p>
+		</div>
+		
+		<div class="myInfo" sec:authorize="!isAuthenticated()">
+			<p class="notLogin" th:text="'로그인 후 이용해주세요'"></p>
+		</div>
+		<ul class="menu_category">
+			<li>
+				<a>소개</a>
+			</li>
+			<li>
+				<a href="/MoimCreate">모임만들기</a>
+			</li>
+			<li>
+				<a>공지사항</a>
+			</li>
+			<li>
+				<a>문의하기</a>
+			</li>
+		</ul>
+	
+		<button class="logout" sec:authorize="isAuthenticated()" onclick="location.href='/logout'">로그아웃</button>
+		<button class="logout" sec:authorize="!isAuthenticated()" onclick="location.href='/login/login'">로그인</button>
+	</div>
+</div>
+
+
+<a href=# onclick="window.open('#','질문', 'width=800,height=1200,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;">
+	<i id="SupportBtn" class="fa fa-comments fa-3x" aria-hidden="true"></i>
+</a>
+<sitemesh:write property='body'/>	 
+</body>
+ 
+</html>

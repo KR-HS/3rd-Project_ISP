@@ -1,0 +1,172 @@
+.moim_create_full_wrap{
+    margin-left: auto;
+    margin-right: auto;
+    width: 80vw;
+    padding: 30px;
+    border: 1px solid black;
+}
+
+.moim_info1{
+    width: 100%;
+    border: 1px solid black;
+    height: 400px;
+    float: left;
+}
+
+/* 프로필 영역 시작 */
+.profile_photo_wrap{
+    width: 250px;
+    height: 400px;
+    border: 1px solid black;
+    text-align: center;
+    margin: 0px;
+    float: left;
+}
+
+.profile_image{
+    width: 100%;
+    height: 250px;
+    border: 1px solid black;
+}
+
+.image_upload_button{
+    width: 90%;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 30px;
+}
+
+.base_info_wrap{
+    width: calc(100% - 300px);
+    border: 1px solid black;
+    float: left;
+    padding: 20px;
+}
+
+/* 나이제한 부분 시작 */
+.slider {
+  width: 100%;
+  height: 100%;
+  /* 후에 padding: 1.5rem 2rem 으로 수정합니다. 참고바랍니다. */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.limit_range_age {
+  width: calc(100% - 2rem);
+  top: 1rem;
+  left: 1rem;
+  position: absolute;
+  border: none;
+  pointer-events: none;
+  z-index: 10;
+  appearance: none;
+  opacity: 0;
+}
+
+.limit_range_age:first-child {
+  top: 1rem;
+}
+
+.limit_range_age::-webkit-slider-thumb {
+  pointer-events: all;
+  /* appearance, background-color는 지워도 됨 */
+  appearance:none;
+  background-color: red;
+  width: 2.5rem;
+  height: 1.5rem;
+}
+
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 0.5rem;
+  /* margin-top: 5rem; */
+  background-color: #bdc3c7;
+  border-radius: 0.5rem;
+}
+
+.range {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #2c3e50;
+  border-radius: 0.5rem;
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  transform: translateY(-0.25rem);
+  width: 1rem;
+  height: 1rem;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+/* 나이제한 부분 종료 */
+
+
+
+/* 프로필 영역 종료 */
+
+
+.moim_info2{
+    width: 100%;
+    height: 400px;
+    border: 1px solid black;
+}
+
+.moim_info3{
+    border: 1px solid black;
+    height: 100px;
+    
+}
+
+.info_title{
+    float: left;
+    margin-right: 50px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.moim_info4{
+    border: 1px solid black;
+    width: 80%;
+    height: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px;
+}
+
+
+.addr1{
+    width: 70%;
+}
+
+.addr2{
+    width: 90%;
+}
+
+/* 지도 api css */
+.map_wrap {position:relative;width:100%;height:350px;}
+.title {font-weight:bold;display:block;}
+.hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+#centerAddr {display:block;margin-top:2px;font-weight: normal;}
+.bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+
+
