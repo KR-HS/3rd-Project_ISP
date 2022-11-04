@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="cmm/layout_login">
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+
+
+
+
+
+<!-- CSS only -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+
+
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var obj = {
+			"boardName" : 'notice',
+			"s" : 5,
+			"b" : 5
+	}
+	
+	$.ajax({
+		url : "board/boardSubject",
+		type : "POST",
+		data : obj,
+		async: false,
+		success : function(res){
+			$(".boardWrapper").show();
+			$("#boardWrite").empty();
+			var boardList = res['pv'].list;
+			var pv = res['pv'];
+			var currentPage = res['pv'].currentPage;
+			var blockSize = res['pv'].blockSize;
+			var pageSize = res['pv'].pageSize;
+			var endNo = res['pv'].endNo;
+			var startPage = res['pv'].startPage;
+			var totalCount = res['pv'].totalCount;
+			var count_idx =0;
+			count_idx = totalCount - (currentPage-1) * pageSize;
+			var result = "<div class='noticeBoardList'><table class='table table-striped table-bordered table-hover'><thead><tr><th>번호</th><th>제목</th><th>작성자</th><th>날짜</th><tr></thead>";
+			if(res["pv"].totalCount !=0){
+				for(vo of boardList){
+					if(vo.board_isDelete =="N"){
+						result += "<tr>";
+						result += "<td>";
+						result += count_idx--;
+						result += "</td>";
+						result += "<td><a href='/noticeDetail/"+vo.board_idx+"' target=_self>"+vo.board_subject+"</a>";
+						result += "</td>";
+						result += "<td>관리자";
+						result += "</td>";
+						result += "<td>";
+						var regdate = vo.board_regdate.split('T');
+						result += regdate[0];
+						result += "</td>";
+						result += "</tr>";
+					}
+				}
+			
+			result += "</table></div>";
+			//result += "<div class='noticeWrite'><button type='button'  onclick='location.href=\"/noticeWrite\"'; name='notice' id='notice' class='btn btn-primary btn-large form-control' style='width:100px;'>글쓰기</button></div>";
+			$("#board").html(result);
+			
+			var totalPage = parseInt((res["pv"].totalCount-1)/pageSize)+1;
+			var startPage = parseInt((pageSize-1)/blockSize)*blockSize+1;
+			endPage = startPage+blockSize-1;
+			//페이징만들기
+			if(endPage>totalPage) {
+				endPage = totalPage;
+			}
+			var pagingBtn="<ul class='pagination pagination-sm justify-content-center'>";
+			// 이전
+			if(startPage>1) {
+				pagingBtn+="<li class='page-item'>";
+				pagingBtn+="<a class='page-link' href='#' aria-label='Previous' onclick='sendPost(\"?\", {\"boardName\":\""+res["boardName"]+"\",\"p\":"+(startPage-1)+",\"s\":"+pageSize+",\"b\":"+blockSize+"})'>";
+				pagingBtn+="<span aria-hidden='true'>&laquo;</span>";
+				pagingBtn+="</a>";
+				pagingBtn+="</li>";
+			}
+			// 페이지 리스트
+			for(let i=startPage;i<=endPage;i++) {
+				// 현재 페이지는 링크를 걸지 않는다.
+				if(i==currentPage) {
+					pagingBtn+="<li class='page-item active' aria-current='page'>";
+					pagingBtn+="<a class='page-link' href='#'>";
+					pagingBtn+=i;
+					pagingBtn+="</a>";
+					pagingBtn+="</li>";				
+				}else {
+					pagingBtn+="<li class='page-item'>";
+					pagingBtn+="<a class='page-link' href='#' onclick='sendPost(\"?\", {\"boardName\":\""+res["boardName"]+"\",\"p\":" + (i) + ",\"s\":"+pageSize+",\"b\":"+blockSize+"})'>";
+					pagingBtn+=i;
+					pagingBtn+="</a>";
+					pagingBtn+="</li>";				
+				}
+			}
+			// 다음
+			if(endPage<totalPage) {
+				pagingBtn+="<li class='page-item'>";
+				pagingBtn+="<a class='page-link' href='#' aria-label='Next' onclick='sendPost(\"?\", {\"boardNam\":\""+res["boardName"]+"\",\"p\":"+(endPage+1)+",\"s\":"+pageSize+",\"b\":"+blockSize+"})'>";
+				pagingBtn+="<span aria-hidden='true'>&raquo;</span>";
+				pagingBtn+="</a>";
+				pagingBtn+="</li>";
+			}
+			pagingBtn+="</ul>";
+			
+			$(".pagingVO").html(pagingBtn);
+		}
+		else{
+			result += "</table></div>";
+			result += "<div class='boardList_nohave'>등록된 글이 없습니다</div>";
+			result += "<div class='noticeWrite'><button type='button'  onclick='location.href=\"/noticeWrite\"'; name='notice' id='notice' class='btn btn-primary btn-large form-control' style='width:100px;'>글쓰기</button></div>";
+			$("#board").html(result);
+		}
+	
+		},
+		error : function(err){
+			alert("에러?:" + err.toString());
+		}
+	});
+});
+function sendPost(url,params){
+	var data={
+			"boardName" : 'notice',
+			"s" : 5,
+			"b" : 5
+	}
+	for(var key in params){
+		data[key] = params[key]+"";
+	}
+		$.ajax({
+			url : "board/boardSubject",
+			type : "POST",
+			data :  data,
+			async: false,
+			success : function(res){
+				$(".boardWrapper").show();
+				$("#boardWrite").empty();
+					var pageSize =  res['pv'].totalCount;
+					var result = "<div class='noticeBoardList'><table class='table table-striped table-bordered table-hover'><thead><tr><th>번호</th><th>제목</th><th>작성자</th><th>날짜</th><tr></thead>";
+					if(res["pv"].totalCount !=0){
+						var boardList = res['pv'].list;
+						var pv = res['pv'];
+						var cv=res["cv"];
+						var currentPage = res['pv'].currentPage;
+						var blockSize = res['pv'].blockSize;
+						var pageSize = res['pv'].pageSize;
+						var endNo = res['pv'].endNo;
+						var totalCount = res['pv'].totalCount;
+						var count_idx =0;
+						count_idx = totalCount - (currentPage-1) * pageSize;
+						var startPage = res['pv'].startPage;
+						/*alert("블럭사이즈: " +blockSize)
+						alert("토탈사이즈 : "+totalPage);
+						alert("스타트사이즈 "+startPage);
+						alert("페이지사이즈 : "+pageSize);
+						alert("엔드페이지 : "+endPage);
+						*/
+					
+						for(vo of boardList){
+							if(vo.board_isDelete =="N"){
+								result += "<tr>";
+								result += "<td>";
+								result += count_idx--;
+								result += "</td>";
+								result += "<td><a href='/noticeDetail/"+vo.board_idx+"' target=_self>"+vo.board_subject+"</a>";
+								result += "</td>";
+								result += "<td>관리자";
+								result += "</td>";
+								result += "<td>";
+								var regdate = vo.board_regdate.split('T');
+								result += regdate[0];
+								result += "</td>";
+								result += "</tr>";
+							}
+						}
+					
+					result += "</table></div>";
+
+					$("#board").html(result);
+	
+					var totalPage = parseInt((res["pv"].totalCount-1)/pageSize)+1;
+					var startPage = parseInt((pageSize-1)/blockSize)*blockSize+1;
+					endPage = startPage+blockSize-1;
+					//페이징만들기
+					if(endPage>totalPage) {
+						endPage = totalPage;
+					}
+					var pagingBtn="<ul class='pagination pagination-sm justify-content-center'>";
+					// 이전
+					if(startPage>1) {
+						pagingBtn+="<li class='page-item'>";
+						pagingBtn+="<a class='page-link' href='#' aria-label='Previous' onclick='sendPost(\"?\", {\"boardName\":\""+res["boardName"]+"\",\"p\":"+(startPage-1)+",\"s\":"+pageSize+",\"b\":"+blockSize+"})'>";
+						pagingBtn+="<span aria-hidden='true'>&laquo;</span>";
+						pagingBtn+="</a>";
+						pagingBtn+="</li>";
+						alert(res["boardName"]);
+					}
+					// 페이지 리스트
+					for(let i=startPage;i<=endPage;i++) {
+						// 현재 페이지는 링크를 걸지 않는다.
+						if(i==currentPage) {
+							pagingBtn+="<li class='page-item active' aria-current='page'>";
+							pagingBtn+="<a class='page-link' href='#'>";
+							pagingBtn+=i;
+							pagingBtn+="</a>";
+							pagingBtn+="</li>";				
+						}else {
+							pagingBtn+="<li class='page-item'>";
+							pagingBtn+="<a class='page-link' href='#' onclick='sendPost(\"?\", {\"boardName\":\""+res["boardName"]+"\",\"p\":" + (i) + ",\"s\":"+pageSize+",\"b\":"+blockSize+"})'>";
+							pagingBtn+=i;
+							pagingBtn+="</a>";
+							pagingBtn+="</li>";				
+						}
+					}
+					// 다음
+					if(endPage<totalPage) {
+						pagingBtn+="<li class='page-item'>";
+						pagingBtn+="<a class='page-link' href='#' aria-label='Next' onclick='sendPost(\"?\", {\"boardName\":\""+res["boardName"]+"\",\"p\":"+(endPage+1)+",\"s\":"+pageSize+",\"b\":"+blockSize+"})'>";
+						pagingBtn+="<span aria-hidden='true'>&raquo;</span>";
+						pagingBtn+="</a>";
+						pagingBtn+="</li>";
+					}
+					pagingBtn+="</ul>";
+					
+					$(".pagingVO").html(pagingBtn);	
+					}
+					else{
+						result += "</table></div>";
+						result += "<div class='boardList_nohave'>등록된 글이 없습니다</div>";
+						$("#board").html(result);
+					}
+				
+					},
+					error : function(err){
+						alert("에러?:" + err.toString());
+					}
+		});
+}
+
+</script>
+<style>
+	a,a:hover,a:link{
+		color:black; 
+	}
+	/* 메뉴바 */
+	.container{
+		background-color: rgb(44, 62, 80);
+		width:70%;
+		margin:auto;
+		padding:2% 2%;
+	}
+	.container >span >a, .container >span >a:hover, .container >span >a:link{
+		color:white ;
+	}
+	.board1{
+		margin-left: 1%;
+		font-size:25px;
+		font-weight:600;
+	} 
+	.board2{
+		margin-left: 5%;
+	}
+	.board3{
+		margin-left: 5%;
+	}
+	/*  */
+	
+	.boardWrapper{
+		width:70%;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		padding:2%;
+	}
+	.notice{
+		margin-top: 1%;
+		font-size:30px;
+		font-weight:700;
+	}
+	 .noticeBoardList{
+		width:100%;
+		margin-top:2%;
+	}
+	.table{
+		width:100%;
+	}
+	.table>thead {
+		background-color: #b3c6ff;
+	}
+	.noticeBoardList th{
+		color: blue;
+		font-size: 18px;
+		text-align:center;
+		font-weight:600;
+	}
+	.noticeBoardList th:nth-child(1){
+		width:10%;
+	}
+	.noticeBoardList th:nth-child(2){
+		width:60%;
+	}
+	.noticeBoardList th:nth-child(3){
+		width:10%;
+	}
+	.noticeBoardList th:nth-child(4){
+		width:20%;
+	}
+	
+	.table-hover>tbody>tr:hover {
+		background-color: #e6ecff;
+	}
+	
+	.noticeBoardList td{
+		text-align: center;
+		font-size:15px;
+		
+	}
+	.noticeBoardList td:nth-child(2){
+		text-align: left;
+		padding-left:1%;
+	}
+	
+	/* 하단 버튼, 페이징 VO */
+	.noticeWrite{
+		width:100%;
+		display:inline-block;
+		text-align:right;
+	}
+	
+	#noticeBtn{
+		width:auto;
+		height:auto;
+		font-size:15px;
+		padding:0.5% 2%;
+	}
+	
+	.pagingVO{
+		width:70%;
+		margin-left:15%;
+		display:inline-block; 
+	}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <span class = "board1"><a class="noticeBoard" onclick="location.href='/noticeList';" id="notice" style="cursor:pointer;">공지사항</a></span>
+  <span class = "board2"><a class="inquiryBoard" onclick="location.href='/inquirySend';" id="inquiry" style="cursor:pointer;">1:1문의하기</a></span>
+  <span class = "board3"><a class="inquiryReply" onclick="location.href='/inquiryResult';" id="inquiryResult" style="cursor:pointer;">나의 문의 내역</a></span>
+</div>
+
+<div class="boardWrapper">
+	<p class='notice'>공지사항</p>
+	<div id="board">
+	
+	</div>
+	<div class="noticeWrite">
+		<th:block th:if="${session.userVO.role == 'ROLE_USER,ROLE_ADMIN'}">
+		<button type='button'  onclick="location.href='/noticeWrite';" name="notice" id="noticeBtn" class="btn btn-primary btn-large form-control" >글쓰기</button>
+		</th:block>
+	</div>
+	<div class="pagingVO"></div>
+	<div id="boardWrite"></div>
+</div>
+
+</body>
+</html>

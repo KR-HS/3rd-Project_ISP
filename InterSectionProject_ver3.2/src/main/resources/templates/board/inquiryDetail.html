@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="cmm/layout_login">
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+
+
+
+
+
+<!-- CSS only -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+
+
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".homeBtn").hide();
+	var board_idx = [[${board_idx}]];
+	obj = {
+			"board_idx" : board_idx		
+	}
+	$.ajax({
+		url: "/inquiryDetail",
+		type : "POST",
+		data : obj,
+		success : function(res){
+			$("#boardView").empty();
+			$(".manager_content").empty();
+			var board_content = res['boardVO'].board_content;
+			var board_idx = res['boardVO'].board_idx;
+			var board_subject = res['boardVO'].board_subject;
+			var reg_date = res['boardVO'].board_regdate.split("T");
+			var result = "<div class='inquiry_Wrapper'>";
+			result += "<div class='inquiry_subject'>"+board_subject+"</div>";
+			result += "<div class='inquiry_inquiry_iddate'>";
+			result +="<span class='regdate'>날짜</span><span>"+reg_date[0]+"</span>";
+			result +="</div>";
+			result += "<div class='inquiry_content'>"+board_content+"</div>";
+			result +="<input type='hidden' id='board_idx' value="+board_idx+">";
+			result +="</div>";
+			$("#boardView").html(result);
+			if(res.CommentContent == "댓글없음"){
+				var manager_content = "<div>등록된 답변이 없습니다.</div>";
+				$(".manager_content").html(manager_content);
+			}else{
+				var manager_content = "<div>"+res.CommentContent+"</div>";
+				$(".manager_content").html(manager_content);
+				$(".manager_Wrapper").hide();
+				$(".homeBtn").show();
+			}
+		},
+		error : function() {
+			alert("에러");
+		}
+	});
+});
+
+function CommentCall(){
+	  if($.trim($("#content").val())==''){
+	      alert("내용을 입력해주세요.");
+	      return false;
+	  }else{
+		  var board_idx = $("#board_idx").val();
+		  var content = $("#content").val();
+		  obj = {
+			  "board_idx" : board_idx,
+			  "content" : content,
+		  }
+	  }
+
+	  $.ajax({
+			url: "/inquiryReview_Insert",
+			type : "POST",
+			data : obj,
+			success : function(res){
+					location.reload();
+				},
+				error : function() {
+					alert("에러");
+				}
+			  
+		  });
+
+}
+
+</script>
+<style>
+	a,a:hover,a:link{
+		color:black; 
+	}
+	/* 메뉴바 */
+	.container{
+		background-color: rgb(44, 62, 80);
+		width:70%;
+		margin:auto;
+		padding:2% 2%;
+	}
+	.container >span >a, .container >span >a:hover, .container >span >a:link{
+		color:white ;
+	}
+	.board1{
+		margin-left: 1%;
+		
+	} 
+	.board2{
+		margin-left: 5%;
+	}
+	.board3{
+		margin-left: 5%;
+		font-size:25px;
+		font-weight:600;
+	}
+	/*  */
+	.boardWrapper{
+		width:70%;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		padding:2% 2% 0 2%;
+	}
+	
+	.inquiry{
+		margin-top: 1%;
+		font-size:30px;
+		font-weight:700;
+	}
+	
+	.inquiry_Wrapper{
+		width:100%;
+		margin-top:2%;
+	}
+	
+	/* 게시판 뷰 css */
+	.inquiry_subject{
+		margin-top: 1%;
+		background-color: #b3c6ff;
+		width : 100%;
+		padding:1% 2%;
+		font-size: 25px;
+	}
+	.inquiry_subject::before{
+		display:inline-block;
+		content:"[문의내역]";
+		margin-right:2%;
+		font-weight:700;
+	}
+	.inquiry_inquiry_iddate{
+		text-align:right;
+		margin:1% 0;
+	}
+	.regdate::before{
+		content:"[";
+	}
+	.regdate::after{
+		content:"]";
+		margin-right:1%;
+	}
+	
+	.inquiry_content{
+		margin-top: 2%;
+		width : 100%;
+		min-height:200px;
+		padding:1%;
+		background-color: #FBF2EF;
+	}
+	
+	
+	/*  */
+	.managerView_Wrapper{
+		width:70%;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		padding:2% 2% 0 2%;
+	}
+	.manager_reply{
+		width : 100%;
+		font-size: 25px;
+	}
+	.manager_reply>p{
+		font-size: 25px;
+		font-weight:600;
+		margin-bottom:1%;
+	}
+	.manager_content{
+		font-size: 10pt;
+		min-height:100px;
+		border: 1px solid lightgray; 
+		padding: 1%;
+	}
+	
+	.manager_Wrapper{
+		margin-top: 2%;
+		width : 100%;
+		font-size: 25px;
+	}
+	
+	.manager_Wrapper>p{
+		font-size: 25px;
+		font-weight:600;
+	}
+	textarea{
+		width: 100%;
+	    height:200px;
+	    border:1px solid lightgray;
+	    font-size:12px;
+	    padding:1%;
+	    resize: none;
+	}
+	
+	.BtnWrapper{
+		text-align:right;
+	}
+	
+	#submitBtn{
+		margin-left:1%;
+	}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <span class = "board1"><a class="noticeBoard" onclick="location.href='/noticeList';" id="notice" style="cursor:pointer;">공지사항</a></span>
+  <span class = "board2"><a class="inquiryBoard" onclick="location.href='/inquirySend';" id="inquiry" style="cursor:pointer;">1:1문의하기</a></span>
+  <span class = "board3"><a class="inquiryReply" onclick="location.href='/inquiryResult';" id="inquiryResult" style="cursor:pointer;">나의 문의 내역</a></span>
+</div>
+
+<div class="boardWrapper">
+	<p class='inquiry'>나의 문의 내역</p>
+	<div id="boardView">
+	</div>
+</div>
+
+<!-- 관리자 답변시 생기는 부분 -->
+<div class="managerView_Wrapper">
+	<div class="manager_reply">
+		<p>관리자 답변</p>
+		<div class="manager_content">
+			
+		</div>
+		<div class="BtnWrapper">
+		<input type="button" id="homeBtn" class="btn btn-outline-danger btn-sm" value="문의내역" onclick="location.href='/inquiryResult'"/>
+		</div>
+	</div>
+	
+	
+	<th:block th:if="${session.userVO.role == 'ROLE_USER,ROLE_ADMIN'}">
+	<div class="manager_Wrapper">
+		
+		<p>답변달기</p>
+		<div><textarea  name="content" id="content" required></textarea> </div>
+		<div class="BtnWrapper">
+		<input type="button" id="homeBtn" class="btn btn-outline-danger btn-sm" value="문의내역" onclick="location.href='/inquiryResult'"/>
+		<input type="submit" id="submitBtn" class="btn btn-outline-danger btn-sm" value="답변달기" onclick="CommentCall()"/>
+		</div>
+	</div>
+	</th:block>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

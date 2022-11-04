@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.MoimCategoryDAO">
+	
+	<!-- 모임 카테고리 저장하기 -->
+	<insert id="insert" parameterType="MoimCategoryVO">
+		insert into MoimCategory values
+		(moimCategory_idx_seq.nextval, #{moim_idx}, #{category_idx})
+	</insert>
+	
+	<!-- 카테고리에 따른 모임idx(여러개) 가져오기 -->
+	<select id="selectByCategory" parameterType="int" resultType="int">
+		select moim_idx from moimCategory where category_idx=#{category_idx}
+	</select>
+	
+	<!-- 카테고리에 따른 모임 갯수 가져오기 -->
+	<select id="selectCountByCategory" parameterType="int" resultType="int">
+		select count(*) from moimCategory where category_idx=#{category_idx}
+	</select>
+	
+	<!-- 모임 카테고리 변경하기 -->
+	<update id="update" parameterType="MoimCategoryVO">
+		update moimCategory set
+		category_idx=#{category_idx}
+		where
+		moim_idx=#{moim_idx}
+	</update>
+	
+	
+	
+	<!-- 0826 현수 추가 -->
+	<!-- 
+	<select id="selectByMoim" parameterType="string" resultType="CategoryVO">
+      select * from category where category_idx in 
+         (select category_idx from moimCategory where moim_idx in
+            (SELECT moim_idx FROM MOIM WHERE TO_CHAR(MOIM_TIME, 'YYYY-MM-DD') = #{moim_time})
+         )
+   </select>
+	 -->
+	
+	
+	<!-- 0826 현수 수정 -->
+	<select id="selectByMoim" parameterType="string" resultType="CategoryVO">
+    select c.* from moimCategory mc, CATEGORY c where moim_idx IN (SELECT moim_idx FROM MOIM WHERE TO_CHAR(MOIM_TIME, 'YYYY-MM-DD') = #{moim_time}) AND mc.CATEGORY_IDX = c.CATEGORY_IDX     
+   </select>
+	
+	
+	<!-- 모임에 따른 카테고리 가져오기 0829 새롬 추가-->
+	<select id="selectCategoryByMoimIdx" parameterType="int" resultType="CategoryVO">
+		select * from Category WHERE category_idx=
+		(select category_idx from MOIMCATEGORY where moim_idx=#{moim_idx})
+	</select>
+	
+	
+	
+</mapper>

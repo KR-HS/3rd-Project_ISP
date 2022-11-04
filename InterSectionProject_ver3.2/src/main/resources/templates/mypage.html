@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<!-- 
+ -->
+
+
+<title>시작 페이지</title>
+<script type="text/javascript">
+
+
+	$(function(){
+		$(".moimCreate").css({
+			"background-color":"rgb(52, 152, 219)",
+			"color":"white",
+			"border":"0"
+		})
+
+		
+		$(".moimCreate").trigger("click");
+		var phone=$(".userPhone").text();
+		$(".userPhone").text(phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3"));
+		
+		var now = new Date();
+		var year=now.getYear()+1900;
+		var myage=year-$(".userAge").text()+1;
+		$(".userAge").text(myage+"세");
+		
+	});
+
+	$(window).resize(function(){
+		
+	})
+	
+	function sendPost(urlPage, params) {
+	var obj={
+	};
+    for (var key in params) {	// key, value로 이루어진 객체 params
+       obj[key]=params[key]+"";
+    }
+    $.ajax({
+		url : "myMoim",
+		type : "POST",  
+		data : obj,
+		async: false,
+		success : function(res){
+			$(".moimList").empty();			
+			//var moimVO = JSON.stringify(res)
+			//alert("결과 : " + moimVO);
+			if(res["pv"].totalCount!=0){
+				alert(user);
+				var moimList=res["pv"].list; // 모임리스트
+				var user=res["user"]; // 유저 정보
+				var cv=res["cv"]; // p,s,b를 담고있음.
+				var approveNum=res["approve"]; // 모임의 승인된 인원수
+				var week = ['일', '월', '화', '수', '목', '금', '토']; // 요일찍기위한 리스트
+				var i=(cv.p-1)*cv.b; // 모집인원 종료 여부 확인하기 위한 인덱스
+				for(vo of moimList){
+					$(".moimList").append(function(){
+						// 요일구하기
+						var dayOfWeek = week[new Date(vo.moim_time.substr(0,10)).getDay()];
+						// 모임시간과 현재시간 비교하기(0:년도, 1:월, 2:일)
+						var moimDate = vo.moim_time.substr(0,10).split("-");
+						var moimTime=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]));
+						
+						// html출력
+						var moim="<div class='moim'>";
+						moim+="<div class='moimUpper'>"
+						moim+="<span class='moimSubject'>"+vo.moim_name+"</span>";
+						moim+="<span class='moimDate'>"+vo.moim_time.substr(0,10)+"("+dayOfWeek+")</span>";
+						moim+="<span class='moimEnd ";
+						if(vo.moim_isEnd=='N'){
+							if(vo.moim_personnel==approveNum[i]){
+								moim+="moim_progress'>&lt;진행중"+"&gt;</span>";	
+							}
+							else{
+								moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
+							}
+						}
+						else{
+							moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+						}
+						moim+="</div>";
+						moim+="<div class='moimUnder'>";
+						moim+="<p class='moimInfo Creator'>작성자명";
+						moim+="<span>"+user[i].user_name+"</span>";
+						moim+="</p>";
+						moim+="<p class='moimInfo JoinNum'>참여인원";
+						moim+="<span>"+approveNum[i]+" / "+vo.moim_personnel+"</span>";
+						moim+="</p>";
+						moim+="<p class='moimInfo CreatorPhone'>연락처";
+						moim+="<span>"+(user[i].user_phone).replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+"</span>";
+						moim+="</p>";
+						moim+="</div>";
+						moim+="</div>";
+						moim+="</div>";
+						return moim;
+					})
+					i++;
+				}
+				
+				var totalPage = parseInt((res["pv"].totalCount-1)/cv.s)+1;
+				var startPage = parseInt((cv.p-1)/cv.b)*cv.b+1
+				var endPage = startPage+cv.b-1;
+				if(endPage>totalPage) {
+					endPage = totalPage;
+				}
+				var pagingBtn="<ul class='pagination pagination-sm justify-content-center'>";
+				// 이전
+				if(startPage>1) {
+					pagingBtn+="<li class='page-item'>";
+					pagingBtn+="<a class='page-link' href='#' aria-label='Previous' onclick='sendPost(\"?\", {\"sortMenu\":\""+res["sortMenu"]+"\",\"p\":"+(startPage-1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+					pagingBtn+="<span aria-hidden='true'>&laquo;</span>";
+					pagingBtn+="</a>";
+					pagingBtn+="</li>";
+				}
+				// 페이지 리스트
+				for(let i=startPage;i<=endPage;i++) {
+					// 현재 페이지는 링크를 걸지 않는다.
+					if(i==cv.p) {
+						pagingBtn+="<li class='page-item active' aria-current='page'>";
+						pagingBtn+="<a class='page-link' href='#'>";
+						pagingBtn+=i;
+						pagingBtn+="</a>";
+						pagingBtn+="</li>";				
+					}else {
+						pagingBtn+="<li class='page-item'>";
+						pagingBtn+="<a class='page-link' href='#' onclick='sendPost(\"?\", {\"sortMenu\":\""+res["sortMenu"]+"\",\"p\":" + (i) + ",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+						pagingBtn+=i;
+						pagingBtn+="</a>";
+						pagingBtn+="</li>";				
+					}
+				}
+				// 다음
+				if(endPage<totalPage) {
+					pagingBtn+="<li class='page-item'>";
+					pagingBtn+="<a class='page-link' href='#' aria-label='Next' onclick='sendPost(\"?\", {\"sortMenu\":\""+res["sortMenu"]+"\",\"p\":"+(endPage+1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+					pagingBtn+="<span aria-hidden='true'>&raquo;</span>";
+					pagingBtn+="</a>";
+					pagingBtn+="</li>";
+				}
+				pagingBtn+="</ul>"; 
+				$(".moimList").append(pagingBtn);
+				
+				
+				$(".moim").each(function(){
+					var moimEnd = $(this).children(".moimUpper").children(".moimEnd").text();
+					switch(moimEnd){
+						case "<종료>":
+							$(this).css("background-color","rgb(224, 224, 224)");
+						break;
+						case "<모집중>":
+							$(this).css("background-color","rgb(26, 188, 156)");
+						break;
+						case "<진행중>":
+							$(this).css("background-color","rgb(241, 196, 15)");
+						break;
+					}
+				})
+			}
+			else{
+				$(".moimList").append("<div class='moim'>등록된 모임이 없습니다.</div>");
+			}
+			var offset = $('.moimList').offset();
+			$('html').animate({scrollTop : offset.top}, 1000);
+			
+		},
+		error : function(err){
+			alert("ajax 보낼 파일명 바꾸세요");
+		}
+});
+}
+
+	
+	function clickMoim(e){
+		$(".moimMenu").css({
+			"background-color":"#FFFFFF",
+			"color":"#000000",
+			"border":"1px solid gray"
+		});
+		$(e).css({
+			"background-color":"rgb(52, 152, 219)",
+			"color":"white",
+			"border":"0"
+		})
+		
+		var now = new Date();
+		var today=new Date(now.getYear()+1900,now.getMonth(),now.getDate());
+		var sortMenu = $(e).text();
+		
+		var obj = {
+				"sortMenu" : sortMenu,
+				"s":"5",
+				"b":"5" 
+		};
+		
+		$.ajax({
+				url : "myMoim",
+				type : "POST",  
+				data : obj,
+				async: false,
+				success : function(res){
+					$(".moimList").empty();			
+					//var moimVO = JSON.stringify(res)
+					//alert("결과 : " + moimVO);
+					
+					if(res["pv"].totalCount!=0){
+						
+						var moimList=res["pv"].list; // 모임리스트
+						var user=res["user"]; // 유저 정보
+						var cv=res["cv"]; // p,s,b를 담고있음.
+						var approveNum=res["approve"]; // 모임의 승인된 인원수
+						var week = ['일', '월', '화', '수', '목', '금', '토']; // 요일찍기위한 리스트
+						// var now = new Date(); // 현재시간
+						var i=(cv.p-1)*cv.b; // 모집인원 종료 여부 확인하기 위한 인덱스
+						for(vo of moimList){
+							$(".moimList").append(function(){
+								// 요일구하기
+								var dayOfWeek = week[new Date(vo.moim_time.substr(0,10)).getDay()];
+								// 모임시간과 현재시간 비교하기(0:년도, 1:월, 2:일)
+								var moimDate = vo.moim_time.substr(0,10).split("-");
+								var moimTime=new Date(Number(moimDate[0]),Number(moimDate[1])-1,Number(moimDate[2]));
+								
+								// html출력
+								var moim="<div class='moim'>";
+								moim+="<div class='moimUpper'>"
+								moim+="<span class='moimSubject'>"+vo.moim_name+"</span>";
+								moim+="<span class='moimDate'>"+vo.moim_time.substr(0,10)+"("+dayOfWeek+")</span>";
+								moim+="<span class='moimEnd ";
+								if(vo.moim_isEnd=='N'){
+									
+									if(today<moimTime){
+										if(vo.moim_personnel==approveNum[i]){
+											moim+="moim_progress'>&lt;진행중"+"&gt;</span>";	
+										}
+										else{
+											moim+="moim_proceed'>&lt;모집중"+"&gt;</span>";
+										}
+									}
+									else{
+										moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+									}
+								}
+								else{
+									moim+="moim_end'>&lt;종료"+"&gt;</span>";		
+								}
+								moim+="</div>";
+								moim+="<div class='moimUnder'>";
+								moim+="<p class='moimInfo Creator'>작성자명";
+								moim+="<span>"+user[i].user_name+"</span>";
+								moim+="</p>";
+								moim+="<p class='moimInfo JoinNum'>참여인원";
+								moim+="<span>"+approveNum[i]+" / "+vo.moim_personnel+"</span>";
+								moim+="</p>";
+								moim+="<p class='moimInfo CreatorPhone'>연락처";
+								moim+="<span>"+(user[i].user_phone).replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+"</span>";
+								moim+="</p>";
+								moim+="</div>";
+								moim+="</div>";
+								moim+="</div>";
+								return moim;
+							})
+							i++;
+						}
+						// 하단 페이징 버튼 추가
+						var totalPage = parseInt((res["pv"].totalCount-1)/cv.s)+1;
+						var startPage = parseInt((cv.p-1)/cv.b)*cv.b+1
+						var endPage = startPage+cv.b-1;
+						if(endPage>totalPage) {
+							endPage = totalPage;
+						}
+						var pagingBtn="<ul class='pagination pagination-sm justify-content-center'>";
+						// 이전
+						if(startPage>1) {
+							pagingBtn+="<li class='page-item'>";
+							pagingBtn+="<a class='page-link' href='#' aria-label='Previous' onclick='sendPost(\"?\", {\"sortMenu\":\""+sortMenu+"\",\"p\":"+(startPage-1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+							pagingBtn+="<span aria-hidden='true'>&laquo;</span>";
+							pagingBtn+="</a>";
+							pagingBtn+="</li>";
+						}
+						// 페이지 리스트
+						for(let i=startPage;i<=endPage;i++) {
+							// 현재 페이지는 링크를 걸지 않는다.
+							if(i==cv.p) {
+								pagingBtn+="<li class='page-item active' aria-current='page'>";
+								pagingBtn+="<a class='page-link' href='#'>";
+								pagingBtn+=i;
+								pagingBtn+="</a>";
+								pagingBtn+="</li>";				
+							}else {
+								pagingBtn+="<li class='page-item'>";
+								pagingBtn+="<a class='page-link' href='#' onclick='sendPost(\"?\", {\"sortMenu\":\""+sortMenu+"\",\"p\":" + (i) + ",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+								pagingBtn+=i;
+								pagingBtn+="</a>";
+								pagingBtn+="</li>";				
+							}
+						}
+						// 다음
+						if(endPage<totalPage) {
+							pagingBtn+="<li class='page-item'>";
+							pagingBtn+="<a class='page-link' href='#' aria-label='Next' onclick='sendPost(\"?\", {\"sortMenu\":\""+sortMenu+"\",\"p\":"+(endPage+1)+",\"s\":"+cv.s+",\"b\":"+cv.b+"})'>";
+							pagingBtn+="<span aria-hidden='true'>&raquo;</span>";
+							pagingBtn+="</a>";
+							pagingBtn+="</li>";
+						}
+						pagingBtn+="</ul>"; 
+						$(".moimList").append(pagingBtn);
+						
+						
+						
+						
+						$(".moim").each(function(){
+							var moimEnd = $(this).children(".moimUpper").children(".moimEnd").text();
+							switch(moimEnd){
+								case "<종료>":
+									$(this).css("background-color","rgb(224, 224, 224)");
+								break;
+								case "<모집중>":
+									$(this).css("background-color","rgb(26, 188, 156)");
+								break;
+								case "<진행중>":
+									$(this).css("background-color","rgb(241, 196, 15)");
+								break;
+							}
+						})
+					}
+					else{
+						$(".moimList").append("<div class='moim'>등록된 모임이 없습니다.</div>");
+					}
+					
+					
+				},
+				error : function(err){
+					alert("ajax 보낼 파일명 바꾸세요");
+				}
+		});
+		
+		
+	}
+	
+	
+	
+</script>
+<style>
+	input{
+		user-select: none;
+	}
+	/* 메인부분 */
+	/* 윗부분 */
+	.upperSection{
+		border: solid 1px lightgray; 
+		width: 70%;
+		margin: auto;
+		padding:0 0 2% 0;
+	}
+	.upper,.under{
+		display: flex;
+	}
+	/* upper */
+	.mypage{
+		width:80%;
+		margin: 2% 0 0 2%;
+	}
+	.mypageTitle{
+		font-size: 30px;
+		font-weight: 700;
+	}
+	
+	.buttonArea{
+		width:20%;
+		margin: 1% 2% 0 0;
+	}
+	
+	#updateBtn{
+		float: right ;
+	    margin: 5%;
+	    padding: 2% 4% ;
+	    font-size: 18px ;
+	    font-weight: 700 ;
+	}
+	
+	/* under */
+	/* (왼쪽) 프로필이미지, 이메일, 전화번호 */
+	.left{
+		width: 45%;
+	}
+	.user{
+		width : 95%;
+		height: auto;
+		padding:2%;
+		margin-bottom:2%;
+	}
+	
+	.profile{
+    	margin: 15% 0% 0% 15%;
+    	background-color: white;
+	}
+	.profile-setting{
+		margin-left: 70%;
+	}
+	.profileImg{
+		width: 300px;
+  		height: 300px; 
+   		border-radius: 100%;
+   		border:1px solid lightgray;
+    	overflow: hidden;
+		object-fit: cover;
+	}
+	
+	.contact{
+		width: 300px;
+		height: 100px;
+		margin: 80px;
+	}
+	.email,.phone{
+		font-size:20px;
+		font-weight:500;
+		margin-bottom:1.5em;
+	}
+	.userEmail::before,.userPhone::before{
+		content:":";
+		margin:0 10px;
+	}
+	/* (오른쪽) 이름, 나이, 성별, 관심항목, 모임, 후기 */
+	.right{
+		width: 55%;
+	}
+	/* 이름 */
+	.userInform{
+		margin-bottom:1%;
+		padding:1% 2%;
+	}
+	.user{
+		background-color:rgb(0, 178, 255);
+		border-radius:10px;
+	}
+	.userInformTitle{
+		font-size: 20px;
+		font-weight: 600;
+	}
+	.userInfromInput{
+		background-color:white;
+	}
+	.userName{
+		font-size:18px;
+		margin-left:1%;
+	}
+	.userAge,.userGender{
+		font-size:15px;
+	}
+	.userAge::before{
+		content:"/";
+		margin-right:1%;
+	}
+	.userGender::before{
+		content:"(";
+	}
+	.userGender::after{
+		content:")";
+	}
+	/* 관심항목 */
+	.userLike{
+		padding:1% 2%;
+	}
+	.userLikeTitle{
+		font-size: 20px;
+		font-weight: 600;
+	}
+	.userLikeContent{
+		width:auto;
+		margin-left: 1%;
+		margin-bottom:2%;
+		padding:2% 6%;
+		font-size:12px;
+	}
+	/* 개설모임수, 참여모임수, 작성후기수 */
+	.CountWrap{
+		padding:2% 2% 0 2%;
+	}
+	.createMoimCount,.joinMoimCount,.reviewCount{
+		margin-left: 1%;
+		font-size:15px;
+		font-weight:700;
+	}
+	.createMoimCount::before,.joinMoimCount::before,.reviewCount::before{
+		content:"◆";
+		margin-right:2%;
+		font-weight:500;
+		font-size:12px;
+	}
+	.countInput{
+		font-weight:500;
+	}
+	.countInput::before{
+		content:":";
+		margin:0 1% 0 1%;
+	}
+	
+	/* 승인대기중인 모임 */
+	.WatingMoimWrap{
+		padding:1% 2%;
+	}
+	.watingMoimInput{
+		margin-left: 1%;
+		font-size:15px;
+	}
+	.watingMoimInput::before{
+		content:"•";
+		margin-right:2%;
+	}
+	
+	/* 최근 작성 후기 */
+	.review{
+		width : 95%;
+		height: auto;
+		padding:1% 2% 2% 2%;
+		border-radius:10px;
+		background-color: rgb(255, 128, 128);
+	}
+	
+	.recentReviewTitle{
+		font-size: 20px;
+		font-weight: 700;
+		margin:2%;
+		margin-bottom:4%;
+		width:60%;
+	}
+	
+	.recentReviewTitle::after{
+		content:"(최근 3건)";
+		font-size:15px;
+		margin-left:2%;
+	}
+	
+	.recentReviewEmpty{
+		margin-left: 2%;
+	}
+	.recentReviewInput{
+		margin-left: 3%;
+		font-size:15px;
+	}
+	
+	.recentReviewInput::before{
+		content:"-";
+		margin-right:2%;
+	}
+	
+	.recentReviewInputDate{
+		font-size:12px;
+	}
+	.recentReviewInputDate::before{
+		content:"(";
+		margin: 0 1% 0 2%;
+	}
+	.recentReviewInputDate::after{
+		content:")";
+		margin-left:1%;
+	}
+	
+	
+	
+	/* 아랫부분 */
+	.underSection{
+		width:70%;
+		height:auto;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		border:1px solid lightgray;
+		padding:2%;
+	}
+	.title{
+		padding:0 2%;
+		font-weight:700;
+	}
+	.sortingMoimMenuWrap{
+		display:flex;
+		width:100%;
+	}
+	.sortingMoimMenu{
+		float:left;
+		display:flex;
+		width:60%;
+		padding:2% 2%;
+		justify-content:space-between;
+	}
+	.applyManageWrap{
+		float:right;
+		width:40%;
+		padding:2% 2%;
+		justify-content:space-between;
+	}
+	.applyManage{
+		float:right;
+	}
+	
+	.moimMenu{
+		text-align:center;
+		padding:2% 6%;
+		border-radius:20px;
+		border:1px solid gray;
+		font-size:12px;
+		cursor:pointer;
+	}
+
+	.moimList{
+		padding:1% 2%;
+	}
+	
+	.moim{
+		border-radius:5px;
+		padding:1% 2%;
+		margin:0;
+		margin-bottom:20px;
+		width:100%;
+		font-size:18px;
+	}
+	.moimUpper{
+		width:100%;
+		padding:10px 20px;
+	}
+	.moimSubject{
+		font-size:25px;
+		font-weight:600;
+	}
+	.moimSubject:before{
+		content:"『 "
+	}
+	.moimSubject:after{
+		content:" 』"
+	}
+	.moimDate{
+		padding-left:20px;
+		font-size:15px;
+		
+	}
+	.moimEnd{
+		padding-left:10px;
+		font-size:15px;
+	}
+	.moimUnder{
+		width:100%;
+		padding:10px 20px;
+	}
+	.moimInfo{
+		padding:10px 30px;
+		padding-bottom:0;
+		font-size:12px;
+		margin:0;
+	}
+	.moimInfo:before{
+		content:"▶";
+		font-size:10px;
+		padding-right:5px;
+		margin-right:5px;
+	}
+	
+	.moimInfo span:before{
+		content:": ";
+		font-size:12px;
+		margin: 0 10px;
+	}
+</style>
+</head>
+<body>
+
+<!-- main -->
+
+<div class="upperSection">
+		<div class="upper">
+			<div class="mypage">
+				<p class="mypageTitle">마이페이지</p>
+			</div>
+			<div class="buttonArea">
+				<button type="button" id="updateBtn" class="btn btn-secondary btn-lg" onclick="location.href='profileUpdate'">수정하기</button>
+			</div>
+		</div>
+		
+		<div class="under">
+			<div class="left">
+				<div class="profile">
+	   				<a href="#" onclick="window.open('/popup/profileImg_upload','프로필 이미지수정', 'width=500,height=400,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;"
+			        class="setting-icon profile-setting">
+			        	<i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+			        </a>
+			        <br>
+	   				<img class="profileImg" th:if="${profileImg}==null" alt="" src="/pictures/profile_default.png">
+					<img class="profileImg" th:if="${profileImg}!=null" th:src="'/upload/'+${profileImg.s_fileName}" onerror="this.onerror=null; this.src='pictures/profile_default.png';">
+				</div>
+				<div class="contact">
+					<p class="email">이메일
+						<span class="userEmail" th:text="${userVO.user_id}"></span></p>
+					<p class="phone">전화번호
+						<span class="userPhone" th:text="${userVO.user_phone}"></span></p>
+				</div>
+			</div>
+			
+			<div class="right">
+				<div class="user">
+					<div class="userInform">
+						<p class="userInformTitle">이름</p>
+						<p class="userInformInput">
+							<span class="userName" th:text="${userVO.user_name}"></span>
+							<span class="userAge" th:text="${#dates.format(userVO.user_birth, 'yyyy')}">27세</span>
+							<!-- 남자 : ♂, 여자 : ♀ -->
+							<span th:if="${userVO.user_gender=='M'}" class="userGender">♂</span>
+							<span th:if="${userVO.user_gender=='F'}" class="userGender">♀</span>
+						</p>
+					</div>
+					
+					<div class="userLike" >
+						<p class="userLikeTitle">관심항목</p>
+						<p th:if="${#lists.isEmpty(listMap['categoryList'])}" class="categoryEmpty">관심 카테고리가 없습니다.</p>
+						
+						<th:block th:if="${!#lists.isEmpty(listMap['categoryList'])}" th:each="vo:${listMap['categoryList']}">
+							<span class="badge rounded-pill text-bg-light userLikeContent" th:text="${vo}">항목</span>
+						<th:block>
+					</div>
+					<div class="CountWrap">
+						<p class="createMoimCount">개설 모임수
+							<span class="countInput" th:text="${countMap['createcount']+'개'}"></span>
+						</p>
+						<p class="joinMoimCount">참여모임수
+							<span class="countInput" th:text="${countMap['signupCount']+'개'}"></span>
+						</p>
+						<p class="reviewCount">후기 작성
+							<span class="countInput" th:text="${countMap['reviewCount']+'개'}"></span>
+						</p>
+					</div>
+					<div class="WatingMoimWrap">
+						<p class="watingMoim" style="font-weight: bold; font-size: 20px;">승인 대기중인 모임</p>
+						<p th:if="${#lists.isEmpty(listMap['nameList'])}">신청한 모임이 없습니다.</p>
+						<th:block th:each="list : ${listMap['nameList']}" th:if="${!#lists.isEmpty(listMap['nameList'])}">
+							<p class="watingMoimInput" th:text="${list}"></p>
+						</th:block>
+					</div>
+				</div>
+				
+				<div class="review">
+					<label class="recentReviewTitle">최근 작성 후기</label>
+					<button type="button" class="btn btn-light" style="float: right; margin: 3% 3%" onclick="window.open('/popup/profile_ReviewList','내 작성후기 리스트', 'width=800,height=650,fullscreen=no,location=no,toolbar=no,menubar=no,scrollbars=no,resizable=no,status=no');return false;">더보기</button>
+					<br>
+					<p th:if="${#lists.isEmpty(listMap['reviewList'])}" class="recentReviewEmpty">작성한 후기가 없습니다</p>
+					<th:block th:if="${!#lists.isEmpty(listMap['reviewList'])&&voStat.index<5}" th:each="vo:${listMap['reviewList']}">
+						<span class="recentReviewInput" th:text="${vo.review_content}"></span>
+						<span class="recentReviewInputDate" th:text="${#dates.format(vo.review_regdate, 'yyyy-MM-dd')}"></span>
+						<br>
+					</th:block>
+					
+				</div>
+			</div>
+		</div>
+</div>
+
+<div class="underSection">
+	<h2 class="title" align="left">내 모임 목록</h2>
+	<div class="sortingMoimMenuWrap">
+		<div class="sortingMoimMenu">
+				<span class="moimMenu moimCreate" onclick="clickMoim(this);">개설</span>
+				<span class="moimMenu moimApply" onclick="clickMoim(this);">신청</span>
+				<span class="moimMenu moimJoin" onclick="clickMoim(this);">참여중</span>
+				<span class="moimMenu moimLike" onclick="clickMoim(this);">찜한모임</span>
+		</div>
+		<div class="applyManageWrap">
+			<span class="btn btn-outline-danger applyManage" onclick="location.href='applyPage'">신청자 관리</span>
+		</div>
+	</div>
+	<div class="moimList">
+		
+
+	</div>
+</div>
+
+</body>
+ 
+</html>

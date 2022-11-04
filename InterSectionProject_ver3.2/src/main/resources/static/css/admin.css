@@ -1,0 +1,390 @@
+html, body {
+	height: 100%;
+}
+
+.mainBanner {
+	width: 100%;
+	padding: 1%;
+	border-top: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
+}
+
+.mainBannerContent {
+	font-weight: 900;
+	font-size: 20px;
+	margin: 0 0 0 5%;
+}
+
+.mainWrapper {
+	display: inline-flex;
+    height: auto;
+    width: 100%;
+    min-height:100%;
+}
+
+.mainMenubar {
+	width: 5%;
+    height: auto;
+    background-color: lightgray;
+    float: left;
+}
+
+.MainMenu {
+	height: 10%;
+	display: flex;
+	cursor: pointer;
+	max-height:70px;
+}
+
+.MainMenuIcon {
+	margin: auto;
+}
+
+.mainSection {
+	width: 95%;
+	height: 100%;
+	background-color: white;
+	padding: 2%;
+	float:right;
+}
+
+.mainContent {
+	height: 100%;
+	width: 100%;
+	border: 1px solid lightgray;
+}
+
+	.recentJoin,.recentMoim{
+		padding:2% 4% 0 4%;
+		font-size:18px;
+		font-weight:700;
+		margin:0;
+	}
+	.recentJoin::before,.recentMoim::before{
+		content:"❤️";
+		font-size:20px;
+		margin-right:0.5%;
+	}
+	/* 테이블 */
+	/* 공통 */
+	.RecentUserTableWrap,.RecentMoimTableWrap{
+		width:100%;
+		margin:auto;
+		height:auto;
+		padding:2% 4%;
+	}
+	
+	.RecentJoinTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+	}
+	.RecentMoimTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+	}
+	
+	
+	/* 신규회원 테이블 */
+	.recentUserInput,.recentUserType,.recentUserType > th,.recentUserInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.recentUserType{
+		background-color:#eaeaea;
+	}
+	.recentUserType > th{
+		font-size:14px;
+	}
+	.recentUserId,.recentUserBirth,.recentUserPhone{
+		width:15%;
+	}
+	.recentUserName,.recentUserGender,.recentUserUse,.recentUserIsdeleted{
+		width:12%;
+	}
+	
+	.recentUserInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	
+	
+	/* 신규모임 테이블 */
+	.recentMoimInput,.recentMoimType,.recentMoimType > th,.recentMoimInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.recentMoimType{
+		background-color:#eaeaea;
+	}
+	.recentMoimType > th{
+		font-size:14px;
+	}
+	.recentMoimName,.recentMoimAddr{
+		width:22%;
+	}
+	.recentMoimCategory,.recentMoimTime,.recentMoimAge,.recentMoimPersonnel,
+	.recentMoimIsdelete,.recentMoimIsend{
+		width:8%;
+	}
+	
+	.recentMoimInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	
+	/* 최상단 버튼 묶음(4종)  */
+	.userCountBtnWrap{
+		display:flex;
+		width:50%;
+		height:10%;
+		justify-content: space-around;
+		align-items: center;
+		padding:2% 2% 0 2%;
+		font-size:12px;
+		font-weight:500;
+		margin:1% 0;
+	}
+	
+	.TotalContent{
+		width:80px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#34495E;
+		color:white;
+		border-radius:20px;
+	}
+	
+	.countBtn{
+		border-radius:20px;
+		width:100px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#3498DB;
+		color:white;
+	}
+	
+	
+	.countBtnDummy{
+		float: left;
+		width:40%;
+	}
+	
+	.countBtnInput{
+		float: right;
+		width:60%;
+		background-color:lightgray;
+		color:rgb(94, 94, 94);
+		border-radius:20px;
+	}
+	
+	.TotalCount{
+		width:120px;
+	}
+	
+	.TotalCount > .countBtnDummy{
+		width:50%;
+	}
+	.TotalCount > .countBtnInput{
+		width:50%;
+	}
+
+	/* 검색버튼 */
+	.searchBtnWrap{
+		width:30%;
+		height:10%;
+		padding:1% 4%;
+		font-size:10px;
+		font-weight:500;
+	}
+	
+	.searchUserInput{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:3% 5%;
+		width:100%;
+	}
+	.searchBtn{
+		position:absolute;
+		margin-top:1%;
+		left: 27.5%;
+		cursor:pointer;
+	}
+	
+	/* 테이블 */
+	.UserTableWrap{
+		width:100%;
+		margin:auto;
+		height:auto;
+		padding:2% 4%;
+		
+	}
+	
+	.userTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+		
+	}
+	.userInput,.topRow,.topRow > th,.userInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.topRow{
+		background-color:#eaeaea;
+	}
+	.topRow > th{
+		font-size:14px;
+	}
+	.userId,.userBirth,.userPhone{
+		width:15%;
+	}
+	.userName,.userGender,.userUse,.userIsdeleted{
+		width:12%;
+	}
+	.userManage{
+		width:7%;
+	}
+	
+	.userInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	.userManageBtn{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:5% 15%;
+		background-color:rgb(52, 152, 219);
+		color:white;
+	}
+	.userInput > td>input{
+		border:0px;
+		text-align:center;
+		width:100%;
+		background-color:white;
+	}
+
+/* 최상단 버튼 묶음(2종)  */
+	.moimCountBtnWrap{
+		display:flex;
+		width:30%;
+		height:10%;
+		justify-content: space-around;
+		align-items: center;
+		padding:2% 2% 0 2%;
+		font-size:12px;
+		font-weight:500;
+		margin:1% 0;
+	}
+	
+	.TotalContent{
+		width:80px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#34495E;
+		color:white;
+		border-radius:20px;
+	}
+	
+	.moimTotalCount{
+		border-radius:20px;
+		width:150px;
+		height:35px;
+		line-height:35px;
+		text-align:center;
+		background-color:#3498DB;
+		color:white;
+	}
+	
+	
+	.moimTotalCount> .countBtnDummy{
+		float: left;
+		width:50%;
+	}
+	
+	.moimTotalCount > .countBtnInput{
+		float: right;
+		width:50%;
+		background-color:lightgray;
+		color:rgb(94, 94, 94);
+		border-radius:20px;
+	}
+	
+	/* 검색버튼 */
+	.searchBtnWrap{
+		width:30%;
+		height:10%;
+		padding:1% 4%;
+		font-size:10px;
+		font-weight:500;
+	}
+	
+	.searchMoimInput{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:3% 5%;
+		width:100%;
+	}
+	.searchBtn{
+		position:absolute;
+		margin-top:1%;
+		left: 27.5%;
+		cursor:pointer;
+	}
+	
+	/* 모임테이블 */
+	.MoimTableWrap{
+		width:100%;
+		margin:auto;
+		height:auto;
+		padding:2% 4%;
+	}
+	
+	.MoimTable{
+		width:100%;
+		text-align:center;
+		border:1px solid #ccc;
+	}
+	
+	.moimInput,.moimType,.moimType > th,.moimInput > td{
+		border:1px solid #ccc;
+		padding: 0.5% 0;
+	}
+	.moimType{
+		background-color:#eaeaea;
+	}
+	.moimType > th{
+		font-size:14px;
+	}
+	.moimName,.moimAddr{
+		width:22%;
+	}
+	.moimCategory,.moimTime,.moimAge,.moimPersonnel,
+	.moimIsdelete,.moimIsend,.MoimManage{
+		width:8%;
+	}
+	
+	.moimInput > td{
+		font-weight:500;
+		font-size:12px;
+	}
+	
+	.moimManageBtn{
+		border-radius:5px;
+		border:1px solid lightgray;
+		padding:5% 15%;
+		background-color:rgb(52, 152, 219);
+		color:white;
+	}
+	
+	.moimInput > td>input{
+		border:0px;
+		text-align:center;
+		width:100%;
+		background-color:white;
+	}
+	

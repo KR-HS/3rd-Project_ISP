@@ -1,0 +1,245 @@
+input {
+	user-select: none;
+}
+/* 메인 부분. */
+.upper_slide {
+	width: 70%;
+	position: relative;
+	position: flex;
+	margin: auto;
+	padding: 0;
+}
+
+.carousel-inner {
+	border-radius: 10px;
+	height: 30%;
+	width: 100%;
+}
+
+.d-block {
+	max-height: 450px;
+	min-width: 100%;
+	object-fit: cover;
+	object-position: center;
+	overflow: hidden;
+}
+/* 날짜별 모임리스트 */
+.under_slide {
+	width: 70%;
+	margin: auto;
+	padding: 5% 0 0 0;
+}
+
+.sortByDate {
+	width: 100%;
+	padding: 0 20px 0 20px;
+}
+
+.pagination {
+	display: flex;
+	justify-content: space-around;
+}
+
+.slider-element {
+	cursor: pointer;
+	text-align: center;
+	height: 70px;
+	vertical-align: middle;
+	color: black;
+	border-radius: 30px;
+	white-space: nowrap;
+	padding-top: 5px;
+	margin: 3px;
+}
+
+.date_sort_start {
+	background-color: #1570FF;
+	color: white;
+}
+
+.slider-element-date {
+	font-size: 1.5em;
+}
+
+.slider-element-day {
+	font-size: 0.8em;
+}
+
+.slick-prev:before, .slick-next:before {
+	color: #3540A5;
+}
+
+.moimContentWrap {
+	width: 70%;
+	margin: auto;
+	background-color: lightgray;
+	border: none;
+	border-radius: 10px;
+	display: flex;
+	margin-top: 2%;
+}
+
+.moimContentList {
+	width: 100%;
+	margin: 0;
+	padding: 1% 2%;
+}
+
+.moimContent {
+	border: none;
+	width: 100%;
+	background-color: white;
+	margin: 2% 0;
+	padding: 1% 2%;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.moimSubjectInput {
+	font-size: 25px;
+	font-weight: 600;
+}
+
+.moimSubjectInput:before {
+	content: "『 "
+}
+
+.moimSubjectInput:after {
+	content: " 』"
+}
+
+.moimCategory {
+	padding: 0.5% 2%;
+	font-weight: 600;
+	border-radius: 10px;
+	color: white;
+}
+
+.moimLC {
+	margin-left: 1%;
+	background-color: #015958;
+	font-size: 13pt;
+}
+
+.moimCategoryArrow {
+	padding: 0 0.5%;
+	font-size: 13pt;
+	color: darkgray;
+}
+
+.moimCategoryArrow::after {
+	content: "▶";
+	font-size: 10pt;
+	color: lightgray;
+}
+
+.moimSC {
+	background-color: #0CABA8;
+	font-size: 10pt;
+}
+
+.moimProceeding {
+	margin-left: 1%;
+	font-size: 5px;
+	font-weight: 700;
+	background-color: #1570FF;
+	color: white;
+	border-radius: 10px;
+	padding: 0.5% 1.5%;
+}
+
+.moimProceeding {
+	margin-left: 1%;
+	font-size: 5px;
+	font-weight: 700;
+	background-color: #1570FF;
+	color: white;
+	border-radius: 10px;
+	padding: 0.5% 1.5%;
+}
+
+.moimInform {
+	font-size: 15px;
+	padding: 0 1%;
+}
+
+.moimInform::before {
+	content: "•";
+	margin-right: 1%;
+}
+
+.moimInformInput::before {
+	content: ":";
+	margin: 0 1%;
+}
+
+.moimEmpty {
+	padding: 1% 0 0 1%;
+	font-weight: 700;
+	font-size: 18px;
+}
+
+/* 필터 부분 */
+.filterBPara{
+	font-size:30px;
+	font-weight:600;
+	padding-left:15%;
+	margin:3% 0 1% 0;
+}
+.filter_selectBox {
+	border: 1px solid lightgray;
+	width: 70%;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius:5px;
+	padding:1% 2%;
+}
+
+
+.filterSPara{
+	font-size:18px;
+	font-weight:600;
+	margin:0 0 0.5% 0;
+	
+}
+
+.area_filter {
+	margin-right: 2%;
+	margin-bottom:1%;
+	min-width: 140px;
+	padding:0.5% 2%;
+	border: solid 1px lightgray;
+	border-radius: 20px;
+	background-color:white;
+	font-size:12px;
+	
+}
+.DivideLine{
+	width: 100%; 
+	border-bottom:5px solid pink;
+	background-color:white;	
+	border-top:0;
+	margin:0 0 1rem 0;
+}
+.lc_filter {
+	margin-right: 2%;
+	margin-bottom:1%;
+	min-width: 80px;
+	padding:0.5% 2%;
+	border: solid 1px lightgray;
+	border-radius: 20px;
+	background-color:white;
+	font-size:12px;
+}
+
+.sc_filter {
+	margin-right: 2%;
+	margin-bottom:1%;
+	min-width: 120px;
+	padding:0.5% 2%;
+	border: solid 1px lightgray;
+	border-radius: 20px;
+	background-color:white;
+	font-size:12px;
+}

@@ -1,0 +1,442 @@
+/*전체 정보보기*/
+.moim_create_full_wrap {
+	margin: auto;
+	width: 70%;
+	padding: 2%;
+	border: 2px solid lightgray;
+	margin-bottom:5%;
+}
+.dividerLine{
+	margin:0 0 1rem 0;
+}
+ /*모임정보보기*/
+.moim_info {
+	width: 100%;
+	border: 1px solid lightgray;
+	float: left;
+	padding:1% 0;
+	margin-bottom:3%;
+}
+
+/* 개설 대표이미지  */
+.profile_photo_wrap {
+	width: 40%;
+	margin: 0px;
+	float: left;
+	padding:1% 0 0 2%;
+}
+
+/* 모임 개설자 정보 */
+.moimCreatorPara{
+	font-size:16px;
+	font-weight:600;
+	margin:0 0 1% 0;
+}
+.moimCreatorPara::before{
+	content:"*";
+	margin-right:1%;
+	font-size:12px;
+}
+
+/*개설자 프로필이미지*/
+.profile_image {
+	width: 100%;
+	height: 300px;
+	margin-top: 10px;
+}
+.open_user1 {
+	margin-left: 2%;
+}
+.userName{
+	margin-left:5%;
+	font-size:20px;
+	font-weight:700;
+}
+.userName::before{
+	content:"개설자 :";
+	margin-right:1%;
+}
+
+
+/* 개설문의사항 */
+
+.emailAndPhone{
+	margin-top:2%;
+	padding-left:2%;
+}
+/* 개설자 이메일 */
+.open_user4 {
+	padding-top:1%;
+}
+.open_user4::after{
+	content:"/";
+	margin:0 2% 0 3%;
+}
+
+/* 개설자 핸드폰번호 */
+.open_user2 {
+	padding-top: 1%;
+}
+
+/* 주의사항 */
+.open_user3 {
+	font-size: 11px;
+	color:darkgray;
+}
+
+/* 모임 정보 */
+.base_info_wrap {
+	width: 55%;
+	float : right;
+	padding: 1% 1%;
+	position:relative;
+}
+/* 온,오프라인 여부 및 카테고리 */
+.moimIsOnline,.moimCategory{
+	font-size:15px;
+	color:#708090;
+}
+.moimIsOnline::after{
+	content:"-";
+	margin:0 0 0 1%;
+}
+.moimIsOnline::before{
+	content:"<";
+	margin:0 1% 0 0;
+}
+.moimCategory::after{
+	content:">";
+	margin:0 0 0 1%;
+}
+/* 모임 이름 */
+.moimName{
+	font-size:25px;
+	font-weight:600;
+	margin:0;
+}
+
+/* 마감시간 */
+.view_time {
+	color: red;
+	font-size:12px;
+}
+.time-title::after{
+	content:"▶";
+	font-size:7px;
+	margin:0 1%;
+}
+.day{
+	padding-right:1%;
+}
+
+/* 모임시간, 모임장소, 정원, 나이제한 */
+.moimTime,.moimLocation,.moimPersonnelAndAgeLimit{
+	font-size:14px;
+}
+
+.moimTime::before{
+	content:"모임시간 :";
+	color:#2f4f4f;
+	font-weight:600;
+	font-size:15px;
+	margin-right:1%;
+}
+
+.moimLocation::before{
+	content:"모임장소 :";
+	color:#2f4f4f;
+	font-weight:600;
+	font-size:15px;
+	margin-right:1%;
+}
+
+.moimPersonnel{
+	margin-right:5%;
+}
+
+.moimPersonnel::before{
+	content:"모임정원 :";
+	color:#2f4f4f;
+	font-weight:600;
+	font-size:15px;
+	margin-right:1%;
+}
+.moimPersonnel::after{
+	content:"명";
+	font-size:11px;
+	margin-left:1%;
+}
+
+.moimAgeLimit::before{
+	content:"나이제한 :";
+	color:#2f4f4f;
+	font-weight:600;
+	font-size:15px;
+	margin-right:1%;
+}
+
+.moimAgeLimit::after{
+	content:"세";
+	font-size:11px;
+	margin-left:1%;
+}
+
+/* (프로필 영역 종료)  참여자 목록*/
+.listPara {
+	font-size:16px;
+	font-weight:600;
+	margin:10% 0 1% 0;
+}
+.listPara::before{
+	content:"*";
+	margin-right:1%;
+	font-size:12px;
+}
+/* 참여자 이미지 파일넣을 큰 div */
+.participants {
+	display: flex;
+	width: 100%; 
+	float: left;
+	margin-bottom: 15px;
+	flex-wrap: wrap;
+}
+
+/* 참여자이미지 ,개설자이미지  */
+/* 참여자이미지아래 글씨위치*/
+.participant {
+	text-align: center;
+	margin-right:2%;
+}
+.profile_img {
+	border-radius: 100%;
+	width: 80px;
+	height: 80px;
+	margin:0 2%;
+	
+}
+/* 참여자이미지아래 글씨크기*/
+.participant_p {
+	margin:5% 0 0 0;
+	font-size:12px;
+	font-weight:600;
+}
+
+/* 찜버튼 */
+#sign_like {
+	position:absolute;
+	display:inline-block;
+	left:0;
+	bottom:2%;
+	width: 100%;
+	text-align:right;
+	padding:0 5%;
+	margin-top:15%;
+}
+
+#sign_like input{
+	margin:0 1%;
+}
+
+/* 버튼 클릭시 팝업창 */
+.modal {
+	width: 600px;
+	height: 252px;
+	border-radius: 10px;
+	padding: 80px 24px;
+	box-sizing: border-box;
+	text-align: center;
+	overflow:hidden;
+}
+
+.modal-section {
+	background: #ffffff;
+	box-sizing: border-box;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	display: none;
+	z-index: 9999;
+}
+
+.modal .btn {
+	cursor: pointer;
+	border: 1px solid #999999;
+	text-align: center;
+	border-radius: 5px;
+	outline: none;
+	font-weight: 500;
+}
+
+.menu_msg {
+	font-size: 21px;
+	font-weight: 500;
+	padding-bottom: 5%;
+}
+
+
+/* 모임정보 종료(상단 박스) */
+
+
+
+
+
+
+/*상세페이지,지도보기 ,문의기대평,참여신청/취소안내*/
+.detail_view {
+	height:auto;
+	margin-bottom:1%;
+	width: 100%;
+}
+
+.detail_view>a{
+	text-decoration: none;
+	font-size: 20px;
+	font-weight:600;
+}
+.detail_view>span{
+	margin: 0 2%;
+}
+
+.detailPara{
+	font-size:18px;
+	margin-bottom:1%;
+	margin-top:5%;
+}
+.detailPara::before{
+	content:"<";
+	margin-right:0.5%;
+}
+.detailPara::after{
+	content:">";
+	margin-left:0.5%;
+}
+
+/* 상세정보 */
+/*ck에디터 툴바, 하단영역 제거*/
+#cke_1_top,#cke_1_bottom{
+	display:none;
+}
+
+
+/* 지도보기 */
+#moim_info3 {
+	width: 100%;
+	height: 400px;
+}
+
+/* 문의평 */
+/*문의 기대평 큰div*/
+.comment_div {
+	display: flex;
+	width: 100%;
+	margin-top: 3%;
+}
+/*문의 기대평 댓글다는 유저 이미지*/
+.comment_img {
+	border-radius: 100%;
+	width: 100px;
+	height:100px;
+}
+
+/*문의 기대평 댓글내용입력란*/
+.comment_content {
+	height: 100px;
+	width: 80%;
+	margin-left: 3%;
+	margin-right:1%;
+	border:1px solid lightgray;
+	resize: none;
+}
+/* 기대평 등록/수정 버튼 */
+#commentInsert{
+	display: inline;
+}
+#commentUpdate{
+	display: none;
+}
+
+/* 비공개 여부 체크 박스 */
+#isPublic{
+	margin:1% 0 0 130px;
+}
+
+
+/* 리뷰 작성자 */
+.ReviewWriterName{
+	font-size:13px;
+	font-weight:600;
+	margin:0;
+}
+/* 리뷰 내용 */
+.reviewContent{
+	font-size:16px;
+	margin-right:1%;
+}
+.reviewContent::before{
+	content:"💬";
+	margin-right:1%;
+	margin-left:2%;
+}
+
+/* 리뷰 내용 삭제/수정 버튼 */
+.commentBtn{
+	font-size: 12px;
+	padding:0.2% 1%;
+	border: 1px solid #DC3545 !important;
+	border-radius:5px;
+	color:#DC3545 !important;
+}
+/* 비공개 여부문구 */
+.reviewIsPublic{
+	color:red;
+	font-size:10px;
+	margin:2% 0 0 0;
+}
+
+
+/* 참여신청/취소안내 */
+.information_div {
+	height: auto;
+	border: 1px solid lightgray;
+	padding:1% 1% 0 1%;
+	font-size:12px;
+	margin-bottom:2%;
+}
+.information_div > p{
+	margin-bottom:1%;
+}
+
+.information_div > p::before{
+	content:"-";
+	margin:0 1%;
+}
+
+.moim_updel_div{
+	display: inline-block;
+	margin-top: 2%;
+	text-align:right;
+    width: 100%;
+}
+.moim_updel_div>button{
+	margin-left: 2%;
+}
+
+.moim_updel_div>#scroll_move{
+	float:left;
+	margin-left:0;
+}
+
+
+#like {
+	display: inline;
+}
+
+#like_ok {
+	display: none;
+}

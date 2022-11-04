@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.human.ISP.dao.MypageDAO">
+
+	<!-- 개설 모임수 갯수찍기-->
+	<select id="createCount" parameterType="int" resultType="int">
+		select count(*) from moim where user_idx = #{user_idx}
+	</select>
+	
+	<!-- 참여 모임수 갯수찍기 -->
+	<select id="signupCount" parameterType="int" resultType="int">
+		select count(*) from signUp where user_idx = #{user_idx} and signUp_isApply='Y'
+	</select>
+	
+	<!-- 후기 작성수 갯수찍기 -->
+	<select id="reviewCount" parameterType="int" resultType="int">
+		select count(*) from review where user_idx = #{user_idx}
+	</select>
+
+	<!-- 승인 대기중인 모임 리스트 -->
+	<select id="signUpList" parameterType="int" resultType="String">
+		select moim_name from moim where moim_idx in (select moim_idx from SIGNUP where user_idx = #{user_idx} AND signup_isapply = 'N')
+	</select>
+	
+	<!-- 관심항목 리스트 -->
+	<select id="categoryList" parameterType="int" resultType="String">
+		select sc_name from category
+		where category_idx in (select category_idx from userCategory where user_idx=#{user_idx})
+	</select>
+	
+	<!-- 후기 리스트 -->
+	<select id="reviewList" parameterType="int" resultType="ReviewVO">
+		select * from Review where user_idx=#{user_idx}
+	</select>
+	
+	<!-- 후기 페이징 리스트 -->
+	<select id="reviewPagingList" parameterType="hashmap" resultType="ReviewVO" >
+		select
+			R.*
+		from
+			( select 
+				rownum rnum, Q.*
+			  from	
+				(select * from review where user_idx = #{user_idx} order by review_idx desc) Q
+			  where
+			  	<![CDATA[
+			  	rownum  <= #{endNo}
+			  	]]>
+			) R
+		where
+			<![CDATA[
+			rnum  >= #{startNo}
+			]]>
+	</select>
+	
+</mapper>

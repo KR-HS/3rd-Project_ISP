@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="cmm/layout_login">
+<head>
+<meta charset="UTF-8">
+<title>회원정보찾기</title>
+
+<!-- CSS only -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script type="text/javascript">
+
+	//회원가입여부 확인
+	function click_mail(){
+	
+		var mail = $('#formMail').serialize();
+		mail = mail.split('%40');
+		var text = mail[0];
+		text =text.split('=');
+		text = text[1];
+		text = text + "@" + mail[1];
+		var user_id = text;
+		$('#result').empty();
+		 if(mail=="email="){
+			 alert("이메일을 입력해주세요.");
+		 }else{
+			
+		$.ajax({
+			url:'emailCheck',
+			method : 'POST',
+			enctype: 'multipart/form-data',
+			data : {  user_id : user_id
+			},
+			cache : false,
+			success:function(data){
+				if(data){
+					$('#result').append("<p class='mailCheck'>"+"가입된 회원입니다.로그인해주세요." + "</p><br>");
+				}else{
+					$('#result').append("<p class='mailCheckFail'>"+"가입되지 않은 회원입니다." + "</p><br>");
+				}
+			},
+			error:function(data){
+			}
+			
+		});
+		}
+		
+	}
+	
+	
+	
+	//아이디 찾기
+	function click_id(){
+		var mail = $('#formId').serialize();
+		var check = mail;
+		var phone="";
+		phone = mail;
+
+		
+		//이름
+		mail = mail.split("&");
+		mail = mail[0];
+		mail = mail.split("=");
+		mail = mail[1];
+		mail = decodeURIComponent(mail); //폼전송시 한글 깨짐현상 해결
+		
+		//휴대전화번호
+		phone = phone.split("&");
+		phone = phone[1];
+		phone = phone.split("=");
+		phone = phone[1]
+		//alert(phone);
+		
+		$('#resultFindId').empty();
+		if(check =="user_name=&user_phone=")
+		{
+			alert("정보를 입력해주세요.");
+		}else{
+			$.ajax({
+				url:'idCheck',
+				method : 'POST',
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				data : {  mail : mail, phone : phone
+				},
+				cache : false,
+				success:function(data){
+						if(data == "fail"){
+							alert("회원정보가 틀립니다.회원정보를 확인해주세요.");
+						}else if(data != null){
+							$('#resultFindId').append("<p class='mailCheck'>회원님의 아이디는 "+data+"입니다.</p><br>");
+						}
+				},
+				error:function(data){
+				}
+				
+			});
+		}
+	}
+
+	
+	//임시비밀번호 전송
+	function click_findPs(){
+		var mail = $('#click_findPs').serialize();
+		var check = mail;
+		var name="";
+		name = mail;
+
+		//이메일
+		mail = mail.split("&");
+		mail = mail[0];
+		mail = mail.split("=");
+		mail = mail[1];
+		mail = mail.replace('%40','@');
+	
+		// 이름
+		name = name.split("&");
+		name = name[1];
+		name = name.split("=");
+		name = name[1];
+		name = decodeURIComponent(name);//폼전송시 한글 깨짐현상 해결
+		//alert(name);
+		//alert(mail);
+		if(check == "email=&user_name=")
+		{
+			alert("정보를 입력해주세요.");
+		}else{
+			$.ajax({
+				url:'psFind',
+				method : 'POST',
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				data : {  mail : mail, name : name
+				},
+				cache : false,
+				success:function(data){
+						if(data==0){
+							alert('회원정보가 일치하지 않습니다.회원정보를 확인해주세요.');
+						}else if(data==1){
+							alert('임시비밀번호를 발송하였습니다.메일을 확인해주세요.');
+						}
+				},
+				error:function(data){
+					alert(data);
+				}
+				
+			});
+		}
+
+		
+	}	
+
+
+</script>
+<style>
+	hr{
+		height: auto;
+		width: 100%;
+		border-bottom:3px solid pink;
+		background-color:white;	
+	}
+	.form-control{
+		font-size:15px;
+		
+	}
+	.isJoinPara,.idFindPara,.psFindPara{
+		font-size: 20px;
+		font-weight:600;
+		margin-bottom:1%;
+	}
+	.Para{
+		font-size:14px;
+	}
+	.mailCheck{
+		color: blue;
+		font-size: 25px;
+	}
+	.mailCheckFail{
+		color: red;
+		font-size: 25px;
+	}
+	.text-uppercase{
+		margin-left: 30%;
+		margin-right: 30%;
+		width:40%;
+		margin-bottom: 2%;
+		font-size:15px;
+	}
+
+</style>
+</head>
+<body>
+
+	<div class="mail_wrapper" style="margin-left: 35%; margin-right: 35%">
+		<p class="isJoinPara">회원가입 여부 확인</p>
+		<p class="Para">회원님 소유의 이메일을 입력해 보세요. 가입 여부를 확인해 드립니다.</p>
+		<hr/>
+        <form id="formMail" enctype="multipart/form-data" method="post">
+			<div class="mb-3 row">
+				<label for="Email" class="col-sm-3 col-form-label">이메일</label>
+			    <div class="col-sm-9">
+			      <input type="email" class="form-control" name="email" placeholder="example@email.com" required/>
+			    </div>
+			</div>
+
+		<hr/>
+		<div id="result">
+		</div>
+		<button type = "button" class="btn btn-lg btn-primary btn-block text-uppercase" onclick="click_mail(this)">확인</button>
+		</form>	
+	</div>
+	
+
+	<div class="idFind_wrapper" style="margin-left: 35%; margin-right: 35%; margin-top: 3%;">
+		<p class="idFindPara">아이디 찾기</p>
+		<p class="para">아이디를 찾기 위해 다음 항목을 입력해 주세요.</p>
+		<hr/>
+        <form id="formId" enctype="multipart/form-data" method="post">
+			<div class="mb-3 row">
+				<label for="user_name" class="col-sm-3 col-form-label">이름</label>
+			    <div class="col-sm-9">
+			      <input  type="text" class="form-control" name="user_name" placeholder="이름 입력" required/>
+			    </div>
+			</div>
+			<div class="mb-3 row">
+				<label for="user_phone" class="col-sm-3 col-form-label">휴대전화</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" name="user_phone" placeholder="휴대전화번호 입력" required/>
+			    </div>
+			</div>
+			<hr/>
+		 <div id="resultFindId">
+		</div>
+		
+		<button type = "button" class="btn btn-lg btn-primary btn-block text-uppercase" onclick="click_id(this)" >확인</button>
+		</form>	
+	</div>	
+	
+	
+
+	<div class="psFind_wrapper" style="margin-left: 35%; margin-right: 35%; margin-top: 3%;">
+		<p class="psFindPara" >비밀번호 찾기</p>
+		<p class="para">비밀번호를 찾기 위해 다음 항목을 입력해 주세요.</p>
+		<hr/>
+        <form id="click_findPs" enctype="multipart/form-data" method="post">
+			<div class="mb-3 row">
+				<label for="eamil" class="col-sm-3 col-form-label">이메일</label>
+			    <div class="col-sm-9">
+			      <input  type="email" class="form-control" name="email" placeholder="example@email.com" required/>
+			    </div>
+			</div>
+			<div class="mb-3 row">
+				<label for="user_name" class="col-sm-3 col-form-label">이름</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" name="user_name" placeholder="가입시 이름 입력" required/>
+			    </div>
+			</div>			
+		<hr/>
+		<button type = "button" id ="btnPs" class="btn btn-lg btn-primary btn-block text-uppercase" onclick="click_findPs(this)" >확인</button>
+		</form>
+		<form id="formFindPs2" enctype="multipart/form-data" method="post">
+		</form>
+	</div>		
+
+
+
+
+
+
+
+
+
+</body>
+</html>

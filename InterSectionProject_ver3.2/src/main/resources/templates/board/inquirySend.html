@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="cmm/layout_login">
+<head>
+<meta charset="UTF-8">
+<title>1:1문의하기</title>
+
+
+
+
+
+<!-- CSS only -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+
+
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script type="text/javascript">
+	$(function(){	
+		CKEDITOR.replace('inquiryWrite_content',{
+			// 이것을 써줘야 로컬파일 업로드가 가능하다.
+		filebrowserUploadUrl : '${pageContext.request.contextPath }/fileupload',
+		height :  300
+		});	
+	})
+
+</script>
+<style>
+	a,a:hover,a:link{
+		color:black; 
+	}
+	/* 메뉴바 */
+	.container{
+		background-color: rgb(44, 62, 80);
+		width:70%;
+		margin:auto;
+		padding:2% 2%;
+	}
+	.container >span >a, .container >span >a:hover, .container >span >a:link{
+		color:white ;
+	}
+	.board1{
+		margin-left: 1%;
+		
+	} 
+	.board2{
+		margin-left: 5%;
+		font-size:25px;
+		font-weight:600;
+	}
+	.board3{
+		margin-left: 5%;
+	}
+	/*  */
+	.boardWrapper{
+		width:70%;
+		margin:auto;
+		margin-top:2%;
+		margin-bottom:2%;
+		padding:2%;
+	}
+	.inquiery{
+		margin-top: 1%;
+		font-size:30px;
+		font-weight:700;
+		font-style: italic;
+	}
+	.my_hr{
+	    border: 0;
+	    height: 3px;
+	    background-color: black;
+	    margin:1% 10% 0 0;
+	}
+	
+	.inquiryWrite{
+		width:100%;
+		height:20%;
+		margin:auto;
+		margin-top:1%;
+		margin-bottom:2%;
+		padding:2%;
+	}
+	.form-check-label{
+		font-size:12px;
+	}
+	.row-9{
+		margin-top:2%;
+		width:90%;
+		margin-left:1%;
+		text-align:right;
+	}
+	.row-9>button{
+		margin-right:2%;
+	}
+	.noticeWrite{
+		width:5%;
+		float: right;
+		margin-right: 18%;
+	}
+	
+	.row{
+		margin-top:2%;
+	}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <span class = "board1"><a class="noticeBoard" onclick="location.href='/noticeList';" id="notice" style="cursor:pointer;">공지사항</a></span>
+  <span class = "board2"><a class="inquiryBoard" onclick="location.href='/inquirySend';" id="inquiry" style="cursor:pointer;">1:1문의하기</a></span>
+  <span class = "board3"><a class="inquiryReply" onclick="location.href='/inquiryResult';" id="inquiryResult" style="cursor:pointer;">나의 문의 내역</a></span>
+</div>
+
+<div class="boardWrapper">
+	<div id="board">
+		<p class="inquiery">1:1문의하기</p>
+		<hr class="my_hr">
+	<div class="inquiryWrite">
+	<form action='/inquiryWrite_send' method='post'>
+		<div class='row'>
+  			<div class='col-2'>이름</div>
+			<div class='col-2'>
+  				<input type='text' class='form-control' th:value="${session.userVO.user_name}" id='user_name'  name='user_name' disabled="disabled"/>
+  			</div>
+  			<div class='col-2' >연락처</div>
+  			<div class='col-3'>				
+  				<input type='text' class='form-control' th:value="${session.userVO.user_phone}" id='user_phone'  name='user_phone' disabled="disabled"/>
+ 		 	</div>
+  		</div>
+  		
+  		<div class='row'>
+  			<div class='col-2'>이메일</div>
+			<div class='col-4'>
+  				<input type='text' class='form-control' th:value="${session.userVO.user_id}" id='user_id'  name='user_id' >
+  			</div>
+  			<div class='col-5'>*답변받을 이메일을 확인해주세요.</div>
+  		</div>
+  			
+	
+		<div class='mb-3 row'>
+			<label for='noticeWirte_subject' class='col-sm-2 col-form-label'>제목</label>
+			<div class='col-sm-4'>
+				<input type='text' class='form-control' id='inquiryWrite_subject'  name='inquiryWrite_subject' placeholder='제목을 입력해주세요.' required/>
+			</div>
+		</div>
+		<div class='mb-9 row'>
+			<label for='inquiryWrite_content' class='col-sm-2 col-form-label'>내용</label>
+		<div class='col-sm-9'>
+			<textarea class ='ck-editor__editable' name='inquiryWrite_content' id='inquiryWrite_content' required></textarea>
+		</div>
+		</div>
+	
+  		<div class='row'>
+  			<div class='col-2'>개인정보 수집 및 이용 동의</div>
+  			
+  			<div class='col-10'>
+  			  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+  				<label class="form-check-label" for="flexCheckChecked" >
+  					작성해주신 이메일, 전화번호는 문의내용 확 및 답변처리 용도로 쓰입니다.
+  				</label>
+  			</div>
+  		</div>
+
+		<input type=hidden value='inquiry' id='inquiry' name='inquiry'>
+		<input type=hidden th:value="${session.userVO.user_idx}" id='user_idx' name='user_idx'>
+		<div class='row-9' style="float: right; margin-right: 10%;">
+			<button class='btn btn-primary btn-sm'>문의하기</button>
+			<input class="btn btn-success btn-sm" type="button" onclick="location.href='/index';" value="홈으로가기">
+		</div>
+	</form>
+	</div>
+	</div>
+</div>
+</body>
+</html>
+</body>
+</html>

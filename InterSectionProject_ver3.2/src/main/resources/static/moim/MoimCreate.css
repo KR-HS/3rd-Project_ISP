@@ -1,0 +1,346 @@
+.moim_create_full_wrap{
+   	margin:auto;
+    width: 70%;
+    padding: 2%;
+    border: 2px solid lightgray;
+    margin-bottom:5%;
+}
+.moimCreatePara{
+	font-size:35px;
+	font-weight:700;
+	
+}
+.moim_info1{
+    width: 100%;
+    border: 1px solid lightgray;
+    min-height:350px;
+    padding:1%;
+    display:inline-flex;
+    margin-bottom:5%;
+}
+
+/* 프로필 영역 시작 */
+.profile_photo_wrap{
+    width: 250px;
+    height: auto;
+    text-align: center;
+    margin-right: 1%;
+    float: left;
+}
+
+.profile_image{
+    width: 100%;
+    height: 250px;
+    border:1px dotted lightgray;
+}
+
+.image_upload_button{
+    width: 100%;
+    padding:4% 0;
+    margin: 5% 0;
+    border-radius: 30px;
+    border:0px;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    color: white;
+    background-size: 400% 400%;
+    animation: gradient1 5s ease infinite;
+}
+
+.base_info_wrap{
+    width: calc(100% - 300px);
+    float: right;
+    padding: 0 2%;
+}
+.baseInfoPara{
+	font-size:25px;
+	font-weight:600;
+	margin-bottom:1rem;
+}
+label{
+	font-size:15px;
+	margin-right:2%;
+}
+.categorySelector{
+	margin-bottom:1rem;
+}
+#lc_category,#sc_category{
+	border:1px solid lightgray;
+	margin-left:1%;
+	font-size:12px;
+}
+#sc{
+	margin-left:5%;
+}
+
+.moimNameInput{
+	margin-bottom:1rem;
+}
+.moimNameInput>input{
+	border:1px solid lightgray;
+	margin-left:1%;
+	font-size:12px;
+	padding:0.5% 1%;
+	width:60%;
+}
+
+.check_limit_age{
+	margin:0 1% 0 2%;
+	font-size:12px;
+}
+/* 나이제한 부분 시작 */
+.slider {
+  width: 100%;
+  height: 100%;
+  /* 후에 padding: 1.5rem 2rem 으로 수정합니다. 참고바랍니다. */
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.limit_range_age {
+  width: calc(100% - 2rem);
+  top: 1rem;
+  left: 1rem;
+  position: absolute;
+  border: none;
+  pointer-events: none;
+  z-index: 10;
+  appearance: none;
+  opacity: 0;
+}
+
+.limit_range_age:first-child {
+  top: 1rem;
+}
+
+.limit_range_age::-webkit-slider-thumb {
+  pointer-events: all;
+  /* appearance, background-color는 지워도 됨 */
+  appearance:none;
+  background-color: red;
+  width: 2.5rem;
+  height: 1.5rem;
+}
+
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 0.5rem;
+  /* margin-top: 5rem; */
+  background-color: #bdc3c7;
+  border-radius: 0.5rem;
+  margin-bottom:1rem;
+}
+
+.range {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #2c3e50;
+  border-radius: 0.5rem;
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  transform: translateY(-0.25rem);
+  width: 1rem;
+  height: 1rem;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+
+.ageLimit{
+	width:100%;
+	text-align:center;
+	padding:1% 0;
+	font-size:12px;
+}
+.minAge::after,.maxAge::after{
+	content:":";
+	margin:0 1%;
+}
+#start_value,#limit_value{
+	font-size:15px;
+}
+#start_value::after,#limit_value::after{
+	content:"세";
+	margin:0 1%;
+	font-size:12px;
+	
+}
+/* 나이제한 부분 종료 */
+
+
+/* 프로필 영역 종료 */
+
+.moimDetailPara{
+	font-size:35px;
+	font-weight:700;
+	margin-bottom:1%;
+}
+.moim_info2{
+	display:inline-block;
+    width: 100%;
+    border: 1px solid lightgray;
+    max-height:500px;
+    min-height:300px;
+    margin-bottom:5%;
+}
+
+.moim_info3{
+    border: 1px solid lightgray;
+	padding:1%;
+	margin-bottom:5%;    
+}
+
+.moimOnoffPara,.groupInfromPara{
+    font-size:35px;
+	font-weight:700;
+	margin-bottom:1%;
+}
+
+.moimOnoffWrapper,.moimPersonnelWrapper{
+	margin-bottom:2%;
+}
+.moimOnoffWrapper>label,.moimDatePara.moimPersonnelWrapper>label,
+.cham>label{
+	margin-right:1%;
+}
+#moim_online,#moim_offline{
+	margin:0 1% 0 2%;
+}
+#moim_time{
+	border:1px solid lightgray;
+	font-size:12px;
+	padding:0.5% 1%;
+}
+
+.moimPersonnelWrapper>input{
+	font-size:12px;
+	padding:0.5% 1%;
+	border:1px solid lightgray;
+}
+
+.cham{
+	width:100%;
+}
+.form-switch{
+	display:inline-flex;
+	width:60%;
+}
+.flexSwitchCheckChecked{
+	margin-right:1%;
+}
+.moimCost{
+	margin-top:1%;
+}
+
+.moimCostInput{
+	font-size:12px;
+	padding:0.5% 1%;
+	border:1px solid lightgray;
+}
+
+.moimLocationPara{
+	font-size:35px;
+	font-weight:700;
+	margin-bottom:1%;
+}
+.moim_info4{
+	width:100%;
+	display: none;
+}
+.moim_info4Wrapper{
+    border: 1px solid lightgray;
+    width: 80%;
+    padding: 2%;
+}
+.moim_info4Wrapper>p{
+	font-size:20px;	
+}
+#postCode{
+	border:1px solid lightgray;
+	margin-bottom:1%;
+	font-size:12px;
+	padding:0.5% 1%;
+}
+#addr1{
+    width: 70%;
+    border:1px solid lightgray;
+    font-size:12px;
+	padding:0.5% 1%;
+}
+.searchBtnWrapper{
+	text-align:right;	
+	margin-right:2%;
+}
+.moim_info4Wrapper>label{
+	height:auto;
+	width:auto;
+	font-size:15px;
+	padding:1% 2%;
+}
+/* 지도 api css */
+.map_wrap {
+	position:relative;
+	width:95%;
+	margin-right:5%;
+	min-height:350px;
+	margin-top:2%;
+}
+
+#map{
+	width:100%;
+	height:300px;
+	position:relative;
+	overflow:hidden;
+}
+
+.title {font-weight:bold;display:block;}
+.hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+#centerAddr {display:block;margin-top:2px;font-weight: normal;}
+.bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+
+
+.submitBtnWrapper{
+	text-align:right;
+	
+}
+.submitBtn{
+	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+	background-color: #f8e6e0;
+    color: #6e6e6e;
+    padding: 1% 2%;
+    text-decoration: none;
+    border: none;
+    border-radius: 15px;
+    font-size:15px;
+	
+}
+@keyframes gradient1 {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
